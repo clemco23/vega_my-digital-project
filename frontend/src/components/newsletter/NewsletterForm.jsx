@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { subscribeToNewsletter } from "../../services/newsletter.service";
+import "./newsletterForm.css";
+import "../../index.css";
+import Button from "../ui/Button";
 
-function NewsletterForm() {
+function NewsletterForm({
+  placeholder = "Votre adresse email",
+  submitLabel = "S'inscrire",
+  loadingLabel = "Inscription...",
+}) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -25,20 +32,25 @@ function NewsletterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="newsletter-form" onSubmit={handleSubmit}>
       <input
         type="email"
-        placeholder="Votre adresse email"
+        className="newsletter-form__input"
+        placeholder={placeholder}
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         required
       />
 
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Inscription..." : "S'inscrire"}
-      </button>
+      <Button
+        type="submit"
+        className="newsletter-form__button"
+        disabled={isLoading}
+      >
+        {isLoading ? loadingLabel : submitLabel}
+      </Button>
 
-      {message && <p>{message}</p>}
+      {message && <p className="newsletter-form__message">{message}</p>}
     </form>
   );
 }

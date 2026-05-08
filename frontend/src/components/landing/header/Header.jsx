@@ -1,4 +1,5 @@
 import "./Header.css";
+import "../../../index.css";
 import haptoLogo from "../../../assets/hapto.svg";
 
 function Header() {
