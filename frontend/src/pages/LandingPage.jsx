@@ -1,18 +1,23 @@
-import NewsletterForm from "../components/newsletter/NewsletterForm";
+import Header from "../components/landing/header/Header";
+// import HeroSection from "../components/landing/HeroSection/HeroSection";
+// import ProductIntroSection from "../components/landing/ProductIntroSection/ProductIntroSection";
+// import ModelsSection from "../components/landing/ModelsSection/ModelsSection";
+// import ValuesSection from "../components/landing/ValuesSection/ValuesSection";
+// import ReassuranceSection from "../components/landing/ReassuranceSection/ReassuranceSection";
+// import Footer from "../components/landing/Footer/Footer";
+import "./LandingPage.css";
 
 function LandingPage() {
   return (
-    <main>
-      <section>
-        <h1>Bienvenue sur Hapto</h1>
-        <p>Inscris-toi pour être informé du lancement.</p>
-      </section>
-
-      <section>
-        <h2>Newsletter</h2>
-        <NewsletterForm />
-      </section>
-    </main>
+    <div className="landing-page">
+      <Header />
+      {/* <HeroSection />
+      <ProductIntroSection />
+      <ModelsSection />
+      <ValuesSection />
+      <ReassuranceSection />
+      <Footer /> */}
+    </div>
   );
 }
 
