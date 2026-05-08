@@ -49,3 +49,11 @@
 .ui-button--full-width {
   width: 100%;
 }
+
+@media (max-width: 540px) {
+  .ui-button {
+    min-height: 52px;
+    padding: 14px 22px;
+    font-size: 0.92rem;
+  }
+}

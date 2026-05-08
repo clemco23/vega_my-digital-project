@@ -13,24 +13,23 @@ function HeroSection() {
     <section className="hero-section">
       <div className="hero-section__left">
         <div className="hero-section__content">
-            <div className="content-title">
-                <h1 className="hero-section__title">
-            Le premier jouet 
-            <span className="hero-section__title-line hero-section__title-line--accent">
-               qui grandit
-            </span>
-             avec votre enfant.
-          </h1>
-            </div>
-          
-        <div className="content-description">
+          <div className="content-title">
+            <h1 className="hero-section__title">
+              <span className="hero-section__title-line">Le premier jouet</span>
+              <span className="hero-section__title-line hero-section__title-line--accent">
+                qui grandit
+              </span>
+              <span className="hero-section__title-line">avec votre enfant.</span>
+            </h1>
+          </div>
+
+          <div className="content-description">
             <p className="hero-section__description">
-            Une planche d'éveil sensorielle modulaire, éco-conçue et inspirée
-            de la pédagogie Montessori. Des modules clipsables qui évoluent au
-            rythme de votre enfant, de 9 mois à 6 ans.
-          </p>
-        </div>
-          
+              Une planche d'eveil sensorielle modulaire, eco-concue et
+              inspiree de la pedagogie Montessori. Des modules clipsables qui
+              evoluent au rythme de votre enfant, de 9 mois a 6 ans.
+            </p>
+          </div>
 
           <NewsletterForm
             placeholder="votre@email.com"
@@ -56,6 +55,7 @@ function HeroSection() {
       </div>
 
       <div className="hero-section__right">
+        <div className="hero-section__visual">
           <img
             src={container}
             alt="Image de la planche d'eveil sensorielle"
@@ -63,6 +63,7 @@ function HeroSection() {
           />
           <div className="hero-section__badge">30+ modules disponibles</div>
         </div>
+      </div>
     </section>
   );
 }
