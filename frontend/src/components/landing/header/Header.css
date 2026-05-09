@@ -1,9 +1,13 @@
 .landing-header {
   width: 100%;
   padding: 24px;
-  background-color: var(--color-background);
+  background-color: color-mix(in srgb, var(--color-background) 86%, transparent);
   border-bottom: solid 1px color-mix(in srgb, var(--color-primary) 20%, transparent);
- /* background-color: aqua; */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .landing-header__container {
