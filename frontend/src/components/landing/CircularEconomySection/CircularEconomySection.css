@@ -21,6 +21,7 @@
 
 .circular-economy-section__orbit {
   --orbit-size: clamp(300px, 28vw, 388px);
+  --orbit-track-radius: 182px;
   position: relative;
   width: var(--orbit-size);
   aspect-ratio: 1;
@@ -28,7 +29,7 @@
 
 .circular-economy-section__orbit-track {
   position: absolute;
-  inset: 11%;
+  inset: 3%;
   border: 2px dashed rgba(140, 144, 116, 0.36);
   border-radius: 50%;
 }
@@ -54,27 +55,27 @@
 
 .circular-economy-section__node--board-pos {
   --orbit-angle: -130deg;
-  --orbit-radius: 157px;
+  --orbit-radius: var(--orbit-track-radius);
 }
 
 .circular-economy-section__node--share-pos {
   --orbit-angle: -55deg;
-  --orbit-radius: 156px;
+  --orbit-radius: var(--orbit-track-radius);
 }
 
 .circular-economy-section__node--renew-pos {
   --orbit-angle: 0deg;
-  --orbit-radius: 156px;
+  --orbit-radius: var(--orbit-track-radius);
 }
 
 .circular-economy-section__node--resale-pos {
   --orbit-angle: 78deg;
-  --orbit-radius: 146px;
+  --orbit-radius: var(--orbit-track-radius);
 }
 
 .circular-economy-section__node--community-pos {
   --orbit-angle: 164deg;
-  --orbit-radius: 149px;
+  --orbit-radius: var(--orbit-track-radius);
 }
 
 .circular-economy-section__node--xl {
@@ -243,26 +244,7 @@
 
   .circular-economy-section__orbit {
     --orbit-size: min(100%, 320px);
-  }
-
-  .circular-economy-section__node--board-pos {
-    --orbit-radius: 130px;
-  }
-
-  .circular-economy-section__node--share-pos {
-    --orbit-radius: 129px;
-  }
-
-  .circular-economy-section__node--renew-pos {
-    --orbit-radius: 129px;
-  }
-
-  .circular-economy-section__node--resale-pos {
-    --orbit-radius: 120px;
-  }
-
-  .circular-economy-section__node--community-pos {
-    --orbit-radius: 123px;
+    --orbit-track-radius: 150px;
   }
 
   .circular-economy-section__content {
@@ -289,26 +271,7 @@
 
   .circular-economy-section__orbit {
     --orbit-size: min(100%, 268px);
-  }
-
-  .circular-economy-section__node--board-pos {
-    --orbit-radius: 109px;
-  }
-
-  .circular-economy-section__node--share-pos {
-    --orbit-radius: 108px;
-  }
-
-  .circular-economy-section__node--renew-pos {
-    --orbit-radius: 108px;
-  }
-
-  .circular-economy-section__node--resale-pos {
-    --orbit-radius: 101px;
-  }
-
-  .circular-economy-section__node--community-pos {
-    --orbit-radius: 103px;
+    --orbit-track-radius: 126px;
   }
 
   .circular-economy-section__node--xl {
