@@ -1,0 +1,97 @@
+.reassurance-section {
+  padding: clamp(26px, 3vw, 38px) clamp(8px, 1vw, 14px);
+  background: var(--color-secondary);
+}
+
+.reassurance-section__panel {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: min(100%, 1600px);
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(232, 189, 77, 0.54);
+  box-shadow: inset 0 0 0 1px rgba(190, 146, 38, 0.24);
+}
+
+.reassurance-section__item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 42px 28px 44px;
+  text-align: center;
+}
+
+.reassurance-section__item + .reassurance-section__item {
+  border-left: 1px solid rgba(190, 146, 38, 0.32);
+}
+
+.reassurance-section__eyebrow {
+  margin: 0 0 10px;
+  color: rgba(34, 28, 18, 0.96);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.reassurance-section__text {
+  margin: 0;
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 1.4vw, 1.32rem);
+  font-weight: 400;
+  line-height: 1.38;
+  white-space: pre-line;
+}
+
+@media (max-width: 1080px) {
+  .reassurance-section__panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .reassurance-section__item:nth-child(4),
+  .reassurance-section__item:nth-child(5) {
+    border-top: 1px solid rgba(190, 146, 38, 0.32);
+  }
+
+  .reassurance-section__item:nth-child(4) {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .reassurance-section {
+    padding: 14px;
+  }
+
+  .reassurance-section__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .reassurance-section__item {
+    padding: 28px 22px 30px;
+  }
+
+  .reassurance-section__item + .reassurance-section__item {
+    border-left: 0;
+    border-top: 1px solid rgba(190, 146, 38, 0.32);
+  }
+
+  .reassurance-section__item:nth-child(4),
+  .reassurance-section__item:nth-child(5) {
+    border-top: 1px solid rgba(190, 146, 38, 0.32);
+  }
+
+  .reassurance-section__eyebrow {
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+  }
+
+  .reassurance-section__text {
+    font-size: 1.02rem;
+  }
+}

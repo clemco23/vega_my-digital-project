@@ -1,6 +1,6 @@
 .circular-economy-section {
   background: var(--color-background);
-  padding: clamp(44px, 5vw, 72px) clamp(18px, 2.2vw, 30px);
+  padding: clamp(44px, 6vw, 90px) clamp(18px, 2.2vw, 30px);
   overflow: hidden;
 }
 
@@ -262,16 +262,16 @@
 
 @media (max-width: 640px) {
   .circular-economy-section {
-    padding: 48px 16px 62px;
+    padding: 56px 16px 74px;
   }
 
   .circular-economy-section__inner {
-    gap: 20px;
+    gap: 32px;
   }
 
   .circular-economy-section__orbit {
-    --orbit-size: min(100%, 268px);
-    --orbit-track-radius: 126px;
+    --orbit-size: min(100%, 252px);
+    --orbit-track-radius: 118px;
   }
 
   .circular-economy-section__node--xl {
@@ -286,7 +286,7 @@
   }
 
   .circular-economy-section__eyebrow {
-    margin-bottom: 14px;
+    margin-bottom: 18px;
     font-size: 0.68rem;
     letter-spacing: 0.22em;
   }
@@ -297,19 +297,19 @@
   }
 
   .circular-economy-section__description {
-    margin-top: 18px;
+    margin-top: 24px;
     font-size: 0.98rem;
     line-height: 1.72;
   }
 
   .circular-economy-section__steps {
-    gap: 14px;
-    margin-top: 24px;
+    gap: 18px;
+    margin-top: 32px;
   }
 
   .circular-economy-section__step {
     grid-template-columns: 22px minmax(0, 1fr);
-    gap: 12px;
+    gap: 14px;
   }
 
   .circular-economy-section__step-badge {
@@ -324,6 +324,6 @@
 
   .circular-economy-section__step-description {
     font-size: 0.9rem;
-    line-height: 1.5;
+    line-height: 1.58;
   }
 }
