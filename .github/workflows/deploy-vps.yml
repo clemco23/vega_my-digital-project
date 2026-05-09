@@ -41,6 +41,8 @@ jobs:
 
       - name: Install and build frontend
         working-directory: frontend
+        env:
+          VITE_API_URL: http://185.98.137.86
         run: |
           npm ci
           npm run build
@@ -64,13 +66,13 @@ jobs:
 
       - name: Ensure remote directories exist
         run: |
-          ssh -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+          ssh -i ~/.ssh/id_rsa -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
             "mkdir -p '${VPS_APP_DIR}/frontend/dist' '${VPS_APP_DIR}/backend'"
 
       - name: Upload frontend build
         run: |
           rsync -az --delete \
-            -e "ssh -p ${VPS_PORT}" \
+            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT}" \
             frontend/dist/ \
             "${VPS_USER}@${VPS_HOST}:${VPS_APP_DIR}/frontend/dist/"
 
@@ -80,12 +82,12 @@ jobs:
             --exclude node_modules \
             --exclude .env \
             --exclude .env.* \
-            -e "ssh -p ${VPS_PORT}" \
+            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT}" \
             backend/ \
             "${VPS_USER}@${VPS_HOST}:${VPS_APP_DIR}/backend/"
 
       - name: Install backend dependencies and restart app
         run: |
-          ssh -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
-            "APP_DIR=$(printf '%q' "${VPS_APP_DIR}") RESTART_COMMAND=$(printf '%q' "${VPS_RESTART_COMMAND}") bash -s" \
-            < ./scripts/deploy/vps-backend-deploy.sh
+          ssh -i ~/.ssh/id_rsa -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+          "APP_DIR=$(printf '%q' "${VPS_APP_DIR}") RESTART_COMMAND=$(printf '%q' "${VPS_RESTART_COMMAND}") bash -s" \
+          < ./scripts/deploy/vps-backend-deploy.sh

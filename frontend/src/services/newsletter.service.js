@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export const subscribeToNewsletter = async (email) => {
-  const response = await fetch("http://localhost:3000/api/newsletter", {
+  const response = await fetch(`${API_URL}/api/newsletter`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
