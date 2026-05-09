@@ -13,7 +13,7 @@
 
 .hero-section__left {
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   align-items: center;
   padding: 56px clamp(24px, 5vw, 64px) 64px;
   background-color: var(--color-background);
@@ -111,13 +111,6 @@
   align-items: center;
   gap: 44px;
   width: min(100%, 380px);
-}
-
-.hero-section__image {
-  width: 100%;
-  max-width: 380px;
-  height: auto;
-  filter: drop-shadow(0 34px 40px rgba(31, 28, 24, 0.22));
 }
 
 .hero-section__badge {

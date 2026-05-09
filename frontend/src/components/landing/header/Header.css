@@ -2,6 +2,8 @@
   width: 100%;
   padding: 24px;
   background-color: var(--color-background);
+  border-bottom: solid 1px color-mix(in srgb, var(--color-primary) 20%, transparent);
+ /* background-color: aqua; */
 }
 
 .landing-header__container {
