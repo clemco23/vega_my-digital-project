@@ -1,4 +1,5 @@
 import Banner from "../components/landing/banner/Banner";
+import CircularEconomySection from "../components/landing/CircularEconomySection/CircularEconomySection";
 import Header from "../components/landing/header/Header";
 import HeroSection from "../components/landing/HeroSection/HeroSection";
 import ProductIntroSection from "../components/landing/ProductIntroSection/ProductIntroSection";
@@ -15,6 +16,7 @@ function LandingPage() {
       <HeroSection />
       <Banner />
       <ProductIntroSection />
+      <CircularEconomySection />
       {/* <ModelsSection />
       <ValuesSection />
       <ReassuranceSection />

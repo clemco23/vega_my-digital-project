@@ -1,0 +1,366 @@
+.circular-economy-section {
+  background: var(--color-background);
+  padding: clamp(44px, 5vw, 72px) clamp(18px, 2.2vw, 30px);
+  overflow: hidden;
+}
+
+.circular-economy-section__inner {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.88fr) minmax(420px, 1.12fr);
+  align-items: center;
+  gap: clamp(52px, 12vw, 200px);
+  width: min(100%, 1380px);
+  margin: 0 auto;
+}
+
+.circular-economy-section__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circular-economy-section__orbit {
+  --orbit-size: clamp(300px, 28vw, 388px);
+  position: relative;
+  width: var(--orbit-size);
+  aspect-ratio: 1;
+}
+
+.circular-economy-section__orbit-track {
+  position: absolute;
+  inset: 11%;
+  border: 2px dashed rgba(140, 144, 116, 0.36);
+  border-radius: 50%;
+}
+
+.circular-economy-section__orbit-rotation {
+  position: absolute;
+  inset: 0;
+  animation: circular-economy-rotate 24s linear infinite;
+  transform-origin: center;
+}
+
+.circular-economy-section__node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--orbit-angle))
+    translateX(var(--orbit-radius));
+  box-shadow: 0 18px 32px rgba(63, 53, 37, 0.1);
+}
+
+.circular-economy-section__node--board-pos {
+  --orbit-angle: -130deg;
+  --orbit-radius: 157px;
+}
+
+.circular-economy-section__node--share-pos {
+  --orbit-angle: -55deg;
+  --orbit-radius: 156px;
+}
+
+.circular-economy-section__node--renew-pos {
+  --orbit-angle: 0deg;
+  --orbit-radius: 156px;
+}
+
+.circular-economy-section__node--resale-pos {
+  --orbit-angle: 78deg;
+  --orbit-radius: 146px;
+}
+
+.circular-economy-section__node--community-pos {
+  --orbit-angle: 164deg;
+  --orbit-radius: 149px;
+}
+
+.circular-economy-section__node--xl {
+  width: 104px;
+  height: 104px;
+}
+
+.circular-economy-section__node--md {
+  width: 36px;
+  height: 36px;
+}
+
+.circular-economy-section__node--sm {
+  width: 34px;
+  height: 34px;
+}
+
+.circular-economy-section__node--olive {
+  background: #697831;
+}
+
+.circular-economy-section__node--burnt {
+  background: #b24d21;
+}
+
+.circular-economy-section__node--gold {
+  background: #d9a92f;
+}
+
+.circular-economy-section__node--rose {
+  background: #d77c82;
+}
+
+.circular-economy-section__content {
+  width: 100%;
+  max-width: 700px;
+}
+
+.circular-economy-section__eyebrow {
+  margin: 0 0 18px;
+  color: #d2a233;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+
+.circular-economy-section__title {
+  margin: 0;
+  color: var(--color-dark);
+  font-family: var(--font-title);
+  font-size: clamp(2.2rem, 4vw, 3.55rem);
+  font-weight: 300;
+  line-height: 1.18;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.circular-economy-section__title-accent {
+  color: #697831;
+  font-weight: 600;
+}
+
+.circular-economy-section__description {
+  margin: 20px 0 0;
+  max-width: 600px;
+  color: #a79f94;
+  font-family: var(--font-body);
+  font-size: clamp(0.96rem, 1.15vw, 1.05rem);
+  line-height: 1.65;
+}
+
+.circular-economy-section__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  margin: 28px 0 0;
+}
+
+.circular-economy-section__step {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.circular-economy-section__step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.circular-economy-section__step-badge--olive {
+  background: #697831;
+}
+
+.circular-economy-section__step-badge--burnt {
+  background: #b24d21;
+}
+
+.circular-economy-section__step-badge--gold {
+  background: #d9a92f;
+}
+
+.circular-economy-section__step-badge--rose {
+  background: #d77c82;
+}
+
+.circular-economy-section__step-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.circular-economy-section__step-title {
+  margin: 0;
+  color: #2f2a24;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.32;
+}
+
+.circular-economy-section__step-description {
+  margin: 0;
+  color: #9b948a;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+@keyframes circular-economy-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circular-economy-section__orbit-rotation {
+    animation: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .circular-economy-section {
+    padding: 64px 20px 76px;
+  }
+
+  .circular-economy-section__inner {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .circular-economy-section__orbit {
+    --orbit-size: min(100%, 320px);
+  }
+
+  .circular-economy-section__node--board-pos {
+    --orbit-radius: 130px;
+  }
+
+  .circular-economy-section__node--share-pos {
+    --orbit-radius: 129px;
+  }
+
+  .circular-economy-section__node--renew-pos {
+    --orbit-radius: 129px;
+  }
+
+  .circular-economy-section__node--resale-pos {
+    --orbit-radius: 120px;
+  }
+
+  .circular-economy-section__node--community-pos {
+    --orbit-radius: 123px;
+  }
+
+  .circular-economy-section__content {
+    max-width: 100%;
+  }
+
+  .circular-economy-section__title {
+    max-width: 100%;
+  }
+
+  .circular-economy-section__description {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .circular-economy-section {
+    padding: 48px 16px 62px;
+  }
+
+  .circular-economy-section__inner {
+    gap: 20px;
+  }
+
+  .circular-economy-section__orbit {
+    --orbit-size: min(100%, 268px);
+  }
+
+  .circular-economy-section__node--board-pos {
+    --orbit-radius: 109px;
+  }
+
+  .circular-economy-section__node--share-pos {
+    --orbit-radius: 108px;
+  }
+
+  .circular-economy-section__node--renew-pos {
+    --orbit-radius: 108px;
+  }
+
+  .circular-economy-section__node--resale-pos {
+    --orbit-radius: 101px;
+  }
+
+  .circular-economy-section__node--community-pos {
+    --orbit-radius: 103px;
+  }
+
+  .circular-economy-section__node--xl {
+    width: 76px;
+    height: 76px;
+  }
+
+  .circular-economy-section__node--md,
+  .circular-economy-section__node--sm {
+    width: 28px;
+    height: 28px;
+  }
+
+  .circular-economy-section__eyebrow {
+    margin-bottom: 14px;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+  }
+
+  .circular-economy-section__title {
+    font-size: clamp(2.05rem, 9vw, 3rem);
+    line-height: 1.22;
+  }
+
+  .circular-economy-section__description {
+    margin-top: 18px;
+    font-size: 0.98rem;
+    line-height: 1.72;
+  }
+
+  .circular-economy-section__steps {
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .circular-economy-section__step {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .circular-economy-section__step-badge {
+    width: 22px;
+    height: 22px;
+    font-size: 0.68rem;
+  }
+
+  .circular-economy-section__step-title {
+    font-size: 0.94rem;
+  }
+
+  .circular-economy-section__step-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
