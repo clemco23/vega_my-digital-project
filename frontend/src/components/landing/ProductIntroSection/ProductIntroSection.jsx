@@ -1,4 +1,5 @@
 import productIntroImage from "../../../assets/productIntroSection.svg";
+import ModulesMarqueeSection from "../ModulesMarqueeSection/ModulesMarqueeSection";
 
 import "./ProductIntroSection.css";
 
@@ -26,6 +27,8 @@ premiers gestes à leurs plus grandes découvertes.
           </p>
         </div>
       </div>
+
+      <ModulesMarqueeSection />
     </section>
   );
 }

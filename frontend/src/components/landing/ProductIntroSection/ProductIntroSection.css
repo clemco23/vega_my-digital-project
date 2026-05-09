@@ -1,6 +1,7 @@
 .product-intro-section {
   background: var(--color-white);
   padding: clamp(76px, 9vw, 128px) clamp(16px, 2.2vw, 28px);
+  overflow: hidden;
 }
 
 .product-intro-section__inner {
