@@ -1,3 +1,4 @@
+import Banner from "../components/landing/banner/Banner";
 import Header from "../components/landing/header/Header";
 import HeroSection from "../components/landing/HeroSection/HeroSection";
 // import ProductIntroSection from "../components/landing/ProductIntroSection/ProductIntroSection";
@@ -12,6 +13,7 @@ function LandingPage() {
     <div className="landing-page">
       <Header />
       <HeroSection />
+      <Banner />
       {/* <ProductIntroSection />
       <ModelsSection />
       <ValuesSection />
