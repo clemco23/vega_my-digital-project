@@ -1,9 +1,9 @@
 import NewsletterForm from "../../newsletter/NewsletterForm";
+import HeroBoard from "./HeroBoard";
 
 import "./HeroSection.css";
 import "../../../index.css";
 
-import container from "../../../assets/Container.svg";
 import picto1 from "../../../assets/pictoFSC.svg";
 import picto2 from "../../../assets/pictoNorme.svg";
 import picto3 from "../../../assets/pictoTime.svg";
@@ -56,11 +56,7 @@ function HeroSection() {
 
       <div className="hero-section__right">
         <div className="hero-section__visual">
-          <img
-            src={container}
-            alt="Image de la planche d'eveil sensorielle"
-            className="hero-section__image"
-          />
+          <HeroBoard />
           <div className="hero-section__badge">30+ modules disponibles</div>
         </div>
       </div>
