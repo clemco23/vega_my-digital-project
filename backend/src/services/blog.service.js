@@ -15,6 +15,13 @@ const getBlogBySlug = async (slug) => {
   });
 };
 
+const getBlogById = async (id) => {
+  return prisma.blog.findUnique({
+    where: { id },
+    include: { category: true },
+  });
+} ;
+
 const createBlog = async (data) => {
   return prisma.blog.create({ data });
 };
@@ -35,6 +42,7 @@ const deleteBlog = async (id) => {
 module.exports = {
   getAllBlogs,
   getBlogBySlug,
+  getBlogById,
   createBlog,
   updateBlog,
   deleteBlog,

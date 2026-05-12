@@ -1,6 +1,7 @@
 const {
     getAllBlogs,
     getBlogBySlug,
+    getBlogById,
     createBlog,
     updateBlog,
     deleteBlog,
@@ -31,6 +32,23 @@ const {
       return res.status(500).json({ message: "Erreur serveur." });
     }
   };
+
+  const getOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const blog = await getBlogById(Number(id));
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog introuvable." });
+    }
+
+    return res.status(200).json({ data: blog });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
   
   const create = async (req, res) => {
     console.log("req.file:", req.file);
@@ -94,4 +112,4 @@ const {
     }
   };
   
-  module.exports = { getAll, getOne, create, update, remove };
+  module.exports = { getAll, getOne, getOneById, create, update, remove };
