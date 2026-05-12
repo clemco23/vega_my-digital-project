@@ -16,7 +16,7 @@ const tiles = [
     slotClass: "hero-board__slot--top-left",
     itemClass: "hero-board__item--burnt",
     iconClass: "hero-board__icon--small",
-    // icon: "\u{1F512}",
+    icon: "\u{1F512}",
     label: "Module cadenas",
   },
   {
@@ -25,7 +25,7 @@ const tiles = [
     slotClass: "hero-board__slot--top-center",
     itemClass: "hero-board__item--gold",
     iconClass: "hero-board__icon--small",
-    // icon: "\u2699\uFE0F",
+    icon: "\u2699\uFE0F",
     label: "Module engrenage",
   },
   {
@@ -34,7 +34,7 @@ const tiles = [
     slotClass: "hero-board__slot--top-right",
     itemClass: "hero-board__item--sand",
     iconClass: "hero-board__icon--small",
-    // icon: "\u{1F511}",
+    icon: "\u{1F511}",
     label: "Module cle",
   },
   {
@@ -43,7 +43,7 @@ const tiles = [
     slotClass: "hero-board__slot--middle-left",
     itemClass: "hero-board__item--rose",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u{1F9F2}",
+    icon: "\u{1F9F2}",
     label: "Module aimant",
   },
   {
@@ -52,7 +52,7 @@ const tiles = [
     slotClass: "hero-board__slot--middle-wide",
     itemClass: "hero-board__item--moss",
     iconClass: "hero-board__icon--tiny",
-    // icon: "\u{1F50D}",
+    icon: "\u{1F50D}",
     label: "Module loupe",
   },
   {
@@ -61,7 +61,7 @@ const tiles = [
     slotClass: "hero-board__slot--lower-left",
     itemClass: "hero-board__item--burnt",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u{1F300}",
+    icon: "\u{1F300}",
     label: "Module spirale",
   },
   {
@@ -70,7 +70,7 @@ const tiles = [
     slotClass: "hero-board__slot--center-tall",
     itemClass: "hero-board__item--gold",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u23F1\uFE0F",
+    icon: "\u23F1\uFE0F",
     label: "Module minuterie",
   },
   {
@@ -79,7 +79,7 @@ const tiles = [
     slotClass: "hero-board__slot--right-middle",
     itemClass: "hero-board__item--olive",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u{1FA9D}",
+    icon: "\u{1FA9D}",
     label: "Module crochet",
   },
   {
@@ -88,7 +88,7 @@ const tiles = [
     slotClass: "hero-board__slot--bottom-left",
     itemClass: "hero-board__item--beige",
     iconClass: "hero-board__icon--large",
-    // icon: "\u{1F39B}\uFE0F",
+    icon: "\u{1F39B}\uFE0F",
     label: "Module boutons",
   },
   {
@@ -97,7 +97,7 @@ const tiles = [
     slotClass: "hero-board__slot--bottom-right",
     itemClass: "hero-board__item--salmon",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u{1F9E9}",
+    icon: "\u{1F9E9}",
     label: "Module puzzle",
   },
   {
@@ -106,7 +106,7 @@ const tiles = [
     slotClass: "hero-board__slot--bottom-bar",
     itemClass: "hero-board__item--leaf",
     iconClass: "hero-board__icon--medium",
-    // icon: "\u{1F504}",
+    icon: "\u{1F504}",
     label: "Module rotation",
   },
 ];
