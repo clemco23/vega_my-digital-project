@@ -89,7 +89,7 @@ function CircularEconomySection() {
           </p>
 
           <h2 className="circular-economy-section__title">
-            Un jouet penser pour{" "}
+            Un jouet pensé pour{" "}
             <span className="circular-economy-section__title-accent">
               durer,
             </span>{" "}

@@ -1,4 +1,6 @@
 const express = require("express");
+const { authMiddleware, adminMiddleware } = require("../middlewares/auth.middleware");
+
 
 const {
   subscribeToNewsletter,
@@ -8,6 +10,6 @@ const {
 const router = express.Router();
 
 router.post("/", subscribeToNewsletter);
-router.get("/", getAllNewsletterEmails);
+router.get("/",authMiddleware, adminMiddleware, getAllNewsletterEmails);
 
 module.exports = router;
