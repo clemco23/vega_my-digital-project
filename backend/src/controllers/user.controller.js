@@ -20,6 +20,16 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "ID invalide." });
+    }
+
+    // Un user ne peut voir que son propre profil, un admin peut voir n'importe quel profil
+    if (req.user.role !== "ADMIN" && req.user.id !== id) {
+      return res.status(403).json({ message: "Accès refusé." });
+    }
+
     const user = await getUserById(id);
 
     if (!user) {
