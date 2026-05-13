@@ -63,10 +63,44 @@ const resendVerificationEmail = async (email) => {
   return validationToken;
 };
 
+const forgotPassword = async (email) => {
+  const user = await findUserByEmail(email);
+
+  if (!user) throw new Error("Utilisateur introuvable.");
+
+  const resetToken = crypto.randomInt(100000, 999999).toString();
+
+  await prisma.user.update({
+    where: { email },
+    data: { validationToken: resetToken },
+  });
+
+  return resetToken;
+};
+
+const resetPassword = async (email, token, newPassword) => {
+  const user = await findUserByEmail(email);
+
+  if (!user) throw new Error("Utilisateur introuvable.");
+  if (user.validationToken !== token) throw new Error("Code invalide.");
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  return prisma.user.update({
+    where: { email },
+    data: {
+      password: hashedPassword,
+      validationToken: null,
+    },
+  });
+};
+
 
 module.exports = {
   findUserByEmail,
   createUser,
   verifyUser,
-  resendVerificationEmail
+  resendVerificationEmail,
+  forgotPassword,
+  resetPassword
 };
