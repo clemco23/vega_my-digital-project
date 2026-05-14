@@ -119,7 +119,7 @@ model ProductVariant {
   stock         Int
   holesCount    Int?
   holesRequired Int?
-  product       Product    @relation(fields: [productId], references: [id])
+  product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   setItems      SetItem[]
   cartItems     CartItem[]
   orderItems    OrderItem[]
@@ -150,7 +150,7 @@ model Skill {
 model ProductSkill {
   productId Int
   skillId   Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   skill     Skill   @relation(fields: [skillId], references: [id])
 
   @@id([productId, skillId])

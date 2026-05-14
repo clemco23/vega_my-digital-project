@@ -5,6 +5,10 @@ const {
   updateProduct,
   deleteProduct,
     getAllProductsAdmin,
+    updateVariant,
+    addProductImages,
+    deleteProductImage,
+    deleteVariant,
 } = require("../services/product.service");
 
 const parsePositiveInt = (value) => {
@@ -255,6 +259,60 @@ const remove = async (req, res) => {
   }
 };
 
+const updateVariantController = async (req, res) => {
+  try {
+    const { variantId } = req.params;
+    const { price, stock, holesCount, holesRequired } = req.body;
+
+    const variant = await updateVariant(variantId, { price, stock, holesCount, holesRequired });
+    return res.status(200).json({ message: "Variante mise à jour.", data: variant });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const addImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "Aucune image fournie." });
+    }
+
+    const imageUrls = req.files.map((file) => file.path);
+    await addProductImages(id, imageUrls);
+
+    return res.status(201).json({ message: "Images ajoutées." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const deleteImage = async (req, res) => {
+  try {
+    const { imageId } = req.params;
+    await deleteProductImage(imageId);
+    return res.status(200).json({ message: "Image supprimée." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const deleteVariantController = async (req, res) => {
+  try {
+    const { variantId } = req.params;
+    await deleteVariant(variantId);
+    return res.status(200).json({ message: "Variante supprimée." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+
 module.exports = {
   getAll,
   getOne,
@@ -262,4 +320,8 @@ module.exports = {
   create,
   update,
   remove,
+  updateVariantController,
+  deleteVariantController,
+  addImages,
+  deleteImage,
 };

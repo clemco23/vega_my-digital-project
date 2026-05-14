@@ -92,6 +92,47 @@ const deleteProduct = async (id) => {
   });
 };
 
+const updateVariant = async (variantId, data) => {
+  return prisma.productVariant.update({
+    where: { id: parseInt(variantId) },
+    data: {
+      price: data.price ? parseFloat(parseFloat(data.price).toFixed(2)) : undefined,
+      stock: data.stock ? parseInt(data.stock) : undefined,
+      holesCount: data.holesCount ? parseInt(data.holesCount) : undefined,
+      holesRequired: data.holesRequired ? parseInt(data.holesRequired) : undefined,
+    },
+  });
+};
+
+const addProductImages = async (productId, images) => {
+  const lastImage = await prisma.productImage.findFirst({
+    where: { productId: parseInt(productId) },
+    orderBy: { position: "desc" },
+  });
+
+  const startPosition = lastImage ? lastImage.position + 1 : 1;
+
+  return prisma.productImage.createMany({
+    data: images.map((url, index) => ({
+      productId: parseInt(productId),
+      url,
+      position: startPosition + index,
+    })),
+  });
+};
+
+const deleteProductImage = async (imageId) => {
+  return prisma.productImage.delete({
+    where: { id: parseInt(imageId) },
+  });
+};
+
+const deleteVariant = async (variantId) => {
+  return prisma.productVariant.delete({
+    where: { id: parseInt(variantId) },
+  });
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -99,4 +140,8 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getAllProductsAdmin,
+  updateVariant,
+  addProductImages,
+  deleteProductImage,
+  deleteVariant,
 };
