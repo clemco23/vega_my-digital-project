@@ -4,11 +4,16 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
-    getAllProductsAdmin,
-    updateVariant,
-    addProductImages,
-    deleteProductImage,
-    deleteVariant,
+  getAllProductsAdmin,
+  updateVariant,
+  addProductImages,
+  deleteProductImage,
+  deleteVariant,
+  getProductsByType,
+  getProductsBySkill,
+  addSetItem,
+  deleteSetItem,
+  addVariant,
 } = require("../services/product.service");
 
 const parsePositiveInt = (value) => {
@@ -312,6 +317,79 @@ const deleteVariantController = async (req, res) => {
   }
 };
 
+const getByType = async (req, res) => {
+  try {
+    const { type } = req.params;
+    const validTypes = ["BOARD", "MODULE", "SET_PREDEFINED"];
+
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({ message: "Type invalide." });
+    }
+
+    const products = await getProductsByType(type);
+    return res.status(200).json({ data: products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const getBySkill = async (req, res) => {
+  try {
+    const { skillId } = req.params;
+    const products = await getProductsBySkill(skillId);
+    return res.status(200).json({ data: products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const addSetItemController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productVariantId, quantity } = req.body;
+
+    if (!productVariantId || !quantity) {
+      return res.status(400).json({ message: "Champs obligatoires manquants." });
+    }
+
+    const item = await addSetItem(id, productVariantId, quantity);
+    return res.status(201).json({ message: "Produit ajouté au set.", data: item });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const deleteSetItemController = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    await deleteSetItem(itemId);
+    return res.status(200).json({ message: "Produit retiré du set." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const addVariantController = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { size, price, stock, holesCount, holesRequired } = req.body;
+
+    if (!size || !price || !stock) {
+      return res.status(400).json({ message: "Champs obligatoires manquants." });
+    }
+
+    const variant = await addVariant(productId, { size, price, stock, holesCount, holesRequired });
+    return res.status(201).json({ message: "Variante ajoutée.", data: variant });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
 
 module.exports = {
   getAll,
@@ -324,4 +402,9 @@ module.exports = {
   deleteVariantController,
   addImages,
   deleteImage,
+  getByType,
+  getBySkill,
+  addSetItemController,
+  deleteSetItemController,
+  addVariantController,
 };

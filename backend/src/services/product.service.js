@@ -131,7 +131,73 @@ const deleteVariant = async (variantId) => {
   return prisma.productVariant.delete({
     where: { id: parseInt(variantId) },
   });
-}
+}; 
+
+const getProductsByType = async (type) => {
+  return prisma.product.findMany({
+    where: { productType: type, isActivated: true },
+    include: {
+      variants: true,
+      images: true,
+      skills: { include: { skill: true } },
+    },
+  });
+};
+
+const getProductsBySkill = async (skillId) => {
+  return prisma.product.findMany({
+    where: {
+      isActivated: true,
+      skills: {
+        some: { skillId: parseInt(skillId) },
+      },
+    },
+    include: {
+      variants: true,
+      images: true,
+      skills: { include: { skill: true } },
+    },
+  });
+};
+
+const addSetItem = async (setId, productVariantId, quantity) => {
+  return prisma.setItem.create({
+    data: {
+      setId: parseInt(setId),
+      productVariantId: parseInt(productVariantId),
+      quantity: parseInt(quantity),
+    },
+  });
+};
+
+const deleteSetItem = async (itemId) => {
+  return prisma.setItem.delete({
+    where: { id: parseInt(itemId) },
+  });
+};
+
+const addVariant = async (productId, data) => {
+  return prisma.productVariant.create({
+    data: {
+      productId: parseInt(productId),
+      size: data.size,
+      price: parseFloat(parseFloat(data.price).toFixed(2)),
+      stock: parseInt(data.stock),
+      holesCount: data.holesCount ? parseInt(data.holesCount) : null,
+      holesRequired: data.holesRequired ? parseInt(data.holesRequired) : null,
+    },
+  });
+};
+
+const addSkillToProduct = async (productId, skillId) => {
+  return prisma.productSkill.create({
+    data: {
+      productId: parseInt(productId),
+      skillId: parseInt(skillId),
+    },
+  });
+};
+
 
 module.exports = {
   getAllProducts,
@@ -144,4 +210,10 @@ module.exports = {
   addProductImages,
   deleteProductImage,
   deleteVariant,
+  getProductsByType,
+  getProductsBySkill,
+  addSetItem,
+  deleteSetItem,
+  addVariant,
+  addSkillToProduct,
 };
