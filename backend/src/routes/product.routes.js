@@ -22,13 +22,13 @@ const upload = require("../config/cloudinary");
 const router = express.Router();
 
 // Routes publiques
+router.get("/admin", authMiddleware, adminMiddleware, getAllAdmin);//
 router.get("/type/:type", getByType);//
 router.get("/skill/:skillId", getBySkill);//
 router.get("/", getAll);//
 router.get("/:id", getOne);//
 
 // Routes admin - produits
-router.get("/admin", authMiddleware, adminMiddleware, getAllAdmin);//
 router.post("/", authMiddleware, adminMiddleware, create);//
 router.put("/:id", authMiddleware, adminMiddleware, update);//
 router.delete("/:id", authMiddleware, adminMiddleware, remove);//

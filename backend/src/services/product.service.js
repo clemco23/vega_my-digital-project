@@ -161,6 +161,19 @@ const getProductsBySkill = async (skillId) => {
 };
 
 const addSetItem = async (setId, productVariantId, quantity) => {
+  // Vérifier que le produit est bien un SET_PREDEFINED
+  const set = await prisma.product.findUnique({
+    where: { id: parseInt(setId) },
+  });
+
+  if (!set) {
+    throw new Error("Produit introuvable.");
+  }
+
+  if (set.productType !== "SET_PREDEFINED") {
+    throw new Error("Ce produit n'est pas un set prédéfini.");
+  }
+
   return prisma.setItem.create({
     data: {
       setId: parseInt(setId),

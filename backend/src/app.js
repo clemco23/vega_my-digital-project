@@ -7,6 +7,7 @@ const blogRoutes = require("./routes/blog.routes");
 const categoryRoutes = require("./routes/category.routes");
 const contactRoutes = require("./routes/contact.routes");
 const productRoutes = require("./routes/product.routes");
+const skillRoutes = require("./routes/skill.routes");
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/skills", skillRoutes);
 
 module.exports = app;
