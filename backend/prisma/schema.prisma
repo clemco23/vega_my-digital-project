@@ -108,8 +108,6 @@ model Product {
   variants     ProductVariant[]
   images       ProductImage[]
   skills       ProductSkill[]
-  setItems     SetItem[]        @relation("SetProducts")
-
   @@map("products")
 }
 
@@ -122,7 +120,8 @@ model ProductVariant {
   holesCount    Int?
   holesRequired Int?
   product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  setItems      SetItem[]
+  setVariantItems  SetItem[] @relation("SetVariantItems")
+  setProductItems  SetItem[] @relation("SetProductItems")
   cartItems     CartItem[]
   orderItems    OrderItem[]
   wishlistItems WishlistItem[]
@@ -162,13 +161,13 @@ model ProductSkill {
 
 model SetItem {
   id               Int            @id @default(autoincrement())
-  setId            Int
+  setVariantId     Int            
   productVariantId Int
   quantity         Int
-  set              Product        @relation("SetProducts", fields: [setId], references: [id])
-  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  setVariant       ProductVariant @relation("SetVariantItems", fields: [setVariantId], references: [id])
+  productVariant   ProductVariant @relation("SetProductItems", fields: [productVariantId], references: [id])
 
-  @@unique([setId, productVariantId])
+  @@unique([setVariantId, productVariantId])
   @@map("set_items")
 }
 

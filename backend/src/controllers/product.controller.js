@@ -357,8 +357,6 @@ const addSetItemController = async (req, res) => {
     const item = await addSetItem(id, productVariantId, quantity);
     return res.status(201).json({ message: "Produit ajouté au set.", data: item });
   } catch (error) {
-    console.error(error);
-    console.error("ERREUR addSetItem:", error);
     return res.status(400).json({ message: error.message });
   }
 };

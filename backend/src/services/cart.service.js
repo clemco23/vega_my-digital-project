@@ -11,6 +11,15 @@ const getOrCreateCart = async (userId) => {
               product: {
                 include: { images: true },
               },
+              setVariantItems: {  
+                include: {
+                  productVariant: {
+                    include: {
+                      product: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -28,6 +37,15 @@ const getOrCreateCart = async (userId) => {
               include: {
                 product: {
                   include: { images: true },
+                },
+                setVariantItems: {  
+                  include: {
+                    productVariant: {
+                      include: {
+                        product: true,
+                      },
+                    },
+                  },
                 },
               },
             },

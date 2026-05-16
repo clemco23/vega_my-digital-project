@@ -9,35 +9,50 @@ const {
   } = require("../services/cart.service");
   
   const getCart = async (req, res) => {
-    try {
-      const cart = await getOrCreateCart(req.user.id);
-      const total = calculateTotal(cart.items);
-  
-      return res.status(200).json({
-        data: {
-          id: cart.id,
-          items: cart.items.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-            productVariant: {
-              id: item.productVariant.id,
-              size: item.productVariant.size,
-              price: item.productVariant.price,
-              product: {
-                id: item.productVariant.product.id,
-                name: item.productVariant.product.name,
-                images: item.productVariant.product.images,
-              },
+  try {
+    const cart = await getOrCreateCart(req.user.id);
+    const total = calculateTotal(cart.items);
+
+    return res.status(200).json({
+      data: {
+        id: cart.id,
+        items: cart.items.map((item) => ({
+          id: item.id,
+          quantity: item.quantity,
+          productVariant: {
+            id: item.productVariant.id,
+            size: item.productVariant.size,
+            price: item.productVariant.price,
+            product: {
+              id: item.productVariant.product.id,
+              name: item.productVariant.product.name,
+              productType: item.productVariant.product.productType,
+              images: item.productVariant.product.images,
             },
-          })),
-          total: total.toFixed(2),
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Erreur serveur." });
-    }
-  };
+            // Si c'est un SET_PREDEFINED on affiche le contenu
+            setItems: item.productVariant.setVariantItems.length > 0
+              ? item.productVariant.setVariantItems.map((setItem) => ({
+                  quantity: setItem.quantity,
+                  productVariant: {
+                    id: setItem.productVariant.id,
+                    size: setItem.productVariant.size,
+                    price: setItem.productVariant.price,
+                    product: {
+                      name: setItem.productVariant.product.name,
+                    },
+                  },
+                }))
+              : [],
+          },
+        })),
+        total: total.toFixed(2),
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
   
   const addItem = async (req, res) => {
     try {

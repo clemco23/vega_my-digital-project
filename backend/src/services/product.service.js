@@ -160,23 +160,25 @@ const getProductsBySkill = async (skillId) => {
   });
 };
 
-const addSetItem = async (setId, productVariantId, quantity) => {
-  // Vérifier que le produit est bien un SET_PREDEFINED
-  const set = await prisma.product.findUnique({
-    where: { id: parseInt(setId) },
+const addSetItem = async (setVariantId, productVariantId, quantity) => {
+  console.log("setVariantId reçu:", setVariantId);
+
+  const setVariant = await prisma.productVariant.findUnique({
+    where: { id: parseInt(setVariantId) },
+    include: { product: true },
   });
 
-  if (!set) {
-    throw new Error("Produit introuvable.");
-  }
+  console.log("setVariant trouvé:", setVariant);
 
-  if (set.productType !== "SET_PREDEFINED") {
-    throw new Error("Ce produit n'est pas un set prédéfini.");
+  if (!setVariant) throw new Error("Variante introuvable.");
+
+  if (setVariant.product.productType !== "SET_PREDEFINED") {
+    throw new Error("Cette variante n'appartient pas à un set prédéfini.");
   }
 
   return prisma.setItem.create({
     data: {
-      setId: parseInt(setId),
+      setVariantId: parseInt(setVariantId),
       productVariantId: parseInt(productVariantId),
       quantity: parseInt(quantity),
     },
