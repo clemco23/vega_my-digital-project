@@ -42,7 +42,7 @@ jobs:
       - name: Install and build frontend
         working-directory: frontend
         env:
-          VITE_API_URL: http://185.98.137.86
+          VITE_API_URL: https://haptokids.fr
         run: |
           npm ci
           npm run build
