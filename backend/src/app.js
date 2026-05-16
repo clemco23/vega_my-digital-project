@@ -12,12 +12,15 @@ const cartRoutes = require("./routes/cart.routes");
 const wishlistRoutes = require("./routes/wishlist.routes");
 const addressRoutes = require("./routes/address.routes");
 const orderRoutes = require("./routes/order.routes");
+const paymentRoutes = require("./routes/payment.routes");
 
 const app = express();
 
 app.use(cors({
   origin: "http://localhost:5173",
 }));
+
+app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 
 app.set("json replacer", (_key, value) => (
   typeof value === "bigint" ? value.toString() : value
@@ -43,5 +46,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
+
 
 module.exports = app;
