@@ -34,6 +34,7 @@ model User {
 
   carts  Cart[]
   orders Order[]
+  wishlists Wishlist[]
 
   @@map("users")
 }
@@ -123,6 +124,7 @@ model ProductVariant {
   setItems      SetItem[]
   cartItems     CartItem[]
   orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
 
   @@unique([productId, size])
   @@map("product_variants")
@@ -233,4 +235,26 @@ model OrderItem {
   productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id], onDelete: SetNull)
 
   @@map("order_items")
+}
+
+model Wishlist {
+  id        Int            @id @default(autoincrement())
+  userId    BigInt
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id])
+  items     WishlistItem[]
+
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id               Int            @id @default(autoincrement())
+  wishlistId       Int
+  productVariantId Int
+  addedAt          DateTime       @default(now())
+  wishlist         Wishlist       @relation(fields: [wishlistId], references: [id])
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  @@unique([wishlistId, productVariantId])
+  @@map("wishlist_items")
 }

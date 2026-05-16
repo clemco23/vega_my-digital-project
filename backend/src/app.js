@@ -9,6 +9,7 @@ const contactRoutes = require("./routes/contact.routes");
 const productRoutes = require("./routes/product.routes");
 const skillRoutes = require("./routes/skill.routes");
 const cartRoutes = require("./routes/cart.routes");
+const wishlistRoutes = require("./routes/wishlist.routes");
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use(cors({
   origin: "http://localhost:5173",
 }));
 
+app.set("json replacer", (_key, value) => (
+  typeof value === "bigint" ? value.toString() : value
+));
 
 app.use(express.json());
 
@@ -34,5 +38,6 @@ app.use("/api/contacts", contactRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 module.exports = app;
