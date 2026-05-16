@@ -32,10 +32,269 @@ model User {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
+  carts  Cart[]
+  orders Order[]
+  wishlists Wishlist[]
+  addresses Address[]
+
   @@map("users")
 }
 
 enum UserRole {
   USER
   ADMIN
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  content     String
+  picture     String?
+  isActivated Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  @@map("blogs")
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+
+  blogs Blog[]
+
+  @@map("categories")
+}
+
+model Contact {
+  id              BigInt    @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  content         String  
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("contacts")
+
+}
+
+enum ProductType {
+  BOARD
+  MODULE
+  SET_PREDEFINED
+}
+
+enum Size {
+  S
+  M
+  L
+}
+
+model Product {
+  id           Int              @id @default(autoincrement())
+  name         String
+  description  String?
+  productType  ProductType
+  ageMin       Int
+  ageMax       Int
+  isActivated  Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  variants     ProductVariant[]
+  images       ProductImage[]
+  skills       ProductSkill[]
+  @@map("products")
+}
+
+model ProductVariant {
+  id            Int        @id @default(autoincrement())
+  productId     Int
+  size          Size
+  price         Decimal
+  stock         Int
+  holesCount    Int?
+  holesRequired Int?
+  product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  setVariantItems  SetItem[] @relation("SetVariantItems")
+  setProductItems  SetItem[] @relation("SetProductItems")
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
+
+  @@unique([productId, size])
+  @@map("product_variants")
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  url       String
+  position  Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, position])
+  @@map("product_images")
+}
+
+model Skill {
+  id       Int            @id @default(autoincrement())
+  label    String @unique
+  products ProductSkill[]
+
+  @@map("skills")
+}
+
+model ProductSkill {
+  productId Int
+  skillId   Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  skill     Skill   @relation(fields: [skillId], references: [id])
+
+  @@id([productId, skillId])
+  @@map("product_skills")
+}
+
+model SetItem {
+  id               Int            @id @default(autoincrement())
+  setVariantId     Int            
+  productVariantId Int
+  quantity         Int
+  setVariant       ProductVariant @relation("SetVariantItems", fields: [setVariantId], references: [id])
+  productVariant   ProductVariant @relation("SetProductItems", fields: [productVariantId], references: [id])
+
+  @@unique([setVariantId, productVariantId])
+  @@map("set_items")
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    BigInt     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id               Int            @id @default(autoincrement())
+  cartId           Int
+  productVariantId Int
+  quantity         Int
+  cart             Cart           @relation(fields: [cartId], references: [id])
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  @@unique([cartId, productVariantId])
+  @@map("cart_items")
+}
+
+model Order {
+  id                 Int         @id @default(autoincrement())
+  userId             BigInt
+  trackingNumber     String?
+  orderStatus        OrderStatus @default(PENDING)
+  totalAmount        Decimal
+  customerFirstname  String
+  customerLastname   String
+  customerEmail      String
+
+  // Adresse figée au moment de la commande
+  customerStreet     String
+  customerCity       String
+  customerPostalCode String
+  customerCountry    String      @default("France")
+
+  // Point relais si applicable
+  customerRelayPointId String?
+  customerRelayName    String?
+
+  // Référence vers l'adresse choisie
+  addressId          Int?
+  address            Address?    @relation(fields: [addressId], references: [id])
+
+  orderDate          DateTime    @default(now())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  user               User        @relation(fields: [userId], references: [id])
+  items              OrderItem[]
+
+  @@map("orders")
+}
+
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id               Int             @id @default(autoincrement())
+  orderId          Int
+  productVariantId Int?
+  quantity         Int
+  unitPrice        Decimal
+  productName      String
+  variantSize      Size?
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}
+
+model Wishlist {
+  id        Int            @id @default(autoincrement())
+  userId    BigInt
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id])
+  items     WishlistItem[]
+
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id               Int            @id @default(autoincrement())
+  wishlistId       Int
+  productVariantId Int
+  addedAt          DateTime       @default(now())
+  wishlist         Wishlist       @relation(fields: [wishlistId], references: [id])
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  @@unique([wishlistId, productVariantId])
+  @@map("wishlist_items")
+}
+
+enum AddressType {
+  SHIPPING
+  BILLING
+  RELAY_POINT
+}
+
+model Address {
+  id           Int         @id @default(autoincrement())
+  userId       BigInt
+  street       String?
+  city         String
+  postalCode   String
+  country      String      @default("France")
+  addressType  AddressType @default(SHIPPING)
+  relayPointId String?
+  relayName    String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  user         User        @relation(fields: [userId], references: [id])
+
+  orders Order[]
+
+  @@map("addresses")
 }
