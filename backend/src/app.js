@@ -11,6 +11,7 @@ const skillRoutes = require("./routes/skill.routes");
 const cartRoutes = require("./routes/cart.routes");
 const wishlistRoutes = require("./routes/wishlist.routes");
 const addressRoutes = require("./routes/address.routes");
+const orderRoutes = require("./routes/order.routes");
 
 const app = express();
 
@@ -41,5 +42,6 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/addresses", addressRoutes);
+app.use("/api/orders", orderRoutes);
 
 module.exports = app;
