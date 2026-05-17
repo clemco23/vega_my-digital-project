@@ -2,7 +2,7 @@ const resend = require("../config/resend");
 
 const sendVerificationEmail = async (email, token) => {
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "noreply@haptokids.fr",
     to: email,
     subject: "Vérification de votre adresse email",
     html: `
@@ -16,7 +16,7 @@ const sendVerificationEmail = async (email, token) => {
 
 const sendResetPasswordEmail = async (email, token) => {
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "noreply@haptokids.fr",
       to: email,
       subject: "Réinitialisation de votre mot de passe",
       html: `
