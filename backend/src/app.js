@@ -13,6 +13,7 @@ const wishlistRoutes = require("./routes/wishlist.routes");
 const addressRoutes = require("./routes/address.routes");
 const orderRoutes = require("./routes/order.routes");
 const paymentRoutes = require("./routes/payment.routes");
+const reviewRoutes = require("./routes/review.routes");
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 
 module.exports = app;

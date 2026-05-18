@@ -36,6 +36,7 @@ model User {
   orders Order[]
   wishlists Wishlist[]
   addresses Address[]
+  reviews Review[]
 
   @@map("users")
 }
@@ -105,6 +106,8 @@ model Product {
   isActivated  Boolean          @default(false)
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+
+  reviews Review[]
   variants     ProductVariant[]
   images       ProductImage[]
   skills       ProductSkill[]
@@ -297,4 +300,26 @@ model Address {
   orders Order[]
 
   @@map("addresses")
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Review {
+  id          Int          @id @default(autoincrement())
+  userId      BigInt
+  productId   Int
+  note        Int
+  description String
+  status      ReviewStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id])
+  product     Product      @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@map("reviews")
 }
