@@ -1,4 +1,5 @@
 require("dotenv").config();
+console.log("DATABASE_URL utilisée =", process.env.DATABASE_URL);
 
 const app = require("./src/app");
 

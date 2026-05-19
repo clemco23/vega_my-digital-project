@@ -29,4 +29,30 @@ const sendResetPasswordEmail = async (email, token) => {
     });
   };
 
-module.exports = { sendVerificationEmail, sendResetPasswordEmail };
+  const sendOrderConfirmationEmail = async (email, order) => {
+    await resend.emails.send({
+      from: "noreply@haptokids.fr",
+      to: email,
+      subject: `Confirmation de votre commande #${order.id}`,
+      html: `
+        <h1>Merci pour votre commande !</h1>
+        <p>Votre commande <strong>#${order.id}</strong> a bien été payée.</p>
+        <h2>Récapitulatif :</h2>
+        <ul>
+          ${order.items.map((item) => `
+            <li>${item.productName} - Taille ${item.variantSize} x${item.quantity} → ${item.unitPrice}€</li>
+          `).join("")}
+        </ul>
+        <p><strong>Total : ${order.totalAmount}€</strong></p>
+        <p>Adresse de livraison : ${order.customerStreet}, ${order.customerCity} ${order.customerPostalCode}</p>
+        <p>Merci de votre confiance !</p>
+      `,
+    });
+  };
+  
+  module.exports = { 
+    sendVerificationEmail, 
+    sendResetPasswordEmail,
+    sendOrderConfirmationEmail,
+  };
+

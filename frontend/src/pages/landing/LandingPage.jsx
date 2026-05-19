@@ -1,10 +1,10 @@
-import Banner from "../components/landing/banner/Banner";
-import CircularEconomySection from "../components/landing/CircularEconomySection/CircularEconomySection";
-import FooterLp from "../components/landing/FooterLp/FooterLp";
-import Header from "../components/landing/header/Header";
-import HeroSection from "../components/landing/HeroSection/HeroSection";
-import ProductIntroSection from "../components/landing/ProductIntroSection/ProductIntroSection";
-import ReassuranceSection from "../components/landing/ReassuranceSection/ReassuranceSection";
+import Banner from "../../components/landing/banner/Banner";
+import CircularEconomySection from "../../components/landing/CircularEconomySection/CircularEconomySection";
+import FooterLp from "../../components/landing/FooterLp/FooterLp";
+import Header from "../../components/landing/header/Header";
+import HeroSection from "../../components/landing/HeroSection/HeroSection";
+import ProductIntroSection from "../../components/landing/ProductIntroSection/ProductIntroSection";
+import ReassuranceSection from "../../components/landing/ReassuranceSection/ReassuranceSection";
 // import ModelsSection from "../components/landing/ModelsSection/ModelsSection";
 // import ValuesSection from "../components/landing/ValuesSection/ValuesSection";
 // import Footer from "../components/landing/Footer/Footer";

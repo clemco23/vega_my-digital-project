@@ -1,0 +1,116 @@
+.verify-page {
+    min-height: 100vh;
+    background-color: #f5f0e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .verify-container {
+    background-color: #f5f0e8;
+    width: 100%;
+    max-width: 650px;
+    padding: 40px 20px;
+  }
+  
+  .verify-logo {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .verify-logo img {
+    height: 60px;
+  }
+  
+  .verify-logo p {
+    color: #c8a96e;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .verify-container h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  
+  .verify-subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  
+  .verify-error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .verify-field {
+    margin-bottom: 15px;
+  }
+  
+  .verify-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  
+  .verify-field input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    box-sizing: border-box;
+    letter-spacing: 5px;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .verify-field input:focus {
+    outline: none;
+    border-color: #c8a96e;
+  }
+  
+  .verify-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+  
+  .verify-btn:hover {
+    background-color: #333;
+  }
+  
+  .verify-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .verify-resend {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .verify-resend-link {
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+  }

@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const prisma = require("../config/prisma");
+const { sendOrderConfirmationEmail } = require("./mail.service");
 
 const createCheckoutSession = async (orderId, userId) => {
   const order = await prisma.order.findFirst({
@@ -83,6 +84,7 @@ const handleWebhook = async (payload, signature) => {
         },
       });
     }
+    await sendOrderConfirmationEmail(order.customerEmail, order);
   }
 
   return event;

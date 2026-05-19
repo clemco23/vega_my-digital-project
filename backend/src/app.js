@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+// const passport = require("./config/passport");
+// const session = require("express-session");
 const newsletterRoutes = require("./routes/newsletter.routes");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -34,6 +36,15 @@ app.get("/", (req, res) => {
     message: "API Hapto fonctionne.",
   });
 });
+
+// app.use(session({
+//   secret: process.env.JWT_SECRET,
+//   resave: false,
+//   saveUninitialized: false,
+// }));
+
+// app.use(passport.initialize());
+// app.use(passport.session())
 
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/auth", authRoutes);
