@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../services/auth.service";
+import { apiBaseUrl } from "../../services/apiBase";
 import "./RegisterPage.css";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import google from "../../assets/google.png"
@@ -29,7 +30,7 @@ function RegisterPage() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = `${apiBaseUrl}/auth/google`;
   };
 
   const handleSubmit = async (e) => {
@@ -122,10 +123,10 @@ function RegisterPage() {
 
           <div className="register-field">
             <PasswordInput
-                name="password"
+                name="confirmPassword"
                 label="Confirmer votre Mot de passe"
                 placeholder="***************"
-                value={formData.password}
+                value={formData.confirmPassword}
                 onChange={handleChange}
             />
           </div>

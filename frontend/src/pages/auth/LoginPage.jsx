@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../services/auth.service";
+import { apiBaseUrl } from "../../services/apiBase";
 import "./LoginPage.css";
 import PasswordInput from "../../components/ui/PasswordInput/PasswordInput";
 import haptoLogo from "../../assets/hapto.svg";
@@ -17,7 +18,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = `${apiBaseUrl}/auth/google`;
   };
 
   const handleChange = (e) => {

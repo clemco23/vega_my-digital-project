@@ -1,7 +1,8 @@
 import axios from "axios";
+import { apiBaseUrl } from "./apiBase";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+  baseURL: apiBaseUrl,
 });
 
 // Ajoute automatiquement le token JWT dans les headers

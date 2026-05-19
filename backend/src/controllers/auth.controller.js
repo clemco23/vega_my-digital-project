@@ -1,7 +1,17 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { findUserByEmail, createUser, verifyUser, resendVerificationEmail, forgotPassword, resetPassword } = require("../services/auth.service");
-const { sendVerificationEmail, sendResetPasswordEmail } = require("../services/mail.service");
+const {
+  findUserByEmail,
+  createUser,
+  verifyUser,
+  resendVerificationEmail,
+  forgotPassword,
+  resetPassword,
+} = require("../services/auth.service");
+const {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+} = require("../services/mail.service");
 
 const register = async (req, res) => {
   try {
@@ -22,14 +32,14 @@ const register = async (req, res) => {
 
     if (password.length < 8) {
       return res.status(400).json({
-        message: "Le mot de passe doit faire au moins 8 caractères.",
+        message: "Le mot de passe doit faire au moins 8 caracteres.",
       });
     }
 
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return res.status(409).json({
-        message: "Cette adresse email est déjà utilisée.",
+        message: "Cette adresse email est deja utilisee.",
       });
     }
 
@@ -38,13 +48,14 @@ const register = async (req, res) => {
     await sendVerificationEmail(email, user.validationToken);
 
     return res.status(201).json({
-      message: "Inscription réussie. Vérifiez votre email.",
+      message: "Inscription reussie. Verifiez votre email.",
       data: {
         id: user.id.toString(),
         name: user.name,
         firstname: user.firstname,
         email: user.email,
         role: user.role,
+        avatar: user.avatar ?? null,
       },
     });
   } catch (error) {
@@ -63,7 +74,7 @@ const verify = async (req, res) => {
 
     await verifyUser(email, token);
 
-    return res.status(200).json({ message: "Compte vérifié avec succès." });
+    return res.status(200).json({ message: "Compte verifie avec succes." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -87,7 +98,9 @@ const login = async (req, res) => {
     }
 
     if (!user.verifiedAt) {
-      return res.status(401).json({ message: "Veuillez vérifier votre email avant de vous connecter." });
+      return res.status(401).json({
+        message: "Veuillez verifier votre email avant de vous connecter.",
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -104,7 +117,7 @@ const login = async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "Connexion réussie.",
+      message: "Connexion reussie.",
       token,
       data: {
         id: user.id.toString(),
@@ -112,6 +125,7 @@ const login = async (req, res) => {
         firstname: user.firstname,
         email: user.email,
         role: user.role,
+        avatar: user.avatar ?? null,
       },
     });
   } catch (error) {
@@ -131,7 +145,7 @@ const resendVerification = async (req, res) => {
     const token = await resendVerificationEmail(email);
     await sendVerificationEmail(email, token);
 
-    return res.status(200).json({ message: "Code renvoyé." });
+    return res.status(200).json({ message: "Code renvoye." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -148,7 +162,9 @@ const forgotPasswordController = async (req, res) => {
     const token = await forgotPassword(email);
     await sendResetPasswordEmail(email, token);
 
-    return res.status(200).json({ message: "Email de réinitialisation envoyé." });
+    return res
+      .status(200)
+      .json({ message: "Email de reinitialisation envoye." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -159,20 +175,32 @@ const resetPasswordController = async (req, res) => {
     const { email, token, newPassword } = req.body;
 
     if (!email || !token || !newPassword) {
-      return res.status(400).json({ message: "Tous les champs sont obligatoires." });
+      return res
+        .status(400)
+        .json({ message: "Tous les champs sont obligatoires." });
     }
 
     if (newPassword.length < 8) {
-      return res.status(400).json({ message: "Le mot de passe doit faire au moins 8 caractères." });
+      return res.status(400).json({
+        message: "Le mot de passe doit faire au moins 8 caracteres.",
+      });
     }
 
     await resetPassword(email, token, newPassword);
 
-    return res.status(200).json({ message: "Mot de passe réinitialisé avec succès." });
+    return res
+      .status(200)
+      .json({ message: "Mot de passe reinitialise avec succes." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-module.exports = { register, login, verify, resendVerification, forgotPasswordController, resetPasswordController };
-
+module.exports = {
+  register,
+  login,
+  verify,
+  resendVerification,
+  forgotPasswordController,
+  resetPasswordController,
+};

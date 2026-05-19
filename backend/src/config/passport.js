@@ -13,25 +13,32 @@ passport.use(
       try {
         const email = profile.emails[0].value;
         const googleId = profile.id;
-        const avatar = profile.photos[0].value;
+        const avatar = profile.photos?.[0]?.value || null;
         const firstname = profile.name.givenName;
         const name = profile.name.familyName;
 
-        // Vérifier si l'utilisateur existe déjà
         let user = await prisma.user.findUnique({
           where: { email },
         });
 
         if (user) {
-          // Mettre à jour le googleId si pas encore lié
+          const dataToUpdate = {};
+
           if (!user.googleId) {
+            dataToUpdate.googleId = googleId;
+          }
+
+          if (avatar && avatar !== user.avatar) {
+            dataToUpdate.avatar = avatar;
+          }
+
+          if (Object.keys(dataToUpdate).length > 0) {
             user = await prisma.user.update({
               where: { email },
-              data: { googleId, avatar },
+              data: dataToUpdate,
             });
           }
         } else {
-          // Créer un nouveau compte
           user = await prisma.user.create({
             data: {
               email,
@@ -53,21 +60,21 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-    done(null, user.id.toString());
-  });
-  
-  passport.deserializeUser(async (id, done) => {
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: BigInt(id),
-        },
-      });
-  
-      done(null, user);
-    } catch (error) {
-      done(error, null);
-    }
-  });
+  done(null, user.id.toString());
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: BigInt(id),
+      },
+    });
+
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
 
 module.exports = passport;
