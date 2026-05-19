@@ -1,9 +1,11 @@
 const express = require("express");
 const passport = require("../config/passport");
 const jwt = require("jsonwebtoken");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 const {
   register,
   login,
+  getCurrentUser,
   verify,
   resendVerification,
   forgotPasswordController,
@@ -52,6 +54,7 @@ router.get(
 
 router.post("/register", register);
 router.post("/login", login);
+router.get("/me", authMiddleware, getCurrentUser);
 router.get("/logout", (req, res, next) => {
   const redirectUrl = req.query.redirect || process.env.FRONTEND_URL;
 

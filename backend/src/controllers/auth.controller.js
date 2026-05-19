@@ -13,6 +13,15 @@ const {
   sendResetPasswordEmail,
 } = require("../services/mail.service");
 
+const toPublicUser = (user) => ({
+  id: user.id.toString(),
+  name: user.name,
+  firstname: user.firstname,
+  email: user.email,
+  role: user.role,
+  avatar: user.avatar ?? null,
+});
+
 const register = async (req, res) => {
   try {
     const { name, firstname, email, password } = req.body;
@@ -49,14 +58,7 @@ const register = async (req, res) => {
 
     return res.status(201).json({
       message: "Inscription reussie. Verifiez votre email.",
-      data: {
-        id: user.id.toString(),
-        name: user.name,
-        firstname: user.firstname,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar ?? null,
-      },
+      data: toPublicUser(user),
     });
   } catch (error) {
     console.error(error);
@@ -119,14 +121,7 @@ const login = async (req, res) => {
     return res.status(200).json({
       message: "Connexion reussie.",
       token,
-      data: {
-        id: user.id.toString(),
-        name: user.name,
-        firstname: user.firstname,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar ?? null,
-      },
+      data: toPublicUser(user),
     });
   } catch (error) {
     console.error(error);
@@ -196,9 +191,25 @@ const resetPasswordController = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await findUserByEmail(req.user.email);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable." });
+    }
+
+    return res.status(200).json({ data: toPublicUser(user) });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
 module.exports = {
   register,
   login,
+  getCurrentUser,
   verify,
   resendVerification,
   forgotPasswordController,

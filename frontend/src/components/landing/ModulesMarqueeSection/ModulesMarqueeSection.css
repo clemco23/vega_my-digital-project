@@ -3,6 +3,10 @@
   background: var(--color-white);
   padding: clamp(48px, 7vw, 92px) 0 clamp(56px, 7vw, 94px);
   overflow: hidden;
+  background-color: var(--color-primary);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 }
 
 .modules-marquee-section__inner {
@@ -14,7 +18,7 @@
 .modules-marquee-section__title {
   margin: 0;
   padding: 0 20px;
-  color: var(--color-dark);
+  color: var(--color-white);
   font-family: var(--font-title);
   font-size: clamp(2rem, 3.8vw, 3.15rem);
   font-weight: 300;

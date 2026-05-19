@@ -3,7 +3,7 @@
   top: 0;
   z-index: 100;
   width: 100%;
-  padding: 0 24px;
+  padding: 0 clamp(24px, 2.6vw, 42px);
   background-color: color-mix(in srgb, var(--color-background) 94%, white 6%);
   border-top: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 16%, transparent);
@@ -12,7 +12,7 @@
 }
 
 .site-navbar__inner {
-  width: min(100%, 1280px);
+  width: min(100%, 1640px);
   min-height: 78px;
   margin: 0 auto;
   display: grid;
@@ -93,7 +93,7 @@
   position: relative;
   padding: 10px 0;
   color: color-mix(in srgb, var(--color-dark) 72%, var(--color-muted) 28%);
-  font-size: 0.68rem;
+  font-size: 0.90rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -364,7 +364,7 @@
   }
 
   .site-navbar__actions {
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
     margin-top: 4px;
@@ -373,12 +373,13 @@
   }
 
   .site-navbar__login {
-    align-self: stretch;
+    align-self: flex-start;
     justify-content: center;
-    min-height: 46px;
-    padding: 0 16px;
+    width: auto;
+    min-height: 48px;
+    padding: 0 22px;
     border: 1px solid transparent;
-    border-radius: 14px;
+    border-radius: 0;
     background-color: var(--color-primary);
     color: var(--color-white);
     box-shadow: none;
@@ -452,7 +453,6 @@
     flex-direction: column;
   }
 
-  .site-navbar__login,
   .site-navbar__user-copy {
     align-items: flex-start;
   }
@@ -461,10 +461,14 @@
     margin-top: 12px;
   }
 
-  .site-navbar__login,
   .site-navbar__user-link,
   .site-navbar__logout {
     width: 100%;
     min-height: 44px;
+  }
+
+  .site-navbar__login {
+    width: auto;
+    min-height: 48px;
   }
 }

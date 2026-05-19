@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import haptoLogo from "../../assets/hapto.svg";
-import api from "../../services/api";
 import { apiBaseUrl } from "../../services/apiBase";
+import { getCurrentUser } from "../../services/auth.service";
 import "./Navbar.css";
 
 const navItems = [
@@ -61,12 +61,12 @@ function Navbar() {
 
       const token = window.localStorage.getItem("token");
 
-      if (!storedUser?.id || !token) {
+      if (!token) {
         return;
       }
 
       try {
-        const { data } = await api.get(`/users/${storedUser.id}`);
+        const data = await getCurrentUser();
         const freshUser = data?.data;
 
         if (!freshUser) {
@@ -128,6 +128,7 @@ function Navbar() {
     user?.email ||
     "Utilisateur connecte";
   const firstName = user?.firstname || user?.name || "vous";
+  const isAdmin = String(user?.role || "").toUpperCase() === "ADMIN";
   const isNavItemActive = (item) =>
     item.matchPaths.some(
       (routePath) =>
@@ -218,6 +219,17 @@ function Navbar() {
                     className={`site-navbar__user-links ${isUserMenuOpen ? "site-navbar__user-links--open" : ""}`}
                     role="menu"
                   >
+                    {isAdmin && (
+                      <Link
+                        to="/dashboard"
+                        className="site-navbar__user-link"
+                        onClick={closeMenu}
+                        role="menuitem"
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+
                     <Link
                       to="/profil"
                       className="site-navbar__user-link"

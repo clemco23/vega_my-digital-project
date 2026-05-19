@@ -1,4 +1,12 @@
 import Navbar from "../../components/navbar/Navbar";
+import HomeHeroSection from "../../components/home/HomeHeroSection";
+import Intro from "../../components/home/Intro";
+import TouchCta from "../../components/home/TouchCta";
+import HomeFooter from "../../components/home/HomeFooter";
+import Banner from "../../components/landing/banner/Banner";
+import ModulesMarqueeSection from "../../components/landing/ModulesMarqueeSection/ModulesMarqueeSection";
+import CircularEconomySection from "../../components/landing/CircularEconomySection/CircularEconomySection";
+import ReassuranceSection from "../../components/landing/ReassuranceSection/ReassuranceSection";
 import "./HomePage.css";
 
 function HomePage() {
@@ -7,15 +15,15 @@ function HomePage() {
       <Navbar />
 
       <main className="home-page__content">
-        <div className="home-page__placeholder">
-          <p className="home-page__eyebrow">HOME PAGE</p>
-          <h1>La home du site sera ici.</h1>
-          <p>
-            La navbar est maintenant un composant separe, independant de la
-            landing page et pret a etre reutilise sur les autres pages du site.
-          </p>
-        </div>
+        <HomeHeroSection />
+        <Banner />
+        <Intro />
+        <ModulesMarqueeSection />
+        <CircularEconomySection />
+        <TouchCta />
+        <ReassuranceSection />
       </main>
+      <HomeFooter />
     </div>
   );
 }

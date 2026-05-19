@@ -10,6 +10,11 @@ export const login = async (email, password) => {
   return data;
 };
 
+export const getCurrentUser = async () => {
+  const { data } = await api.get("/auth/me");
+  return data;
+};
+
 export const verifyEmail = async (email, token) => {
   const { data } = await api.post("/auth/verify", { email, token });
   return data;

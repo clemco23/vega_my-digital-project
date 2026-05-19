@@ -3,6 +3,7 @@ import LandingPage from "./pages/landing/LandingPage";
 import HomePage from "./pages/home/HomePage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import OrdersPage from "./pages/orders/OrdersPage";
+import DashboardPage from "./pages/dashboard/DashboardPage";
 import AboutPage from "./pages/about/AboutPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -16,6 +17,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/profil" element={<ProfilePage />} />
         <Route path="/commandes" element={<OrdersPage />} />
         <Route path="/landing-page" element={<LandingPage />} />

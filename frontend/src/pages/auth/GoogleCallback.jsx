@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { getCurrentUser } from "../../services/auth.service";
 
 export default function GoogleCallback() {
   const navigate = useNavigate();
@@ -8,19 +9,32 @@ export default function GoogleCallback() {
   useEffect(() => {
     const token = searchParams.get("token");
     const userParam = searchParams.get("user");
+    let parsedUser = null;
 
     if (!token || !userParam) {
       navigate("/login");
       return;
     }
 
+    const syncCurrentUser = async () => {
+      try {
+        const data = await getCurrentUser();
+        localStorage.setItem("user", JSON.stringify(data.data));
+      } catch (error) {
+        console.error("Erreur sync profil Google:", error);
+        if (parsedUser) {
+          localStorage.setItem("user", JSON.stringify(parsedUser));
+        }
+      } finally {
+        navigate("/");
+      }
+    };
+
     try {
-      const user = JSON.parse(userParam);
+      parsedUser = JSON.parse(userParam);
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      navigate("/");
+      void syncCurrentUser();
     } catch (error) {
       console.error("Erreur Google callback:", error);
       navigate("/login");
