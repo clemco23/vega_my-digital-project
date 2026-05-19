@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { resetPassword } from "../../services/auth.service";
 import Toast from "../../components/ui/Toast/Toast";
 import useToast from "../../hooks/useToast";
+import haptoLogo from "../../assets/hapto.svg";
+
 import "./ResetPasswordPage.css";
 
 function ResetPasswordPage() {
@@ -60,10 +62,12 @@ function ResetPasswordPage() {
         />
       )}
       <div className="reset-container">
-        <div className="reset-logo">
-          <img src="/logo.png" alt="Hapto" />
-          <p>Le design sensoriel</p>
-        </div>
+        <div className="login-logo">
+            <a href="/" >
+                  <img src={haptoLogo} alt="Hapto Logo" />
+                </a>
+              <p>Le design sensoriel</p>
+          </div>
 
         <h1>Réinitialisation du mot de passe</h1>
         <p className="reset-subtitle">

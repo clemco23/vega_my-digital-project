@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 92px 20px 48px;
+  padding: 135px 20px 48px;
   position: relative;
   overflow: hidden;
   font-family: "Inter", "Arial", sans-serif;
@@ -51,26 +51,25 @@
 .register-page::before {
   content: "";
   position: absolute;
-  top: -165px;
-  left: -95px;
-  width: 360px;
-  height: 260px;
+  top: -330px;
+  left: -180px;
+  width: 660px;
+  height: 500px;
   background: #59662b;
-  border-radius: 0 0 55% 55%;
-  box-shadow: 18px 24px 28px rgba(0, 0, 0, 0.22);
+  border-radius: 50%;
+  box-shadow: 35px 35px 45px rgba(0, 0, 0, 0.22);
   z-index: 0;
 }
 
 .register-page::after {
   content: "";
   position: absolute;
-  top: -58px;
-  left: 150px;
-  width: 105px;
-  height: 105px;
+  top: -130px;
+  left: 390px;
+  width: 230px;
+  height: 230px;
   background: #59662b;
   border-radius: 50%;
-  box-shadow: 18px 24px 28px rgba(0, 0, 0, 0.22);
   z-index: 0;
 }
 
@@ -95,7 +94,7 @@
 
 .register-logo p {
   margin-top: 1px;
-  font-size: 7px;
+  font-size: 10px;
   color: #c89b2c;
   font-weight: 400;
 }

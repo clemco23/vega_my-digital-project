@@ -5,6 +5,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import GoogleCallback from "./pages/auth/GoogleCallback";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
       </Routes>
     </BrowserRouter>
   );

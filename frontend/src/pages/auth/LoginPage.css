@@ -22,26 +22,25 @@
 .login-page::before {
   content: "";
   position: absolute;
-  top: -150px;
-  left: -75px;
-  width: 365px;
-  height: 258px;
+  top: -330px;
+  left: -180px;
+  width: 660px;
+  height: 500px;
   background: #a9411e;
-  border-radius: 0 0 56% 56%;
-  box-shadow: 18px 24px 28px rgba(0, 0, 0, 0.22);
+  border-radius: 50%;
+  box-shadow: 35px 35px 45px rgba(0, 0, 0, 0.22);
   z-index: 0;
 }
 
 .login-page::after {
   content: "";
   position: absolute;
-  top: -48px;
-  left: 180px;
-  width: 106px;
-  height: 106px;
+  top: -130px;
+  left: 390px;
+  width: 230px;
+  height: 230px;
   background: #a9411e;
   border-radius: 50%;
-  box-shadow: 18px 24px 28px rgba(0, 0, 0, 0.22);
   z-index: 0;
 }
 
@@ -61,7 +60,7 @@
 
 .login-logo p {
   margin-top: 2px;
-  font-size: 7px;
+  font-size: 10px;
   color: #c89b2c;
   font-weight: 400;
 }

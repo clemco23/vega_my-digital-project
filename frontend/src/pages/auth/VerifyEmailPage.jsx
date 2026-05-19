@@ -4,6 +4,7 @@ import { verifyEmail, resendVerification} from "../../services/auth.service";
 import useToast from "../../hooks/useToast";
 import Toast from "../../components/ui/Toast/Toast";
 import "./VerifyEmailPage.css";
+import haptoLogo from "../../assets/hapto.svg";
 
 function VerifyEmailPage() {
   const navigate = useNavigate();
@@ -50,10 +51,12 @@ function VerifyEmailPage() {
         />
       )}
       <div className="verify-container">
-        <div className="verify-logo">
-          <img src="/logo.png" alt="Hapto" />
-          <p>Le design sensoriel</p>
-        </div>
+         <div className="login-logo">
+            <a href="/" >
+                      <img src={haptoLogo} alt="Hapto Logo" />
+                    </a>
+            <p>Le design sensoriel</p>
+          </div>
 
         <h1>Vérification de votre email</h1>
         <p className="verify-subtitle">

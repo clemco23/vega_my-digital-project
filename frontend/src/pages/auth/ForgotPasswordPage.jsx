@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../services/auth.service";
 import Toast from "../../components/ui/Toast/Toast";
 import useToast from "../../hooks/useToast";
+import haptoLogo from "../../assets/hapto.svg";
 import "./ForgotPasswordPage.css";
 
 function ForgotPasswordPage() {
@@ -38,10 +39,12 @@ function ForgotPasswordPage() {
         />
       )}
       <div className="forgot-container">
-        <div className="forgot-logo">
-          <img src="/logo.png" alt="Hapto" />
-          <p>Le design sensoriel</p>
-        </div>
+        <div className="login-logo">
+                  <a href="/" >
+                            <img src={haptoLogo} alt="Hapto Logo" />
+                          </a>
+                  <p>Le design sensoriel</p>
+                </div>
 
         <h1>Mot de passe oublié</h1>
         <p className="forgot-subtitle">
