@@ -34,3 +34,8 @@ export const resendVerification = async (email) => {
     const { data } = await api.post("/auth/resend-verification", { email });
     return data;
   };
+
+  export const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  };

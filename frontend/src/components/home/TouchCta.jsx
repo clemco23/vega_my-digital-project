@@ -22,7 +22,7 @@ function TouchCta() {
           <span className="touch-cta__description-line">decouvertes.</span>
         </p>
 
-        <Link to="/login" className="touch-cta__button">
+        <Link to="/" className="touch-cta__button">
           Composer ma planche
         </Link>
       </div>

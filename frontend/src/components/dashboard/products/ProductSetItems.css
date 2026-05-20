@@ -1,0 +1,78 @@
+.product-set-items {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  
+  .product-set-items h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 15px;
+  }
+  
+  .set-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .set-items-table th {
+    background-color: #f5f5f5;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .set-items-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #1a1a1a;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .set-items-form {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .set-items-form h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 12px;
+  }
+  
+  .set-items-form__row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  
+  .set-items-form__field {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .set-items-form__field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+  }
+  
+  .set-items-form__field input,
+  .set-items-form__field select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }

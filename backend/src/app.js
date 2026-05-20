@@ -16,6 +16,7 @@ const addressRoutes = require("./routes/address.routes");
 const orderRoutes = require("./routes/order.routes");
 const paymentRoutes = require("./routes/payment.routes");
 const reviewRoutes = require("./routes/review.routes");
+const statsRoutes = require("./routes/stats.routes");
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use("/api/addresses", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/stats", statsRoutes);
 
 
 module.exports = app;

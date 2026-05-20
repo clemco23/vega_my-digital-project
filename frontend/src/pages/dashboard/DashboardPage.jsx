@@ -1,21 +1,62 @@
-import Navbar from "../../components/navbar/Navbar";
-import "../home/HomePage.css";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import DashboardLayout from "../../components/dashboard/DashboardLayout/DashboardLayout";
+import StatsCards from "../../components/dashboard/StatsCards/StatsCards";
+import ProductsList from "../../components/dashboard/products/ProductsList";
+import ProductForm from "../../components/dashboard/products/ProductForm"; 
+import "./DashboardPage.css";
 
 function DashboardPage() {
-  return (
-    <div className="home-page">
-      <Navbar />
+  const { pathname } = useLocation();
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
-      <main className="home-page__content">
-        <div className="home-page__placeholder">
-          <p className="home-page__eyebrow">ADMIN</p>
-          <h1>Dashboard</h1>
-          <p>
-            Cette page est prete pour votre futur dashboard administrateur.
-          </p>
-        </div>
-      </main>
-    </div>
+  const renderContent = () => {
+    switch (pathname) {
+      case "/dashboard":
+        return (
+          <>
+            <h1 className="dashboard-title">Dashboard</h1>
+            <StatsCards />
+          </>
+        );
+
+      case "/dashboard/produits":
+        return (
+          <>
+            <ProductsList
+              onEdit={(product) => {
+                setSelectedProduct(product);
+                setShowForm(true);
+              }}
+              onAdd={() => {
+                setSelectedProduct(null);
+                setShowForm(true);
+              }}
+            />
+            
+            {showForm && (
+              <ProductForm
+                product={selectedProduct}
+                onClose={() => setShowForm(false)}
+                onSave={() => {
+                  setShowForm(false);
+                  // Recharger la liste
+                }}
+              />
+            )}
+          </>
+        );
+
+      default:
+        return <h1 className="dashboard-title">Page en construction</h1>;
+    }
+  };
+
+  return (
+    <DashboardLayout>
+      {renderContent()}
+    </DashboardLayout>
   );
 }
 

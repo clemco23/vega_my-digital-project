@@ -1,0 +1,139 @@
+.products-loading {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .products-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .products-list__header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  
+  .btn-add {
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn-add:hover {
+    background-color: #333;
+  }
+  
+  .products-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .products-table th {
+    background-color: #f5f5f5;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .products-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #1a1a1a;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .products-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .products-table tr:hover td {
+    background-color: #fafafa;
+  }
+  
+  .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .badge--board {
+    background-color: #e8f4fd;
+    color: #1a73e8;
+  }
+  
+  .badge--module {
+    background-color: #fef3e2;
+    color: #f59e0b;
+  }
+  
+  .badge--set_predefined {
+    background-color: #e8f5e9;
+    color: #34a853;
+  }
+  
+  .badge--active {
+    background-color: #e8f5e9;
+    color: #34a853;
+  }
+  
+  .badge--inactive {
+    background-color: #fce8e6;
+    color: #ea4335;
+  }
+  
+  .products-table__actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .btn-edit {
+    background-color: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #ddd;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  
+  .btn-edit:hover {
+    background-color: #eee;
+  }
+  
+  .btn-delete {
+    background-color: #fff;
+    color: #ea4335;
+    border: 1px solid #ea4335;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  
+  .btn-delete:hover {
+    background-color: #fce8e6;
+  }
+  
+  .products-empty {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+    font-size: 14px;
+  }
