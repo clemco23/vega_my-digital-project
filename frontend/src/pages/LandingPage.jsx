@@ -3,6 +3,7 @@ import CircularEconomySection from "../components/landing/CircularEconomySection
 import FooterLp from "../components/landing/FooterLp/FooterLp";
 import Header from "../components/landing/header/Header";
 import HeroSection from "../components/landing/HeroSection/HeroSection";
+import LaunchNewsletterSection from "../components/landing/LaunchNewsletterSection/LaunchNewsletterSection";
 import ProductIntroSection from "../components/landing/ProductIntroSection/ProductIntroSection";
 import ReassuranceSection from "../components/landing/ReassuranceSection/ReassuranceSection";
 // import ModelsSection from "../components/landing/ModelsSection/ModelsSection";
@@ -18,6 +19,7 @@ function LandingPage() {
       <Banner />
       <ProductIntroSection />
       <CircularEconomySection />
+      <LaunchNewsletterSection />
       <ReassuranceSection />
       <FooterLp />
       {/* <ModelsSection />

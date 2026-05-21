@@ -1,6 +1,7 @@
 .product-intro-section {
+  --product-intro-inline-padding: clamp(16px, 2.2vw, 28px);
   background: var(--color-white);
-  padding: clamp(76px, 9vw, 128px) clamp(16px, 2.2vw, 28px);
+  padding: clamp(76px, 9vw, 128px) var(--product-intro-inline-padding) 0;
   overflow: hidden;
 }
 
@@ -75,7 +76,8 @@
 
 @media (max-width: 960px) {
   .product-intro-section {
-    padding: 64px 20px 74px;
+    --product-intro-inline-padding: 20px;
+    padding: 64px var(--product-intro-inline-padding) 0;
   }
 
   .product-intro-section__inner {
@@ -104,7 +106,8 @@
 
 @media (max-width: 640px) {
   .product-intro-section {
-    padding: 52px 16px 60px;
+    --product-intro-inline-padding: 16px;
+    padding: 52px var(--product-intro-inline-padding) 0;
   }
 
   .product-intro-section__content {
