@@ -16,9 +16,9 @@ const footerColumns = [
 ];
 
 const legalLinks = [
-  { label: "Mentions legales", to: "/" },
-  { label: "RGPD", to: "/" },
-  { label: "Accessibilite", to: "/" },
+  { label: "Mentions legales", to: "/mentions-legales" },
+  { label: "RGPD", to: "/rgpd" },
+  { label: "Accessibilite", to: "/accessibilite" },
 ];
 
 function HomeFooter() {

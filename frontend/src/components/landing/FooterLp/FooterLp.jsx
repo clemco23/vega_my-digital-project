@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { legalPages } from "../../../data/legalPages";
 import "./FooterLp.css";
 
@@ -13,9 +14,9 @@ function FooterLp() {
         <div className="footer-lp__meta">
           <nav className="footer-lp__legal-nav" aria-label="Liens legaux">
             {legalPages.map(({ path, label }) => (
-              <a className="footer-lp__legal-link" href={path} key={path}>
+              <Link className="footer-lp__legal-link" to={path} key={path}>
                 {label}
-              </a>
+              </Link>
             ))}
           </nav>
 

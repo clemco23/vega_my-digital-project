@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import bgHapto from "../../../assets/bg_hapto.png";
 import "./AboutClosingCtaSection.css";
 
 function AboutClosingCtaSection() {
@@ -8,9 +9,12 @@ function AboutClosingCtaSection() {
       aria-labelledby="about-closing-cta-title"
     >
       <div className="about-closing-cta__inner">
-        <div className="about-closing-cta__backdrop" aria-hidden="true">
-          HAPTO
-        </div>
+        <img
+          className="about-closing-cta__backdrop"
+          src={bgHapto}
+          alt=""
+          aria-hidden="true"
+        />
 
         <div className="about-closing-cta__content">
           <h2
