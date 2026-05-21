@@ -1,0 +1,9 @@
+.about-page {
+  min-height: 100vh;
+  background-color: color-mix(in srgb, var(--color-background) 94%, white 6%);
+  overflow-x: clip;
+}
+
+.about-page__content {
+  display: block;
+}

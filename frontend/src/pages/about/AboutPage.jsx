@@ -1,3 +1,10 @@
+import AboutClosingCtaSection from "../../components/about/AboutClosingCtaSection/AboutClosingCtaSection";
+import AboutFooter from "../../components/about/AboutFooter/AboutFooter";
+import AboutHeroSection from "../../components/about/AboutHeroSection/AboutHeroSection";
+import AboutDifferentiatorsSection from "../../components/about/AboutDifferentiatorsSection/AboutDifferentiatorsSection";
+import AboutStorySection from "../../components/about/AboutStorySection/AboutStorySection";
+import AboutTeamSection from "../../components/about/AboutTeamSection/AboutTeamSection";
+import ReassuranceSection from "../../components/landing/ReassuranceSection/ReassuranceSection";
 import Navbar from "../../components/navbar/Navbar";
 import "./AboutPage.css";
 
@@ -7,15 +14,14 @@ function AboutPage() {
       <Navbar />
 
       <main className="about-page__content">
-        <div className="about-page__placeholder">
-          <p className="about-page__eyebrow">ABOUT PAGE</p>
-          <h1>La page à propos du site sera ici.</h1>
-          <p>
-            La navbar est maintenant un composant separe, independant de la
-            landing page et pret a etre reutilise sur les autres pages du site.
-          </p>
-        </div>
+        <AboutHeroSection />
+        <AboutStorySection />
+        <AboutTeamSection />
+        <AboutDifferentiatorsSection />
+        <AboutClosingCtaSection />
+        <ReassuranceSection />
       </main>
+
     </div>
   );
 }

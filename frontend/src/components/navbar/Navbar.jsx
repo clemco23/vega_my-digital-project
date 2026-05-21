@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ShoppingCart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import haptoLogo from "../../assets/hapto.svg";
 import { apiBaseUrl } from "../../services/apiBase";
@@ -177,17 +178,29 @@ function Navbar() {
 
           <div className="site-navbar__actions">
             {!user && (
-              <Link
-                to="/login"
-                className="site-navbar__login"
-                onClick={closeMenu}
-              >
-                Connexion
-              </Link>
+              <div className="site-navbar__guest-menu">
+                <span className="site-navbar__icon-chip" aria-hidden="true">
+                  
+                </span>
+
+                <Link
+                  to="/login"
+                  className="site-navbar__icon-button site-navbar__icon-button--link"
+                  aria-label="Se connecter"
+                  onClick={closeMenu}
+                >
+                  <User className="site-navbar__icon" aria-hidden="true" />
+                </Link>
+              </div>
             )}
 
             {user && (
+               
               <div className="site-navbar__user">
+                <span className="site-navbar__icon-chip" aria-hidden="true">
+                  <ShoppingCart className="site-navbar__icon" aria-hidden="true" />
+                </span>
+
                 <div className="site-navbar__user-copy">
                   <p className="site-navbar__greeting">Bonjour, {firstName}</p>
                 </div>
