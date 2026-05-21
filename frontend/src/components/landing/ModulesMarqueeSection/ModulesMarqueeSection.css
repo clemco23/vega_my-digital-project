@@ -1,12 +1,11 @@
 .modules-marquee-section {
-  margin-top: 50px;
-  background: var(--color-white);
+  margin-top: 80px;
+  margin-right: calc(var(--product-intro-inline-padding, 0px) * -1);
+  margin-bottom: 0;
+  margin-left: calc(var(--product-intro-inline-padding, 0px) * -1);
   padding: clamp(48px, 7vw, 92px) 0 clamp(56px, 7vw, 94px);
   overflow: hidden;
-  background-color: var(--color-primary);
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  background: var(--color-primary);
 }
 
 .modules-marquee-section__inner {
