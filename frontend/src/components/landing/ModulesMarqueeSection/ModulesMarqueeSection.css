@@ -17,7 +17,7 @@
 .modules-marquee-section__title {
   margin: 0;
   padding: 0 20px;
-  color: var(--color-dark);
+  color: var(--color-white);
   font-family: var(--font-title);
   font-size: clamp(2rem, 3.8vw, 3.15rem);
   font-weight: 300;
