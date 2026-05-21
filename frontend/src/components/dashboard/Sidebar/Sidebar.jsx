@@ -4,6 +4,7 @@ import "./Sidebar.css";
 
 const menuItems = [
   { path: "/dashboard", label: "Dashboard", icon: "▦" },
+  { path: "/dashboard/contact", label: "Messages", icon: "▦" },
   { path: "/dashboard/produits", label: "Produits", icon: "📦" },
   { path: "/dashboard/commandes", label: "Commandes", icon: "🧾" },
   { path: "/dashboard/users", label: "Utilisateurs", icon: "👤" },

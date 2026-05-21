@@ -1,40 +1,27 @@
 const prisma = require("../config/prisma");
 
-
-const getWishlist = async (userId) => {
-  return prisma.wishlist.findFirst({
+const getOrCreateWishlist = async (userId) => {
+  let wishlist = await prisma.wishlist.findFirst({
     where: { userId: BigInt(userId) },
     include: {
-      items: {
+      variants: {
         include: {
-          productVariant: {
-            include: {
-              product: {
-                include: { images: true },
-              },
-            },
+          product: {
+            include: { images: true },
           },
         },
       },
     },
   });
-};
-
-const getOrCreateWishlist = async (userId) => {
-  let wishlist = await getWishlist(userId);
 
   if (!wishlist) {
     wishlist = await prisma.wishlist.create({
       data: { userId: BigInt(userId) },
       include: {
-        items: {
+        variants: {
           include: {
-            productVariant: {
-              include: {
-                product: {
-                  include: { images: true },
-                },
-              },
+            product: {
+              include: { images: true },
             },
           },
         },
@@ -48,32 +35,42 @@ const getOrCreateWishlist = async (userId) => {
 const addToWishlist = async (userId, productVariantId) => {
   const wishlist = await getOrCreateWishlist(userId);
 
-  const existingItem = await prisma.wishlistItem.findFirst({
-    where: {
-      wishlistId: wishlist.id,
-      productVariantId: parseInt(productVariantId),
-    },
-  });
+  // Vérifier si déjà dans la wishlist
+  const alreadyInWishlist = wishlist.variants.some(
+    (v) => v.id === parseInt(productVariantId)
+  );
 
-  if (existingItem) {
+  if (alreadyInWishlist) {
     throw new Error("Ce produit est déjà dans votre wishlist.");
   }
 
-  return prisma.wishlistItem.create({
+  await prisma.wishlist.update({
+    where: { id: wishlist.id },
     data: {
-      wishlistId: wishlist.id,
-      productVariantId: parseInt(productVariantId),
+      variants: {
+        connect: { id: parseInt(productVariantId) },
+      },
     },
   });
+
+  return getOrCreateWishlist(userId);
 };
 
-const removeFromWishlist = async (itemId) => {
-  return prisma.wishlistItem.delete({
-    where: { id: parseInt(itemId) },
+const removeFromWishlist = async (userId, productVariantId) => {
+  const wishlist = await getOrCreateWishlist(userId);
+
+  await prisma.wishlist.update({
+    where: { id: wishlist.id },
+    data: {
+      variants: {
+        disconnect: { id: parseInt(productVariantId) },
+      },
+    },
   });
+
+  return getOrCreateWishlist(userId);
 };
 
-//admin
 const getAllWishlists = async () => {
   return prisma.wishlist.findMany({
     include: {
@@ -85,12 +82,10 @@ const getAllWishlists = async () => {
           email: true,
         },
       },
-      items: {
+      variants: {
         include: {
-          productVariant: {
-            include: {
-              product: true,
-            },
+          product: {
+            include: { images: true },
           },
         },
       },

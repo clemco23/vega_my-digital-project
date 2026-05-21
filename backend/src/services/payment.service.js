@@ -9,7 +9,15 @@ const createCheckoutSession = async (orderId, userId) => {
       userId: BigInt(userId),
     },
     include: {
-      items: true,
+      orderVariants: {
+        include: {
+          productVariant: {
+            include: {
+              product : true,
+            }
+          },
+        },
+      },
     },
   });
 
@@ -25,15 +33,15 @@ const createCheckoutSession = async (orderId, userId) => {
       orderId: orderId.toString(),
       userId: userId.toString(),
     },
-    line_items: order.items.map((item) => ({
+    line_items: order.orderVariants.map((ov) => ({
       price_data: {
         currency: "eur",
         product_data: {
-          name: `${item.productName} - Taille ${item.variantSize}`,
+          name: `${ov.productVariant.product.name} - Taille ${ov.productVariant.size}`,
         },
-        unit_amount: Math.round(parseFloat(item.unitPrice) * 100), // Stripe utilise les centimes
+        unit_amount: Math.round(parseFloat(ov.productVariant.price) * 100),
       },
-      quantity: item.quantity,
+      quantity: ov.quantity,
     })),
   });
 
@@ -61,8 +69,14 @@ const handleWebhook = async (payload, signature) => {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
-        items: {
-          include: { productVariant: true },
+        orderVariants: {
+          include: { 
+            productVariant: {
+              include: {
+                product: true 
+              }
+            } 
+          },
         },
       },
     });
@@ -76,11 +90,11 @@ const handleWebhook = async (payload, signature) => {
     });
 
     // Diminuer le stock
-    for (const item of order.items) {
+    for (const ov of order.orderVariants) {
       await prisma.productVariant.update({
-        where: { id: item.productVariantId },
+        where: { id: ov.productVariantId },
         data: {
-          stock: item.productVariant.stock - item.quantity,
+          stock: ov.productVariant.stock - ov.quantity,
         },
       });
     }

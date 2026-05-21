@@ -35,7 +35,6 @@ model User {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
-  carts  Cart[]
   orders Order[]
   wishlists Wishlist[]
   addresses Address[]
@@ -128,9 +127,8 @@ model ProductVariant {
   product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   setVariantItems  SetItem[] @relation("SetVariantItems")
   setProductItems  SetItem[] @relation("SetProductItems")
-  cartItems     CartItem[]
-  orderItems    OrderItem[]
-  wishlistItems WishlistItem[]
+  orderVariants OrderVariant[]
+  wishlists Wishlist[] @relation("WishVariants")
 
   @@unique([productId, size])
   @@map("product_variants")
@@ -177,44 +175,23 @@ model SetItem {
   @@map("set_items")
 }
 
-model Cart {
-  id        Int        @id @default(autoincrement())
-  userId    BigInt     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  user      User       @relation(fields: [userId], references: [id])
-  items     CartItem[]
 
-  @@map("carts")
-}
-
-model CartItem {
-  id               Int            @id @default(autoincrement())
-  cartId           Int
-  productVariantId Int
-  quantity         Int
-  cart             Cart           @relation(fields: [cartId], references: [id])
-  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
-
-  @@unique([cartId, productVariantId])
-  @@map("cart_items")
-}
 
 model Order {
   id                 Int         @id @default(autoincrement())
   userId             BigInt
   trackingNumber     String?
-  orderStatus        OrderStatus @default(PENDING)
+  orderStatus        OrderStatus @default(CART)
   totalAmount        Decimal
-  customerFirstname  String
-  customerLastname   String
-  customerEmail      String
+  customerFirstname  String?
+  customerLastname   String?
+  customerEmail      String?
 
   // Adresse figée au moment de la commande
-  customerStreet     String
-  customerCity       String
-  customerPostalCode String
-  customerCountry    String      @default("France")
+  customerStreet     String?
+  customerCity       String?
+  customerPostalCode String?
+  customerCountry    String?      @default("France")
 
   // Point relais si applicable
   customerRelayPointId String?
@@ -228,13 +205,15 @@ model Order {
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   user               User        @relation(fields: [userId], references: [id])
-  items              OrderItem[]
+  payment            Payment?      
+  orderVariants OrderVariant[]
 
   @@map("orders")
 }
 
 
 enum OrderStatus {
+  CART
   PENDING
   PAID
   PREPARING
@@ -244,41 +223,19 @@ enum OrderStatus {
   REFUNDED
 }
 
-model OrderItem {
-  id               Int             @id @default(autoincrement())
-  orderId          Int
-  productVariantId Int?
-  quantity         Int
-  unitPrice        Decimal
-  productName      String
-  variantSize      Size?
-  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id], onDelete: SetNull)
 
-  @@map("order_items")
-}
 
 model Wishlist {
   id        Int            @id @default(autoincrement())
   userId    BigInt
   createdAt DateTime       @default(now())
   user      User           @relation(fields: [userId], references: [id])
-  items     WishlistItem[]
+  variants  ProductVariant[] @relation("WishVariants")
 
   @@map("wishlists")
 }
 
-model WishlistItem {
-  id               Int            @id @default(autoincrement())
-  wishlistId       Int
-  productVariantId Int
-  addedAt          DateTime       @default(now())
-  wishlist         Wishlist       @relation(fields: [wishlistId], references: [id])
-  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
 
-  @@unique([wishlistId, productVariantId])
-  @@map("wishlist_items")
-}
 
 enum AddressType {
   SHIPPING
@@ -325,4 +282,31 @@ model Review {
 
   @@unique([userId, productId])
   @@map("reviews")
+}
+
+model Payment {
+  id              Int       @id @default(autoincrement())
+  orderId         Int       @unique
+  stripeSessionId String
+  stripePaymentId String?
+  amount          Decimal
+  currency        String    @default("eur")
+  status          String    @default("PENDING")
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  order           Order     @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
+
+model OrderVariant {
+  orderId          Int
+  productVariantId Int
+  quantity         Int            @default(1)
+  order            Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  @@id([orderId, productVariantId])
+  @@map("order_variants")
 }

@@ -25,6 +25,7 @@ const webhook = async (req, res) => {
     await handleWebhook(req.body, signature);
     return res.status(200).json({ received: true });
   } catch (error) {
+    console.error("WEBHOOK ERREUR:", error); 
     return res.status(400).json({ message: error.message });
   }
 };

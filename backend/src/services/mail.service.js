@@ -28,7 +28,6 @@ const sendResetPasswordEmail = async (email, token) => {
       `,
     });
   };
-
   const sendOrderConfirmationEmail = async (email, order) => {
     await resend.emails.send({
       from: "noreply@haptokids.fr",
@@ -39,8 +38,11 @@ const sendResetPasswordEmail = async (email, token) => {
         <p>Votre commande <strong>#${order.id}</strong> a bien été payée.</p>
         <h2>Récapitulatif :</h2>
         <ul>
-          ${order.items.map((item) => `
-            <li>${item.productName} - Taille ${item.variantSize} x${item.quantity} → ${item.unitPrice}€</li>
+          ${order.orderVariants.map((ov) => `
+            <li>
+              <strong>${ov.productVariant.product.name}</strong> - Taille ${ov.productVariant.size} 
+              x${ov.quantity} → ${ov.productVariant.price}€
+            </li>
           `).join("")}
         </ul>
         <p><strong>Total : ${order.totalAmount}€</strong></p>

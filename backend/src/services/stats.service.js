@@ -1,14 +1,16 @@
 const prisma = require("../config/prisma");
 
 const getStats = async () => {
-  // On a inversé 'blogsCount' et 'orders' ici pour correspondre aux requêtes en dessous
-  const [usersCount, ordersCount, productsCount, newsletterCount, blogsCount, orders] = await Promise.all([
+  const [usersCount, contactCount, ordersCount, productsCount, newsletterCount, blogsCount, orders] = await Promise.all([
     prisma.user.count(),
-    prisma.order.count(),
+    prisma.contact.count(),
+    prisma.order.count({
+      where: { orderStatus: { not: "CART" } }, // ← toutes les commandes sauf les paniers
+    }),
     prisma.product.count(),
     prisma.newsletter.count(),
-    prisma.blog.count(), // -> va dans blogsCount
-    prisma.order.findMany({ // -> va dans orders
+    prisma.blog.count(),
+    prisma.order.findMany({
       where: { orderStatus: "PAID" },
       select: { totalAmount: true },
     }),
@@ -20,6 +22,7 @@ const getStats = async () => {
 
   return {
     usersCount,
+    contactCount,
     ordersCount,
     productsCount,
     newsletterCount,

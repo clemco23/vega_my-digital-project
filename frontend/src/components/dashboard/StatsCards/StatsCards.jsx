@@ -4,6 +4,7 @@ import "./StatsCards.css";
 
 const cards = [
   { key: "usersCount", label: "Utilisateurs", icon: "👤", suffix: "" },
+  { key: "contactCount", label: "Messages", icon: "📧", suffix: "" },
   { key: "ordersCount", label: "Commandes", icon: "🧾", suffix: "" },
   { key: "productsCount", label: "Produits", icon: "📦", suffix: "" },
   { key: "totalRevenue", label: "Chiffre d'affaires", icon: "💰", suffix: "€" },
