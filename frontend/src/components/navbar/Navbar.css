@@ -101,6 +101,23 @@
   transition: color 0.2s ease;
 }
 
+.site-navbar__link--blog {
+  display: inline-flex;
+  align-items: flex-end;
+  padding-top: 0;
+  padding-bottom: 2px;
+  font-family: var(--font-script);
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 0.76;
+  text-transform: none;
+}
+
+.site-navbar__link--blog::after {
+  bottom: -3px;
+}
+
 .site-navbar__link::after {
   content: "";
   position: absolute;
@@ -439,6 +456,16 @@
     width: 100%;
     padding: 10px 0;
     font-size: 0.74rem;
+  }
+
+  .site-navbar__link--blog {
+    padding-bottom: 0;
+    font-size: 1.95rem;
+    line-height: 0.82;
+  }
+
+  .site-navbar__link--blog::after {
+    bottom: -1px;
   }
 
   .site-navbar__actions {

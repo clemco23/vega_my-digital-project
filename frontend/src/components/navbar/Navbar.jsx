@@ -10,7 +10,12 @@ const navItems = [
   { label: "ACCUEIL", to: "/", matchPaths: ["/"] },
   { label: "A PROPOS", to: "/about", matchPaths: ["/about"] },
   { label: "LA PLANCHE", to: "/", matchPaths: ["/planche", "/la-planche"] },
-  { label: "CONTACT", to: "/", matchPaths: ["/contact"] },
+  { label: "CONTACT", to: "/contact", matchPaths: ["/contact"] },
+  {
+    label: "Blog",
+    to: "/blog",
+    matchPaths: ["/blog"],
+  },
 ];
 
 const readStoredUser = () => {

@@ -76,7 +76,7 @@ model Category {
 model Contact {
   id              BigInt    @id @default(autoincrement())
   name            String
-  email           String    @unique
+  email           String    
   content         String  
 
   createdAt       DateTime  @default(now()) @map("created_at")

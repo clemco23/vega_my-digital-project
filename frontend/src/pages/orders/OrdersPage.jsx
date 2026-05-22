@@ -1,3 +1,4 @@
+import SiteFooter from "../../components/footer/SiteFooter";
 import Navbar from "../../components/navbar/Navbar";
 import "../home/HomePage.css";
 
@@ -16,6 +17,7 @@ function OrdersPage() {
           </p>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }
