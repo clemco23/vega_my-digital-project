@@ -62,6 +62,23 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/contact"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/newsletter"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/dashboard/produits"
           element={
             <ProtectedRoute adminOnly>

@@ -1,0 +1,56 @@
+.newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.newsletter__state {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.newsletter__state--error {
+  color: #b42318;
+}
+
+.newsletter__table-shell {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.newsletter__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 420px;
+}
+
+.newsletter__table th,
+.newsletter__table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.newsletter__table th {
+  background: #f9fafb;
+  color: #111827;
+  font-weight: 700;
+}
+
+.newsletter__table td {
+  color: #374151;
+}
+
+.newsletter__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.newsletter__back-link {
+  align-self: flex-start;
+  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 600;
+}

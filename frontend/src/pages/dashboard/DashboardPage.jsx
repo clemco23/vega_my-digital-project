@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout/DashboardLayout";
+import Newsletter from "../../components/dashboard/newsletter/Newsletter";
 import StatsCards from "../../components/dashboard/StatsCards/StatsCards";
 import ProductsList from "../../components/dashboard/products/ProductsList";
 import ProductForm from "../../components/dashboard/products/ProductForm"; 
@@ -47,6 +48,14 @@ function DashboardPage() {
             )}
           </>
         );
+
+        case "/dashboard/newsletter":
+          return (
+            <>
+              <h1 className="dashboard-title">Newsletter Subscribers</h1>
+              <Newsletter />
+            </>
+          );
 
       default:
         return <h1 className="dashboard-title">Page en construction</h1>;
