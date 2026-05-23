@@ -45,13 +45,13 @@ const getCart = async (req, res) => {
 
 const addItem = async (req, res) => {
   try {
-    const { productVariantId } = req.body;
+    const { productVariantId, quantity = 1 } = req.body;
 
     if (!productVariantId) {
       return res.status(400).json({ message: "productVariantId obligatoire." });
     }
 
-    const cart = await addToCart(req.user.id, productVariantId);
+    const cart = await addToCart(req.user.id, productVariantId, quantity);
     return res.status(200).json({ message: "Produit ajouté au panier.", data: cart });
   } catch (error) {
     return res.status(400).json({ message: error.message });

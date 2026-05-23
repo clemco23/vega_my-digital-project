@@ -1,5 +1,18 @@
 import api from "./api";
 
+export const getProductsByType = async (type) => {
+  const { data } = await api.get(`/products/type/${type}`);
+  return data;
+};
+
+export const getBoards = async () => {
+  return getProductsByType("BOARD");
+};
+
+export const getModules = async () => {
+  return getProductsByType("MODULE");
+};
+
 export const getProductsAdmin = async () => {
   const { data } = await api.get("/products/admin");
   return data;

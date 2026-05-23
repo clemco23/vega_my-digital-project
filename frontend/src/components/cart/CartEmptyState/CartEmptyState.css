@@ -1,0 +1,104 @@
+.cart-empty-state {
+  position: relative;
+  width: 100vw;
+  min-height: clamp(460px, 68vh, 720px);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  padding: clamp(110px, 14vw, 170px) 24px clamp(80px, 10vw, 120px);
+}
+
+.cart-empty-state::before {
+  content: "";
+  position: absolute;
+  top: clamp(-150px, -10vw, -80px);
+  left: clamp(-120px, -7vw, -32px);
+  width: min(62vw, 980px);
+  height: clamp(180px, 22vw, 310px);
+  background: var(--color-secondary);
+  border-radius: 0 0 220px 150px;
+  box-shadow: 18px 24px 28px rgba(31, 28, 24, 0.18);
+  transform: rotate(-7deg);
+}
+
+.cart-empty-state__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  width: min(100%, 860px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cart-empty-state__title {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-primary) 82%, var(--color-dark) 18%);
+  font-size: clamp(3rem, 7vw, 5.2rem);
+  font-weight: 600;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+.cart-empty-state__description {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-muted) 68%, #c4b9ab 32%);
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  font-weight: 300;
+  line-height: 1.58;
+}
+
+.cart-empty-state__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 0 38px;
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--color-primary) 88%, #6d7631 12%);
+  color: var(--color-white);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cart-empty-state__action:hover {
+  background: color-mix(in srgb, var(--color-primary) 92%, #4c5623 8%);
+  box-shadow: 0 14px 26px rgba(93, 104, 46, 0.18);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .cart-empty-state {
+    min-height: clamp(420px, 60vh, 620px);
+    padding: 92px 18px 68px;
+  }
+
+  .cart-empty-state::before {
+    top: -88px;
+    left: -92px;
+    width: min(94vw, 520px);
+    height: 170px;
+    border-radius: 0 0 150px 110px;
+  }
+
+  .cart-empty-state__content {
+    gap: 22px;
+  }
+
+  .cart-empty-state__description {
+    max-width: 22ch;
+  }
+
+  .cart-empty-state__action {
+    width: 100%;
+    max-width: 320px;
+    padding: 0 24px;
+  }
+}

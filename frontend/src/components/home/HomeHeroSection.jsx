@@ -41,7 +41,7 @@ function HomeHeroSection() {
             de votre enfant, au plus loin des ecrans.
           </p>
 
-          <Link to="/login" className="home-hero__cta">
+          <Link to="/la-planche" className="home-hero__cta">
             Composer ma planche
           </Link>
 

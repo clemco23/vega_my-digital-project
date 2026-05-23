@@ -32,7 +32,7 @@ function AboutClosingCtaSection() {
 
         <div className="about-closing-cta__divider" aria-hidden="true" />
 
-        <Link to="/" className="about-closing-cta__button">
+        <Link to="/la-planche" className="about-closing-cta__button">
           Composer ma planche
         </Link>
       </div>

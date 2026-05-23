@@ -7,7 +7,7 @@ const footerColumns = [
   [
     { label: "Accueil", to: "/" },
     { label: "A propos", to: "/about" },
-    { label: "Composer ma planche", to: "/login" },
+    { label: "Composer ma planche", to: "/la-planche" },
   ],
   [
     { label: "Revendeurs B2B", to: "/" },

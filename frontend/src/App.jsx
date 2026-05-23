@@ -9,9 +9,11 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import GoogleCallback from "./pages/auth/GoogleCallback";
 import AboutPage from "./pages/about/AboutPage";
 import BlogPage from "./pages/blog/BlogPage";
+import BoardPage from "./pages/board/BoardPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
+import CartPage from "./pages/cart/CartPage";
 import LandingPage from "./pages/landing/LandingPage";
 import OrdersPage from "./pages/orders/OrdersPage";
 import ProfilePage from "./pages/profile/ProfilePage";
@@ -24,6 +26,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/la-planche" element={<BoardPage />} />
+        <Route path="/planche" element={<BoardPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
 
@@ -106,6 +110,14 @@ function App() {
           }
         />
 
+        <Route
+          path="/panier"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/profil"
           element={

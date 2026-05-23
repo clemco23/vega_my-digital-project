@@ -4,12 +4,25 @@ import { Link, useLocation } from "react-router-dom";
 import haptoLogo from "../../assets/hapto.svg";
 import { apiBaseUrl } from "../../services/apiBase";
 import { getCurrentUser } from "../../services/auth.service";
+import { getCart } from "../../services/cart.service";
+import {
+  CART_ANIMATION_EVENT,
+  CART_STATE_EVENT,
+  clearStoredCartState,
+  clearPendingCartAnimation,
+  readPendingCartAnimation,
+  readStoredCartState,
+} from "../../services/cart-feedback";
 import "./Navbar.css";
 
 const navItems = [
   { label: "ACCUEIL", to: "/", matchPaths: ["/"] },
   { label: "A PROPOS", to: "/about", matchPaths: ["/about"] },
-  { label: "LA PLANCHE", to: "/", matchPaths: ["/planche", "/la-planche"] },
+  {
+    label: "LA PLANCHE",
+    to: "/la-planche",
+    matchPaths: ["/planche", "/la-planche"],
+  },
   { label: "CONTACT", to: "/contact", matchPaths: ["/contact"] },
   {
     label: "Blog",
@@ -55,9 +68,14 @@ function Navbar() {
   const { pathname } = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isCartAnimating, setIsCartAnimating] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(
+    () => readStoredCartState()?.itemCount || 0
+  );
   const [user, setUser] = useState(null);
   const [hasAvatarError, setHasAvatarError] = useState(false);
   const userMenuRef = useRef(null);
+  const cartAnimationTimerRef = useRef(null);
 
   useEffect(() => {
     const syncUser = async () => {
@@ -116,6 +134,75 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const playCartAnimation = () => {
+      window.clearTimeout(cartAnimationTimerRef.current);
+      setIsCartAnimating(false);
+
+      window.requestAnimationFrame(() => {
+        setIsCartAnimating(true);
+        cartAnimationTimerRef.current = window.setTimeout(() => {
+          setIsCartAnimating(false);
+        }, 950);
+      });
+    };
+
+    const handleCartAnimation = () => {
+      playCartAnimation();
+    };
+
+    const pendingAnimation = readPendingCartAnimation();
+
+    if (pendingAnimation) {
+      playCartAnimation();
+      clearPendingCartAnimation();
+    }
+
+    window.addEventListener(CART_ANIMATION_EVENT, handleCartAnimation);
+
+    return () => {
+      window.removeEventListener(CART_ANIMATION_EVENT, handleCartAnimation);
+      window.clearTimeout(cartAnimationTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleCartState = (event) => {
+      setCartItemCount(Math.max(0, Number(event.detail?.itemCount) || 0));
+    };
+
+    window.addEventListener(CART_STATE_EVENT, handleCartState);
+
+    return () => {
+      window.removeEventListener(CART_STATE_EVENT, handleCartState);
+    };
+  }, []);
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+
+    if (!token) {
+      setCartItemCount(0);
+      clearStoredCartState();
+      return;
+    }
+
+    const syncCart = async () => {
+      try {
+        const cart = await getCart();
+        const nextCount = (cart.items || []).reduce(
+          (accumulator, item) => accumulator + (Number(item.quantity) || 0),
+          0
+        );
+        setCartItemCount(nextCount);
+      } catch (error) {
+        console.error("Impossible de charger l'etat du panier :", error);
+      }
+    };
+
+    void syncCart();
+  }, [user]);
+
   const closeMenu = () => {
     setIsMenuOpen(false);
     setIsUserMenuOpen(false);
@@ -124,6 +211,8 @@ function Navbar() {
   const handleLogout = () => {
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("user");
+    clearStoredCartState();
+    setCartItemCount(0);
     setUser(null);
     closeMenu();
     window.location.href = `${apiBaseUrl}/auth/logout?redirect=${encodeURIComponent(window.location.origin)}`;
@@ -140,6 +229,10 @@ function Navbar() {
       (routePath) =>
         pathname === routePath || pathname.startsWith(`${routePath}/`)
     );
+  const cartAriaLabel =
+    cartItemCount > 0
+      ? `Ouvrir le panier, ${cartItemCount} article${cartItemCount > 1 ? "s" : ""}`
+      : "Ouvrir le panier";
 
   return (
     <header className="site-navbar">
@@ -202,9 +295,20 @@ function Navbar() {
             {user && (
                
               <div className="site-navbar__user">
-                <span className="site-navbar__icon-chip" aria-hidden="true">
+                <Link
+                  to="/panier"
+                  className={`site-navbar__icon-button site-navbar__cart-button ${pathname === "/panier" ? "site-navbar__icon-button--active" : ""} ${isCartAnimating ? "site-navbar__cart-button--animating" : ""}`}
+                  aria-label={cartAriaLabel}
+                  onClick={closeMenu}
+                >
                   <ShoppingCart className="site-navbar__icon" aria-hidden="true" />
-                </span>
+                  {cartItemCount > 0 ? (
+                    <span
+                      className="site-navbar__cart-badge"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </Link>
 
                 <div className="site-navbar__user-copy">
                   <p className="site-navbar__greeting">Bonjour, {firstName}</p>
