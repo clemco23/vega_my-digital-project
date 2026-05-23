@@ -29,12 +29,6 @@
     opacity 0.2s ease;
 }
 
-.module-card:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-1px);
-}
-
 .module-card--selected {
   border-color: var(--color-primary);
   background-color: var(--color-primary);
