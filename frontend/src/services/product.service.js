@@ -1,18 +1,5 @@
 import api from "./api";
 
-export const getProductsByType = async (type) => {
-  const { data } = await api.get(`/products/type/${type}`);
-  return data;
-};
-
-export const getBoards = async () => {
-  return getProductsByType("BOARD");
-};
-
-export const getModules = async () => {
-  return getProductsByType("MODULE");
-};
-
 export const getProductsAdmin = async () => {
   const { data } = await api.get("/products/admin");
   return data;
@@ -72,5 +59,16 @@ export const addSetItem = async (productId, setItemData) => {
 
 export const deleteSetItem = async (itemId) => {
   const { data } = await api.delete(`/products/set-items/${itemId}`);
+  return data;
+};
+
+// Fonctions spécifiques pour les types de produits
+export const getBoards = async () => {
+  const { data } = await api.get("/products/type/BOARD");
+  return data;
+};
+
+export const getModules = async () => {
+  const { data } = await api.get("/products/type/MODULE");
   return data;
 };
