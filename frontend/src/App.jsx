@@ -23,8 +23,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/accueil" element={<HomePage />} />
+        <Route path="/acceuil" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/la-planche" element={<BoardPage />} />
         <Route path="/planche" element={<BoardPage />} />

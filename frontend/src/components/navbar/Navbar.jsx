@@ -16,7 +16,7 @@ import {
 import "./Navbar.css";
 
 const navItems = [
-  { label: "ACCUEIL", to: "/", matchPaths: ["/"] },
+  { label: "ACCUEIL", to: "/accueil", matchPaths: ["/accueil", "/acceuil"] },
   { label: "A PROPOS", to: "/about", matchPaths: ["/about"] },
   {
     label: "LA PLANCHE",
@@ -238,7 +238,7 @@ function Navbar() {
     <header className="site-navbar">
       <div className="site-navbar__inner">
         <Link
-          to="/"
+          to="/accueil"
           className="site-navbar__logo"
           aria-label="Retourner a l'accueil"
           onClick={closeMenu}

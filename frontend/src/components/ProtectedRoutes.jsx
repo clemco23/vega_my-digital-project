@@ -9,7 +9,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
   }
 
   if (adminOnly && user.role !== "ADMIN") {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/accueil" replace />;
   }
 
   return children;
