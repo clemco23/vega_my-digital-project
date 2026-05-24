@@ -18,10 +18,16 @@ const reviewRoutes = require("./routes/review.routes");
 const statsRoutes = require("./routes/stats.routes");
 
 const app = express();
+const frontendUrl = (
+  process.env.FRONTEND_URL || "http://localhost:5173"
+).replace(/\/+$/, "");
 
-app.use(cors({
-  origin: "http://localhost:5173",
-}));
+app.use(
+  cors({
+    origin: frontendUrl,
+    credentials: true,
+  })
+);
 
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 
