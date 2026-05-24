@@ -6,9 +6,6 @@ import HeroSection from "../../components/landing/HeroSection/HeroSection";
 import LaunchNewsletterSection from "../../components/landing/LaunchNewsletterSection/LaunchNewsletterSection";
 import ProductIntroSection from "../../components/landing/ProductIntroSection/ProductIntroSection";
 import ReassuranceSection from "../../components/landing/ReassuranceSection/ReassuranceSection";
-// import ModelsSection from "../components/landing/ModelsSection/ModelsSection";
-// import ValuesSection from "../components/landing/ValuesSection/ValuesSection";
-// import Footer from "../components/landing/Footer/Footer";
 import "./LandingPage.css";
 
 function LandingPage() {

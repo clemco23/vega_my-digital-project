@@ -2,62 +2,73 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const prisma = require("./prisma");
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/api/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        const email = profile.emails[0].value;
-        const googleId = profile.id;
-        const avatar = profile.photos?.[0]?.value || null;
-        const firstname = profile.name.givenName;
-        const name = profile.name.familyName;
+const hasGoogleAuthConfig = Boolean(process.env.GOOGLE_CLIENT_ID) &&
+  Boolean(process.env.GOOGLE_CLIENT_SECRET);
 
-        let user = await prisma.user.findUnique({
-          where: { email },
-        });
+if (hasGoogleAuthConfig) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL:
+          process.env.GOOGLE_CALLBACK_URL ||
+          "http://localhost:3000/api/auth/google/callback",
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          const email = profile.emails[0].value;
+          const googleId = profile.id;
+          const avatar = profile.photos?.[0]?.value || null;
+          const firstname = profile.name.givenName;
+          const name = profile.name.familyName;
 
-        if (user) {
-          const dataToUpdate = {};
+          let user = await prisma.user.findUnique({
+            where: { email },
+          });
 
-          if (!user.googleId) {
-            dataToUpdate.googleId = googleId;
-          }
+          if (user) {
+            const dataToUpdate = {};
 
-          if (avatar && avatar !== user.avatar) {
-            dataToUpdate.avatar = avatar;
-          }
+            if (!user.googleId) {
+              dataToUpdate.googleId = googleId;
+            }
 
-          if (Object.keys(dataToUpdate).length > 0) {
-            user = await prisma.user.update({
-              where: { email },
-              data: dataToUpdate,
+            if (avatar && avatar !== user.avatar) {
+              dataToUpdate.avatar = avatar;
+            }
+
+            if (Object.keys(dataToUpdate).length > 0) {
+              user = await prisma.user.update({
+                where: { email },
+                data: dataToUpdate,
+              });
+            }
+          } else {
+            user = await prisma.user.create({
+              data: {
+                email,
+                googleId,
+                avatar,
+                firstname,
+                name: name || "Inconnu",
+                verifiedAt: new Date(),
+              },
             });
           }
-        } else {
-          user = await prisma.user.create({
-            data: {
-              email,
-              googleId,
-              avatar,
-              firstname,
-              name: name || "Inconnu",
-              verifiedAt: new Date(),
-            },
-          });
-        }
 
-        return done(null, user);
-      } catch (error) {
-        return done(error, null);
+          return done(null, user);
+        } catch (error) {
+          return done(error, null);
+        }
       }
-    }
-  )
-);
+    )
+  );
+} else {
+  console.warn(
+    "Google OAuth desactive : GOOGLE_CLIENT_ID ou GOOGLE_CLIENT_SECRET manquant."
+  );
+}
 
 passport.serializeUser((user, done) => {
   done(null, user.id.toString());
@@ -76,5 +87,7 @@ passport.deserializeUser(async (id, done) => {
     done(error, null);
   }
 });
+
+passport.hasGoogleAuthConfig = hasGoogleAuthConfig;
 
 module.exports = passport;

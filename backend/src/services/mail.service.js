@@ -1,6 +1,10 @@
 const resend = require("../config/resend");
 
 const sendVerificationEmail = async (email, token) => {
+  if (!resend) {
+    throw new Error("Service email indisponible : RESEND_API_KEY manquante.");
+  }
+
   await resend.emails.send({
     from: "noreply@haptokids.fr",
     to: email,
@@ -15,6 +19,10 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 const sendResetPasswordEmail = async (email, token) => {
+    if (!resend) {
+      throw new Error("Service email indisponible : RESEND_API_KEY manquante.");
+    }
+
     await resend.emails.send({
       from: "noreply@haptokids.fr",
       to: email,
@@ -29,6 +37,10 @@ const sendResetPasswordEmail = async (email, token) => {
     });
   };
   const sendOrderConfirmationEmail = async (email, order) => {
+    if (!resend) {
+      throw new Error("Service email indisponible : RESEND_API_KEY manquante.");
+    }
+
     await resend.emails.send({
       from: "noreply@haptokids.fr",
       to: email,
