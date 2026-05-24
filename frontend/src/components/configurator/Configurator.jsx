@@ -194,6 +194,65 @@ function Configurator() {
   );
   const previewModules = selectedModules.slice(0, previewPlacements.length);
 
+  const renderBoardPreview = (className = "") => (
+    <div className={["configurator__preview-card", className].join(" ").trim()}>
+      <div
+        className={`configurator__board configurator__board--${boardSizeModifier}`}
+      >
+        <div className="configurator__board-surface">
+          <div
+            className="configurator__board-holes"
+            style={{
+              "--board-columns": String(holeLayout.columns),
+              "--board-rows": String(holeLayout.rows),
+            }}
+          >
+            {holeItems.map((holeIndex) => (
+              <span
+                key={`board-hole-${holeIndex}`}
+                className={`configurator__board-hole ${holeIndex < usedHoles ? "configurator__board-hole--used" : ""}`}
+              />
+            ))}
+          </div>
+
+          {previewModules.length > 0 ? (
+            <div className="configurator__board-modules">
+              {previewModules.map((module, index) => {
+                const placement = previewPlacements[index];
+                const span = Math.min(
+                  Math.max(module.variant.holesRequired || 1, 1),
+                  4
+                );
+
+                return (
+                  <div
+                    key={`preview-module-${module.variant.id}`}
+                    className={`configurator__board-module configurator__board-module--span-${span}`}
+                    style={{
+                      "--module-top": placement.top,
+                      "--module-left": placement.left,
+                      "--module-rotate": placement.rotate,
+                    }}
+                  >
+                    <span className="configurator__board-module-name">
+                      {getPreviewModuleLabel(module.product.name)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="configurator__board-empty">
+              Selectionnez vos modules pour visualiser la composition.
+            </p>
+          )}
+
+          <span className="configurator__board-brand">HAPTO</span>
+        </div>
+      </div>
+    </div>
+  );
+
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
 
@@ -250,6 +309,8 @@ function Configurator() {
               modules que vous voulez y integrer.
             </p>
 
+            {renderBoardPreview("configurator__preview-card--mobile")}
+
             <div className="configurator__rating" aria-label="Note 4,8 sur 5">
               <div className="configurator__stars" aria-hidden="true">
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -299,62 +360,7 @@ function Configurator() {
         </div>
 
         <div className="configurator__right">
-          <div className="configurator__preview-card">
-            <div
-              className={`configurator__board configurator__board--${boardSizeModifier}`}
-            >
-              <div className="configurator__board-surface">
-                <div
-                  className="configurator__board-holes"
-                  style={{
-                    "--board-columns": String(holeLayout.columns),
-                    "--board-rows": String(holeLayout.rows),
-                  }}
-                >
-                  {holeItems.map((holeIndex) => (
-                    <span
-                      key={`board-hole-${holeIndex}`}
-                      className={`configurator__board-hole ${holeIndex < usedHoles ? "configurator__board-hole--used" : ""}`}
-                    />
-                  ))}
-                </div>
-
-                {previewModules.length > 0 ? (
-                  <div className="configurator__board-modules">
-                    {previewModules.map((module, index) => {
-                      const placement = previewPlacements[index];
-                      const span = Math.min(
-                        Math.max(module.variant.holesRequired || 1, 1),
-                        4
-                      );
-
-                      return (
-                        <div
-                          key={`preview-module-${module.variant.id}`}
-                          className={`configurator__board-module configurator__board-module--span-${span}`}
-                          style={{
-                            "--module-top": placement.top,
-                            "--module-left": placement.left,
-                            "--module-rotate": placement.rotate,
-                          }}
-                        >
-                          <span className="configurator__board-module-name">
-                            {getPreviewModuleLabel(module.product.name)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="configurator__board-empty">
-                    Selectionnez vos modules pour visualiser la composition.
-                  </p>
-                )}
-
-                <span className="configurator__board-brand">HAPTO</span>
-              </div>
-            </div>
-          </div>
+          {renderBoardPreview("configurator__preview-card--desktop")}
 
           <div className="configurator__benefits">
             {benefitItems.map((item) => {
