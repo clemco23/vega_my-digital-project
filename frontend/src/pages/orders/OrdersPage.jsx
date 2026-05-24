@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import SiteFooter from "../../components/footer/SiteFooter";
 import Navbar from "../../components/navbar/Navbar";
 import { formatPrice } from "../../components/cart/cart.utils";
-import { getMyOrders } from "../../services/order.service";
+import { getMyOrders, getOrderById } from "../../services/order.service";
 import { createCheckoutSession } from "../../services/payment.service";
 import "./OrdersPage.css";
 
@@ -44,6 +44,10 @@ function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [payingOrderId, setPayingOrderId] = useState(null);
+  const pendingOrderIds = orders
+    .filter((order) => order.orderStatus === "PENDING")
+    .map((order) => String(order.id))
+    .join("|");
 
   useEffect(() => {
     let isCancelled = false;
@@ -81,6 +85,117 @@ function OrdersPage() {
   const createdOrderId = searchParams.get("created");
   const paymentState = searchParams.get("payment");
   const paymentOrderId = searchParams.get("order");
+  const paymentOrder = orders.find(
+    (order) => String(order.id) === String(paymentOrderId)
+  );
+  const isPaymentConfirmationPending =
+    paymentState === "success" &&
+    paymentOrderId &&
+    paymentOrder?.orderStatus === "PENDING";
+
+  useEffect(() => {
+    if (paymentState !== "success" || !paymentOrderId) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+    let timeoutId = null;
+    let attempts = 0;
+
+    const syncPaidOrder = async () => {
+      try {
+        const refreshedOrder = await getOrderById(paymentOrderId);
+
+        if (isCancelled) {
+          return;
+        }
+
+        setOrders((previousOrders) => {
+          const hasOrder = previousOrders.some(
+            (order) => String(order.id) === String(refreshedOrder.id)
+          );
+
+          if (!hasOrder) {
+            return [refreshedOrder, ...previousOrders];
+          }
+
+          return previousOrders.map((order) =>
+            String(order.id) === String(refreshedOrder.id) ? refreshedOrder : order
+          );
+        });
+
+        if (refreshedOrder.orderStatus !== "PENDING") {
+          return;
+        }
+      } catch (syncError) {
+        if (!isCancelled) {
+          console.error(syncError);
+        }
+      }
+
+      attempts += 1;
+
+      if (isCancelled || attempts >= 8) {
+        return;
+      }
+
+      timeoutId = window.setTimeout(syncPaidOrder, 2000);
+    };
+
+    void syncPaidOrder();
+
+    return () => {
+      isCancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [paymentOrderId, paymentState]);
+
+  useEffect(() => {
+    if (!pendingOrderIds || loading) {
+      return undefined;
+    }
+
+    let isCancelled = false;
+    let attempts = 0;
+    let intervalId = null;
+
+    const refreshPendingOrders = async () => {
+      try {
+        const nextOrders = await getMyOrders();
+
+        if (isCancelled) {
+          return;
+        }
+
+        setOrders(nextOrders);
+
+        const hasPendingOrder = nextOrders.some(
+          (order) => order.orderStatus === "PENDING"
+        );
+
+        if (!hasPendingOrder) {
+          window.clearInterval(intervalId);
+        }
+      } catch (refreshError) {
+        if (!isCancelled) {
+          console.error(refreshError);
+        }
+      } finally {
+        attempts += 1;
+
+        if (attempts >= 10) {
+          window.clearInterval(intervalId);
+        }
+      }
+    };
+
+    intervalId = window.setInterval(refreshPendingOrders, 3000);
+
+    return () => {
+      isCancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [loading, pendingOrderIds]);
 
   const handlePayOrder = async (orderId) => {
     try {
@@ -101,7 +216,9 @@ function OrdersPage() {
 
   const bannerMessage =
     paymentState === "success" && paymentOrderId
-      ? `Le paiement de votre commande #${paymentOrderId} a ete confirme.`
+      ? isPaymentConfirmationPending
+        ? `Le paiement de votre commande #${paymentOrderId} a bien ete recu. Confirmation en cours...`
+        : `Le paiement de votre commande #${paymentOrderId} a ete confirme.`
       : paymentState === "cancel" && paymentOrderId
         ? `Le paiement de votre commande #${paymentOrderId} a ete annule. Vous pouvez le reprendre ci-dessous.`
       : paymentState === "unavailable" && createdOrderId
@@ -222,9 +339,16 @@ function OrdersPage() {
                       type="button"
                       className="order-card__pay-button"
                       onClick={() => handlePayOrder(order.id)}
-                      disabled={payingOrderId === order.id}
+                      disabled={
+                        payingOrderId === order.id ||
+                        (paymentState === "success" &&
+                          String(paymentOrderId) === String(order.id))
+                      }
                     >
-                      {payingOrderId === order.id
+                      {paymentState === "success" &&
+                      String(paymentOrderId) === String(order.id)
+                        ? "Confirmation en cours..."
+                        : payingOrderId === order.id
                         ? "Redirection..."
                         : "Payer maintenant"}
                     </button>
