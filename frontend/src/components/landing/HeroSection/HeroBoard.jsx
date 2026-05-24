@@ -2,6 +2,7 @@
 
 import { createSwapy } from "swapy";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import "./HeroBoard.css";
 
@@ -207,29 +208,35 @@ function HeroBoard() {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="hero-board"
-      aria-label="Modules interchangeables"
-    >
-      {tiles.map(({ slotId, itemId, slotClass, itemClass, iconClass, icon, label }) => (
-        <div
-          key={slotId}
-          data-swapy-slot={slotId}
-          className={`hero-board__slot ${slotClass}`}
-        >
+    <div className="hero-board__group">
+      <div
+        ref={containerRef}
+        className="hero-board"
+        aria-label="Modules interchangeables"
+      >
+        {tiles.map(({ slotId, itemId, slotClass, itemClass, iconClass, icon, label }) => (
           <div
-            data-swapy-item={itemId}
-            className={`hero-board__item ${itemClass} ${hintedItemId === itemId ? "hero-board__item--hint" : ""}`}
-            aria-label={label}
-            title={label}
+            key={slotId}
+            data-swapy-slot={slotId}
+            className={`hero-board__slot ${slotClass}`}
           >
-            <span className={`hero-board__icon ${iconClass}`} aria-hidden="true">
-              {icon}
-            </span>
+            <div
+              data-swapy-item={itemId}
+              className={`hero-board__item ${itemClass} ${hintedItemId === itemId ? "hero-board__item--hint" : ""}`}
+              aria-label={label}
+              title={label}
+            >
+              <span className={`hero-board__icon ${iconClass}`} aria-hidden="true">
+                {icon}
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <Link to="/la-planche" className="hero-board__cta">
+        Composer ma planche
+      </Link>
     </div>
   );
 }
