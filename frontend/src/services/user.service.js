@@ -10,7 +10,17 @@ export const getCurrentUserProfile = async () => {
   return data.data;
 };
 
+export const updateUserProfile = async (userId, payload) => {
+  const { data } = await api.patch(`/users/${userId}`, payload);
+  return data.data;
+};
+
 export const updateUserRole = async (userId, role) => {
   const { data } = await api.patch(`/users/${userId}/role`, { role });
   return data.data;
+};
+
+export const deleteUserAccount = async (userId) => {
+  const { data } = await api.delete(`/users/${userId}`);
+  return data;
 };

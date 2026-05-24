@@ -3,13 +3,14 @@ const {
   createAddress,
   updateAddress,
   deleteAddress,
-    getUserAddressesById,
+  getUserAddressesById,
 } = require("../services/address.service");
+const { serializeForJson } = require("../utils/serialize");
 
 const getAll = async (req, res) => {
   try {
     const addresses = await getUserAddresses(req.user.id);
-    return res.status(200).json({ data: addresses });
+    return res.status(200).json({ data: serializeForJson(addresses) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -19,11 +20,13 @@ const getAll = async (req, res) => {
 const getByuserId = async (req, res) => {
   try {
     const { userId } = req.params;
+
     if (isNaN(userId)) {
       return res.status(400).json({ message: "ID utilisateur invalide." });
     }
+
     const addresses = await getUserAddressesById(userId);
-    return res.status(200).json({ data: addresses });
+    return res.status(200).json({ data: serializeForJson(addresses) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -32,16 +35,26 @@ const getByuserId = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { street, city, postalCode, country, addressType, relayPointId, relayName } = req.body;
+    const {
+      street,
+      city,
+      postalCode,
+      country,
+      addressType,
+      relayPointId,
+      relayName,
+    } = req.body;
 
     if (addressType === "RELAY_POINT") {
       if (!relayPointId || !relayName || !city || !postalCode) {
-        return res.status(400).json({ message: "Champs obligatoires manquants pour le point relais." });
+        return res.status(400).json({
+          message: "Champs obligatoires manquants pour le point relais.",
+        });
       }
-    } else {
-      if (!street || !city || !postalCode) {
-        return res.status(400).json({ message: "Champs obligatoires manquants." });
-      }
+    } else if (!street || !city || !postalCode) {
+      return res.status(400).json({
+        message: "Champs obligatoires manquants.",
+      });
     }
 
     const address = await createAddress(req.user.id, {
@@ -54,7 +67,10 @@ const create = async (req, res) => {
       relayName,
     });
 
-    return res.status(201).json({ message: "Adresse ajoutée.", data: address });
+    return res.status(201).json({
+      message: "Adresse ajoutee.",
+      data: serializeForJson(address),
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -74,7 +90,11 @@ const update = async (req, res) => {
     if (addressType) data.addressType = addressType;
 
     const address = await updateAddress(id, req.user.id, data);
-    return res.status(200).json({ message: "Adresse mise à jour.", data: address });
+
+    return res.status(200).json({
+      message: "Adresse mise a jour.",
+      data: serializeForJson(address),
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -84,7 +104,7 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
     await deleteAddress(id, req.user.id);
-    return res.status(200).json({ message: "Adresse supprimée." });
+    return res.status(200).json({ message: "Adresse supprimee." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
