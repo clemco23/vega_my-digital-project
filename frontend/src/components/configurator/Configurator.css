@@ -135,13 +135,20 @@
 
 .configurator__preview-card {
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: flex-start;
+  min-height: clamp(360px, 31vw, 420px);
+}
+
+.configurator__preview-card--mobile {
+  display: none;
 }
 
 .configurator__board {
   width: 100%;
   max-width: 560px;
+  flex-shrink: 0;
   transition: width 0.25s ease;
 }
 
@@ -344,12 +351,18 @@
 
   .configurator__preview-card {
     justify-content: flex-start;
+    min-height: auto;
   }
 }
 
 @media (max-width: 720px) {
   .configurator {
     padding: 34px 16px 72px;
+  }
+
+  .configurator__right {
+    order: 0;
+    gap: 20px;
   }
 
   .configurator__left {
@@ -364,6 +377,16 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
+  }
+
+  .configurator__preview-card--mobile {
+    display: flex;
+    min-height: auto;
+    margin: 4px 0 2px;
+  }
+
+  .configurator__preview-card--desktop {
+    display: none;
   }
 
   .configurator__board--small,
