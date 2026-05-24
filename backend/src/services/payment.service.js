@@ -10,37 +10,125 @@ const ensureStripeConfigured = () => {
   }
 };
 
-const createCheckoutSession = async (orderId, userId) => {
-  ensureStripeConfigured();
-
-  const order = await prisma.order.findFirst({
-    where: {
-      id: parseInt(orderId),
-      userId: BigInt(userId),
-    },
+const paymentOrderInclude = {
+  orderVariants: {
     include: {
-      orderVariants: {
+      productVariant: {
         include: {
-          productVariant: {
-            include: {
-              product : true,
-            }
-          },
+          product: true,
         },
       },
     },
+  },
+};
+
+const sendOrderConfirmationEmailSafely = async (order) => {
+  if (!order?.customerEmail) {
+    return;
+  }
+
+  try {
+    await sendOrderConfirmationEmail(order.customerEmail, order);
+  } catch (error) {
+    console.error(
+      `Impossible d'envoyer l'email de confirmation pour la commande #${order.id}:`,
+      error.message
+    );
+  }
+};
+
+const markOrderAsPaid = async (orderId) => {
+  const normalizedOrderId = parseInt(orderId, 10);
+
+  return prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: normalizedOrderId },
+      include: paymentOrderInclude,
+    });
+
+    if (!order) {
+      throw new Error("Commande introuvable.");
+    }
+
+    if (order.orderStatus === "PAID") {
+      return {
+        order,
+        justMarkedAsPaid: false,
+      };
+    }
+
+    const updateResult = await tx.order.updateMany({
+      where: {
+        id: normalizedOrderId,
+        NOT: {
+          orderStatus: "PAID",
+        },
+      },
+      data: {
+        orderStatus: "PAID",
+      },
+    });
+
+    if (updateResult.count === 0) {
+      const refreshedOrder = await tx.order.findUnique({
+        where: { id: normalizedOrderId },
+        include: paymentOrderInclude,
+      });
+
+      return {
+        order: refreshedOrder,
+        justMarkedAsPaid: false,
+      };
+    }
+
+    for (const ov of order.orderVariants) {
+      await tx.productVariant.update({
+        where: { id: ov.productVariantId },
+        data: {
+          stock: ov.productVariant.stock - ov.quantity,
+        },
+      });
+    }
+
+    const refreshedOrder = await tx.order.findUnique({
+      where: { id: normalizedOrderId },
+      include: paymentOrderInclude,
+    });
+
+    return {
+      order: refreshedOrder,
+      justMarkedAsPaid: true,
+    };
+  });
+};
+
+const createCheckoutSession = async (orderId, userId) => {
+  ensureStripeConfigured();
+
+  const normalizedOrderId = parseInt(orderId, 10);
+  const order = await prisma.order.findFirst({
+    where: {
+      id: normalizedOrderId,
+      userId: BigInt(userId),
+    },
+    include: paymentOrderInclude,
   });
 
-  if (!order) throw new Error("Commande introuvable.");
-  if (order.orderStatus !== "PENDING") throw new Error("Cette commande ne peut pas être payée.");
+  if (!order) {
+    throw new Error("Commande introuvable.");
+  }
 
-  const session = await stripe.checkout.sessions.create({
+  if (order.orderStatus !== "PENDING") {
+    throw new Error("Cette commande ne peut pas etre payee.");
+  }
+
+  return stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
-    success_url: `${process.env.FRONTEND_URL}/orders/${orderId}/success`,
-    cancel_url: `${process.env.FRONTEND_URL}/orders/${orderId}/cancel`,
+    success_url: `${process.env.FRONTEND_URL}/orders/${normalizedOrderId}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.FRONTEND_URL}/orders/${normalizedOrderId}/cancel`,
     metadata: {
-      orderId: orderId.toString(),
+      orderId: normalizedOrderId.toString(),
       userId: userId.toString(),
     },
     line_items: order.orderVariants.map((ov) => ({
@@ -54,8 +142,51 @@ const createCheckoutSession = async (orderId, userId) => {
       quantity: ov.quantity,
     })),
   });
+};
 
-  return session;
+const confirmCheckoutSession = async (orderId, sessionId, userId) => {
+  ensureStripeConfigured();
+
+  if (!sessionId) {
+    throw new Error("session_id manquant.");
+  }
+
+  const normalizedOrderId = parseInt(orderId, 10);
+  const order = await prisma.order.findFirst({
+    where: {
+      id: normalizedOrderId,
+      userId: BigInt(userId),
+    },
+    select: {
+      id: true,
+      orderStatus: true,
+    },
+  });
+
+  if (!order) {
+    throw new Error("Commande introuvable.");
+  }
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+  if (
+    session.metadata?.orderId !== normalizedOrderId.toString() ||
+    session.metadata?.userId !== userId.toString()
+  ) {
+    throw new Error("Session Stripe invalide pour cette commande.");
+  }
+
+  if (session.payment_status !== "paid") {
+    throw new Error("Le paiement Stripe n'est pas encore confirme.");
+  }
+
+  const result = await markOrderAsPaid(normalizedOrderId);
+
+  if (result.justMarkedAsPaid) {
+    await sendOrderConfirmationEmailSafely(result.order);
+  }
+
+  return result.order;
 };
 
 const handleWebhook = async (payload, signature) => {
@@ -75,45 +206,19 @@ const handleWebhook = async (payload, signature) => {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    const orderId = parseInt(session.metadata.orderId);
+    const orderId = parseInt(session.metadata.orderId, 10);
+    const result = await markOrderAsPaid(orderId);
 
-    // Récupérer la commande avec ses items
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        orderVariants: {
-          include: { 
-            productVariant: {
-              include: {
-                product: true 
-              }
-            } 
-          },
-        },
-      },
-    });
-
-    if (!order) throw new Error("Commande introuvable.");
-
-    // Mettre à jour le statut
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { orderStatus: "PAID" },
-    });
-
-    // Diminuer le stock
-    for (const ov of order.orderVariants) {
-      await prisma.productVariant.update({
-        where: { id: ov.productVariantId },
-        data: {
-          stock: ov.productVariant.stock - ov.quantity,
-        },
-      });
+    if (result.justMarkedAsPaid) {
+      await sendOrderConfirmationEmailSafely(result.order);
     }
-    await sendOrderConfirmationEmail(order.customerEmail, order);
   }
 
   return event;
 };
 
-module.exports = { createCheckoutSession, handleWebhook };
+module.exports = {
+  createCheckoutSession,
+  confirmCheckoutSession,
+  handleWebhook,
+};
