@@ -1,8 +1,18 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? require("stripe")(process.env.STRIPE_SECRET_KEY)
+  : null;
 const prisma = require("../config/prisma");
 const { sendOrderConfirmationEmail } = require("./mail.service");
 
+const ensureStripeConfigured = () => {
+  if (!stripe) {
+    throw new Error("Paiement indisponible : STRIPE_SECRET_KEY manquante.");
+  }
+};
+
 const createCheckoutSession = async (orderId, userId) => {
+  ensureStripeConfigured();
+
   const order = await prisma.order.findFirst({
     where: {
       id: parseInt(orderId),
@@ -49,6 +59,8 @@ const createCheckoutSession = async (orderId, userId) => {
 };
 
 const handleWebhook = async (payload, signature) => {
+  ensureStripeConfigured();
+
   let event;
 
   try {
