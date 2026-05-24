@@ -1,4 +1,4 @@
-import Banner from "../../components/landing/Banner/Banner";
+import Banner from "../../components/landing/banner/Banner";
 import CircularEconomySection from "../../components/landing/CircularEconomySection/CircularEconomySection";
 import FooterLp from "../../components/landing/FooterLp/FooterLp";
 import Header from "../../components/landing/header/Header";
