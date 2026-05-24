@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CartEmptyState from "../../components/cart/CartEmptyState/CartEmptyState";
 import CartHero from "../../components/cart/CartHero/CartHero";
 import CartItemCard from "../../components/cart/CartItemCard/CartItemCard";
@@ -12,14 +13,25 @@ import {
   removeCartItem,
   updateCartItem,
 } from "../../services/cart.service";
+import { getMyAddresses } from "../../services/address.service";
+import { createOrder } from "../../services/order.service";
+import { createCheckoutSession } from "../../services/payment.service";
 import "./CartPage.css";
 
+const getPreferredAddress = (addresses = []) =>
+  addresses.find((item) => item.addressType === "SHIPPING") || addresses[0] || null;
+
 function CartPage() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState({ items: [], total: "0.00" });
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingAddress, setLoadingAddress] = useState(true);
   const [error, setError] = useState("");
+  const [addressMessage, setAddressMessage] = useState("");
   const [pendingItemId, setPendingItemId] = useState(null);
   const [isClearing, setIsClearing] = useState(false);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const loadCart = async () => {
     try {
@@ -34,8 +46,31 @@ function CartPage() {
     }
   };
 
+  const loadAddress = async () => {
+    try {
+      const addresses = await getMyAddresses();
+      const preferredAddress = getPreferredAddress(addresses);
+
+      setSelectedAddress(preferredAddress);
+      setAddressMessage(
+        preferredAddress
+          ? ""
+          : "Ajoutez une adresse de livraison depuis votre profil avant de valider votre panier."
+      );
+    } catch (addressLoadError) {
+      console.error(addressLoadError);
+      setSelectedAddress(null);
+      setAddressMessage(
+        "Impossible de charger votre adresse de livraison pour le moment."
+      );
+    } finally {
+      setLoadingAddress(false);
+    }
+  };
+
   useEffect(() => {
     void loadCart();
+    void loadAddress();
   }, []);
 
   const handleQuantityChange = async (item, nextQuantity) => {
@@ -98,6 +133,42 @@ function CartPage() {
     }
   };
 
+  const handleCheckout = async () => {
+    if (!selectedAddress?.id) {
+      setError(
+        "Ajoutez une adresse de livraison dans votre profil avant de valider votre panier."
+      );
+      return;
+    }
+
+    let createdOrder = null;
+
+    try {
+      setIsCreatingOrder(true);
+      setError("");
+
+      createdOrder = await createOrder(selectedAddress.id);
+      const checkoutUrl = await createCheckoutSession(createdOrder.id);
+      window.location.href = checkoutUrl;
+    } catch (createOrderError) {
+      console.error(createOrderError);
+      const errorMessage =
+        createOrderError.response?.data?.message ||
+        "Impossible de creer votre commande.";
+
+      if (createdOrder?.id) {
+        navigate(
+          `/commandes?created=${encodeURIComponent(createdOrder.id)}&payment=unavailable`
+        );
+        return;
+      }
+
+      setError(errorMessage);
+    } finally {
+      setIsCreatingOrder(false);
+    }
+  };
+
   const totalItems = cart.items.reduce(
     (accumulator, item) => accumulator + item.quantity,
     0
@@ -134,7 +205,12 @@ function CartPage() {
             <CartSummary
               totalItems={totalItems}
               totalAmount={cart.total}
+              shippingAddress={selectedAddress}
+              addressMessage={addressMessage}
+              isLoadingAddress={loadingAddress}
+              isCreatingOrder={isCreatingOrder}
               isClearing={isClearing}
+              onCheckout={handleCheckout}
               onClear={handleClearCart}
             />
           </section>

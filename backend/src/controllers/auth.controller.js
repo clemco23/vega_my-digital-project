@@ -8,6 +8,7 @@ const {
   forgotPassword,
   resetPassword,
 } = require("../services/auth.service");
+const { getUserById } = require("../services/user.service");
 const {
   sendVerificationEmail,
   sendResetPasswordEmail,
@@ -193,7 +194,7 @@ const resetPasswordController = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    const user = await findUserByEmail(req.user.email);
+    const user = await getUserById(req.user.id);
 
     if (!user) {
       return res.status(404).json({ message: "Utilisateur introuvable." });

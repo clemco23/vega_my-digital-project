@@ -15,6 +15,7 @@ import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import CartPage from "./pages/cart/CartPage";
 import LandingPage from "./pages/landing/LandingPage";
+import OrderPaymentStatusPage from "./pages/orders/OrderPaymentStatusPage";
 import OrdersPage from "./pages/orders/OrdersPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import StaticInfoPage from "./pages/StaticInfoPage";
@@ -150,6 +151,22 @@ function App() {
           element={
             <ProtectedRoute>
               <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId/success"
+          element={
+            <ProtectedRoute>
+              <OrderPaymentStatusPage paymentStatus="success" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId/cancel"
+          element={
+            <ProtectedRoute>
+              <OrderPaymentStatusPage paymentStatus="cancel" />
             </ProtectedRoute>
           }
         />

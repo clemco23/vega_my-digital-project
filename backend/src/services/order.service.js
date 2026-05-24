@@ -1,52 +1,131 @@
 const prisma = require("../config/prisma");
 
-// ============ PANIER ============
-
-const getOrCreateCart = async (userId) => {
-  let cart = await prisma.order.findFirst({
-    where: {
-      userId: BigInt(userId),
-      orderStatus: "CART",
-    },
+const cartInclude = {
+  orderVariants: {
     include: {
-      orderVariants: {
+      productVariant: {
         include: {
-          productVariant: {
-            include: {
-              product: {
-                include: { images: true },
-              },
-            },
+          product: {
+            include: { images: true },
           },
         },
       },
     },
+  },
+};
+
+const getCartTotal = (orderVariants = []) =>
+  orderVariants.reduce((total, ov) => {
+    return total + parseFloat(ov.productVariant.price) * ov.quantity;
+  }, 0);
+
+const mergeCartIntoPrimary = async (tx, primaryCartId, secondaryCartId) => {
+  const secondaryVariants = await tx.orderVariant.findMany({
+    where: { orderId: secondaryCartId },
   });
 
-  if (!cart) {
-    cart = await prisma.order.create({
-      data: {
-        userId: BigInt(userId),
-        orderStatus: "CART",
-        totalAmount: 0,
-      },
-      include: {
-        orderVariants: {
-          include: {
-            productVariant: {
-              include: {
-                product: {
-                  include: { images: true },
-                },
-              },
-            },
-          },
+  for (const secondaryVariant of secondaryVariants) {
+    const existingVariant = await tx.orderVariant.findUnique({
+      where: {
+        orderId_productVariantId: {
+          orderId: primaryCartId,
+          productVariantId: secondaryVariant.productVariantId,
         },
       },
     });
+
+    if (existingVariant) {
+      await tx.orderVariant.update({
+        where: {
+          orderId_productVariantId: {
+            orderId: primaryCartId,
+            productVariantId: secondaryVariant.productVariantId,
+          },
+        },
+        data: {
+          quantity: existingVariant.quantity + secondaryVariant.quantity,
+        },
+      });
+
+      await tx.orderVariant.delete({
+        where: {
+          orderId_productVariantId: {
+            orderId: secondaryCartId,
+            productVariantId: secondaryVariant.productVariantId,
+          },
+        },
+      });
+    } else {
+      await tx.orderVariant.update({
+        where: {
+          orderId_productVariantId: {
+            orderId: secondaryCartId,
+            productVariantId: secondaryVariant.productVariantId,
+          },
+        },
+        data: {
+          orderId: primaryCartId,
+        },
+      });
+    }
   }
 
-  return cart;
+  await tx.order.delete({
+    where: { id: secondaryCartId },
+  });
+};
+
+// ============ PANIER ============
+
+const getOrCreateCart = async (userId) => {
+  const normalizedUserId = BigInt(userId);
+
+  return prisma.$transaction(async (tx) => {
+    const carts = await tx.order.findMany({
+      where: {
+        userId: normalizedUserId,
+        orderStatus: "CART",
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+      include: cartInclude,
+    });
+
+    if (carts.length === 0) {
+      return tx.order.create({
+        data: {
+          userId: normalizedUserId,
+          orderStatus: "CART",
+          totalAmount: 0,
+        },
+        include: cartInclude,
+      });
+    }
+
+    const [primaryCart, ...secondaryCarts] = carts;
+
+    for (const secondaryCart of secondaryCarts) {
+      await mergeCartIntoPrimary(tx, primaryCart.id, secondaryCart.id);
+    }
+
+    const normalizedCart = await tx.order.findUnique({
+      where: { id: primaryCart.id },
+      include: cartInclude,
+    });
+
+    const nextTotal = getCartTotal(normalizedCart?.orderVariants || []);
+
+    await tx.order.update({
+      where: { id: primaryCart.id },
+      data: { totalAmount: nextTotal },
+    });
+
+    return tx.order.findUnique({
+      where: { id: primaryCart.id },
+      include: cartInclude,
+    });
+  });
 };
 
 const addToCart = async (userId, productVariantId, quantity = 1) => {
@@ -171,9 +250,7 @@ const clearCart = async (userId) => {
 };
 
 const calculateTotal = (orderVariants) => {
-  return orderVariants.reduce((total, ov) => {
-    return total + parseFloat(ov.productVariant.price) * ov.quantity;
-  }, 0);
+  return getCartTotal(orderVariants);
 };
 
 // ============ COMMANDES ============

@@ -11,8 +11,7 @@ const {
   getAllOrders,
   calculateTotal,
 } = require("../services/order.service");
-
-// ============ PANIER ============
+const { serializeForJson } = require("../utils/serialize");
 
 const getCart = async (req, res) => {
   try {
@@ -52,7 +51,11 @@ const addItem = async (req, res) => {
     }
 
     const cart = await addToCart(req.user.id, productVariantId, quantity);
-    return res.status(200).json({ message: "Produit ajouté au panier.", data: cart });
+
+    return res.status(200).json({
+      message: "Produit ajoute au panier.",
+      data: serializeForJson(cart),
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -62,7 +65,11 @@ const removeItem = async (req, res) => {
   try {
     const { variantId } = req.params;
     const cart = await removeFromCart(req.user.id, variantId);
-    return res.status(200).json({ message: "Produit retiré du panier.", data: cart });
+
+    return res.status(200).json({
+      message: "Produit retire du panier.",
+      data: serializeForJson(cart),
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -71,14 +78,12 @@ const removeItem = async (req, res) => {
 const emptyCart = async (req, res) => {
   try {
     await clearCart(req.user.id);
-    return res.status(200).json({ message: "Panier vidé." });
+    return res.status(200).json({ message: "Panier vide." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
   }
 };
-
-// ============ COMMANDES ============
 
 const create = async (req, res) => {
   try {
@@ -89,7 +94,11 @@ const create = async (req, res) => {
     }
 
     const order = await createOrder(req.user.id, addressId);
-    return res.status(201).json({ message: "Commande créée.", data: order });
+
+    return res.status(201).json({
+      message: "Commande creee.",
+      data: serializeForJson(order),
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -98,7 +107,7 @@ const create = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const orders = await getUserOrders(req.user.id);
-    return res.status(200).json({ data: orders });
+    return res.status(200).json({ data: serializeForJson(orders) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -109,7 +118,7 @@ const getOne = async (req, res) => {
   try {
     const { id } = req.params;
     const order = await getOrderById(id, req.user.id);
-    return res.status(200).json({ data: order });
+    return res.status(200).json({ data: serializeForJson(order) });
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
@@ -120,13 +129,26 @@ const updateStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const validStatuses = ["PENDING", "PAID", "PREPARING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED"];
+    const validStatuses = [
+      "PENDING",
+      "PAID",
+      "PREPARING",
+      "SHIPPED",
+      "DELIVERED",
+      "CANCELLED",
+      "REFUNDED",
+    ];
+
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Statut invalide." });
     }
 
     const order = await updateOrderStatus(id, status);
-    return res.status(200).json({ message: "Statut mis à jour.", data: order });
+
+    return res.status(200).json({
+      message: "Statut mis a jour.",
+      data: serializeForJson(order),
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -136,7 +158,7 @@ const updateStatus = async (req, res) => {
 const getAllAdmin = async (req, res) => {
   try {
     const orders = await getAllOrders();
-    return res.status(200).json({ data: orders });
+    return res.status(200).json({ data: serializeForJson(orders) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -149,15 +171,29 @@ const updateItem = async (req, res) => {
     const { quantity } = req.body;
 
     if (!quantity) {
-      return res.status(400).json({ message: "Quantité obligatoire." });
+      return res.status(400).json({ message: "Quantite obligatoire." });
     }
 
     const cart = await updateCartItem(req.user.id, variantId, quantity);
-    return res.status(200).json({ message: "Quantité mise à jour.", data: cart });
+
+    return res.status(200).json({
+      message: "Quantite mise a jour.",
+      data: serializeForJson(cart),
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-module.exports = { getCart, addItem, updateItem, removeItem, emptyCart, create, getAll, getOne, updateStatus, getAllAdmin };
-
+module.exports = {
+  getCart,
+  addItem,
+  updateItem,
+  removeItem,
+  emptyCart,
+  create,
+  getAll,
+  getOne,
+  updateStatus,
+  getAllAdmin,
+};
