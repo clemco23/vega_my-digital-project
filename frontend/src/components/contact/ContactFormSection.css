@@ -1,0 +1,27 @@
+.contact-form-section {
+  padding: clamp(52px, 7vw, 110px) 20px clamp(72px, 10vw, 120px);
+  background: #667328;
+}
+
+.contact-form-section__inner {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+}
+
+.contact-form-section__form-shell {
+  padding: clamp(28px, 5vw, 48px);
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: 0 22px 46px rgba(53, 42, 24, 0.12);
+}
+
+@media (max-width: 540px) {
+  .contact-form-section {
+    padding: 54px 16px 68px;
+  }
+
+  .contact-form-section__form-shell {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+}

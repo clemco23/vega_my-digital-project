@@ -1,0 +1,176 @@
+.board-size__label {
+  margin: 0 0 12px;
+  color: var(--color-dark);
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.board-size__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.board-size__btn {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 152px;
+  min-height: 150px;
+  padding: 18px;
+  border: 1px solid #d5d0c8;
+  border-radius: 0;
+  background-color: rgba(255, 255, 255, 0.72);
+  color: var(--color-dark);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.board-size__btn:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 36%, transparent);
+  transform: translateY(-1px);
+}
+
+.board-size__btn--active {
+  border-color: var(--color-primary);
+  background-color: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary) 22%, transparent);
+}
+
+.board-size__preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-size__preview-surface {
+  --preview-width: 92px;
+  --preview-height: 52px;
+  --preview-columns: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--preview-columns), minmax(0, 1fr));
+  align-content: center;
+  justify-items: center;
+  gap: 6px;
+  width: var(--preview-width);
+  height: var(--preview-height);
+  padding: 8px 10px;
+  border: 4px solid #b77d48;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 28%),
+    linear-gradient(135deg, #dbb37f 0%, #c58d55 46%, #bf824b 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(112, 70, 32, 0.18),
+    0 8px 16px rgba(61, 46, 28, 0.12);
+}
+
+.board-size__preview--s .board-size__preview-surface {
+  --preview-width: 74px;
+  --preview-height: 44px;
+  --preview-columns: 3;
+}
+
+.board-size__preview--m .board-size__preview-surface {
+  --preview-width: 92px;
+  --preview-height: 52px;
+  --preview-columns: 4;
+}
+
+.board-size__preview--l .board-size__preview-surface {
+  --preview-width: 110px;
+  --preview-height: 58px;
+  --preview-columns: 5;
+}
+
+.board-size__preview-hole {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, #8e5931 0%, #70421d 48%, #533019 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(20, 12, 7, 0.24),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.board-size__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.board-size__text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.board-size__details {
+  color: color-mix(in srgb, var(--color-text) 72%, #8f8274 28%);
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.board-size__indicator {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #d5d0c8;
+  border-radius: 50%;
+  background-color: transparent;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.board-size__indicator--active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+.board-size__btn--active .board-size__details {
+  color: color-mix(in srgb, var(--color-primary) 70%, var(--color-dark) 30%);
+}
+
+@media (max-width: 540px) {
+  .board-size__options {
+    gap: 10px;
+  }
+
+  .board-size__btn {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 0;
+    min-height: 138px;
+    padding: 16px;
+  }
+
+  .board-size__preview--s .board-size__preview-surface {
+    --preview-width: 68px;
+    --preview-height: 40px;
+  }
+
+  .board-size__preview--m .board-size__preview-surface {
+    --preview-width: 82px;
+    --preview-height: 46px;
+  }
+
+  .board-size__preview--l .board-size__preview-surface {
+    --preview-width: 96px;
+    --preview-height: 52px;
+  }
+}

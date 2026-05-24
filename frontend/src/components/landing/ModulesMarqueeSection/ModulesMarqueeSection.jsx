@@ -23,7 +23,7 @@ function ModulesMarqueeSection() {
     <div className="modules-marquee-section">
       <div className="modules-marquee-section__inner">
         <h2 className="modules-marquee-section__title">
-          30+ modules pour chaque etape
+          Un module pour chaque besoin
         </h2>
 
         <Marquee

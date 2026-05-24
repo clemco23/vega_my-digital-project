@@ -1,0 +1,13 @@
+.board-page {
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-background) 94%, white 6%) 0%,
+      color-mix(in srgb, var(--color-background) 97%, white 3%) 100%
+    );
+}
+
+.board-page__content {
+  display: block;
+}

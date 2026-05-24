@@ -1,0 +1,119 @@
+.about-closing-cta {
+  background-color: color-mix(in srgb, var(--color-background) 96%, white 4%);
+  overflow: hidden;
+}
+
+.about-closing-cta__inner {
+  position: relative;
+  width: min(100%, 1360px);
+  margin: 0 auto;
+  padding: clamp(78px, 9vw, 132px) clamp(20px, 3vw, 36px) clamp(82px, 10vw, 136px);
+  text-align: center;
+}
+
+.about-closing-cta__backdrop {
+  position: absolute;
+  inset: clamp(78px, 9vw, 118px) 50% auto;
+  width: min(100%, 1080px);
+  transform: translateX(-50%);
+  opacity: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.about-closing-cta__content {
+  position: relative;
+  z-index: 1;
+}
+
+.about-closing-cta__title {
+  margin: 0;
+  color: var(--color-accent);
+  font-family: var(--font-title);
+  font-size: clamp(2.45rem, 5vw, 4.7rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+
+.about-closing-cta__description {
+  width: min(100%, 620px);
+  margin: 24px auto 0;
+  color: color-mix(in srgb, var(--color-text) 72%, #8f725e 28%);
+  font-size: clamp(1rem, 1.34vw, 1.38rem);
+  font-family: var(--font-body);
+  line-height: 1.72;
+}
+
+.about-closing-cta__button {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 218px;
+  min-height: 54px;
+  margin-top: 28px;
+  padding: 0 28px;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.about-closing-cta__button:hover,
+.about-closing-cta__button:focus-visible {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .about-closing-cta__inner {
+    padding: 64px 18px 82px;
+  }
+
+  .about-closing-cta__backdrop {
+    inset: 76px 50% auto;
+    width: min(100%, 760px);
+  }
+
+  .about-closing-cta__title {
+    font-size: clamp(2.1rem, 9vw, 3.3rem);
+  }
+
+  .about-closing-cta__description {
+    font-size: 0.98rem;
+    line-height: 1.72;
+  }
+}
+
+@media (max-width: 540px) {
+  .about-closing-cta__inner {
+    padding: 56px 16px 68px;
+  }
+
+  .about-closing-cta__backdrop {
+    inset: 72px 50% auto;
+    width: min(100%, 520px);
+  }
+
+  .about-closing-cta__title {
+    font-size: clamp(1.9rem, 10vw, 2.7rem);
+  }
+
+  .about-closing-cta__description {
+    font-size: 0.94rem;
+  }
+
+  .about-closing-cta__button {
+    width: 100%;
+    min-width: 0;
+  }
+}

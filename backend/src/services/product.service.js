@@ -1,5 +1,143 @@
 const prisma = require("../config/prisma");
 
+const createHttpError = (message, statusCode) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};
+
+const calculateOrderVariantsTotal = (orderVariants) => {
+  return orderVariants.reduce((total, orderVariant) => {
+    return total + parseFloat(orderVariant.productVariant.price) * orderVariant.quantity;
+  }, 0);
+};
+
+const cleanupWishlistsForVariants = async (tx, variantIds) => {
+  const wishlists = await tx.wishlist.findMany({
+    where: {
+      variants: {
+        some: {
+          id: { in: variantIds },
+        },
+      },
+    },
+    select: { id: true },
+  });
+
+  for (const wishlist of wishlists) {
+    await tx.wishlist.update({
+      where: { id: wishlist.id },
+      data: {
+        variants: {
+          disconnect: variantIds.map((id) => ({ id })),
+        },
+      },
+    });
+  }
+};
+
+const cleanupCartOrderVariants = async (tx, variantIds) => {
+  const carts = await tx.order.findMany({
+    where: {
+      orderStatus: "CART",
+      orderVariants: {
+        some: {
+          productVariantId: { in: variantIds },
+        },
+      },
+    },
+    select: { id: true },
+  });
+
+  if (carts.length === 0) {
+    return;
+  }
+
+  const cartIds = carts.map((cart) => cart.id);
+
+  await tx.orderVariant.deleteMany({
+    where: {
+      orderId: { in: cartIds },
+      productVariantId: { in: variantIds },
+    },
+  });
+
+  const refreshedCarts = await tx.order.findMany({
+    where: { id: { in: cartIds } },
+    include: {
+      orderVariants: {
+        include: {
+          productVariant: true,
+        },
+      },
+    },
+  });
+
+  for (const cart of refreshedCarts) {
+    await tx.order.update({
+      where: { id: cart.id },
+      data: {
+        totalAmount: calculateOrderVariantsTotal(cart.orderVariants),
+      },
+    });
+  }
+};
+
+const assertVariantsNotUsedInOrders = async (tx, variantIds) => {
+  const usedOrderVariant = await tx.orderVariant.findFirst({
+    where: {
+      productVariantId: { in: variantIds },
+      order: {
+        orderStatus: { not: "CART" },
+      },
+    },
+    include: {
+      order: {
+        select: {
+          id: true,
+          orderStatus: true,
+        },
+      },
+      productVariant: {
+        include: {
+          product: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (usedOrderVariant) {
+    throw createHttpError(
+      `Impossible de supprimer cette variante car elle est deja utilisee dans la commande #${usedOrderVariant.order.id}.`,
+      409
+    );
+  }
+};
+
+const cleanupVariantRelations = async (tx, variantIds) => {
+  if (variantIds.length === 0) {
+    return;
+  }
+
+  await assertVariantsNotUsedInOrders(tx, variantIds);
+
+  await cleanupCartOrderVariants(tx, variantIds);
+  await cleanupWishlistsForVariants(tx, variantIds);
+
+  await tx.setItem.deleteMany({
+    where: {
+      OR: [
+        { setVariantId: { in: variantIds } },
+        { productVariantId: { in: variantIds } },
+      ],
+    },
+  });
+};
+
 const getAllProducts = async () => {
   return prisma.product.findMany({
     where: { isActivated: true },
@@ -87,8 +225,29 @@ const updateProduct = async (id, data) => {
 };
 
 const deleteProduct = async (id) => {
-  return prisma.product.delete({
-    where: { id: parseInt(id) },
+  const productId = parseInt(id);
+
+  return prisma.$transaction(async (tx) => {
+    const product = await tx.product.findUnique({
+      where: { id: productId },
+      include: {
+        variants: {
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!product) {
+      throw createHttpError("Produit introuvable.", 404);
+    }
+
+    const variantIds = product.variants.map((variant) => variant.id);
+
+    await cleanupVariantRelations(tx, variantIds);
+
+    return tx.product.delete({
+      where: { id: productId },
+    });
   });
 };
 
@@ -128,8 +287,23 @@ const deleteProductImage = async (imageId) => {
 };
 
 const deleteVariant = async (variantId) => {
-  return prisma.productVariant.delete({
-    where: { id: parseInt(variantId) },
+  const parsedVariantId = parseInt(variantId);
+
+  return prisma.$transaction(async (tx) => {
+    const variant = await tx.productVariant.findUnique({
+      where: { id: parsedVariantId },
+      select: { id: true },
+    });
+
+    if (!variant) {
+      throw createHttpError("Variante introuvable.", 404);
+    }
+
+    await cleanupVariantRelations(tx, [parsedVariantId]);
+
+    return tx.productVariant.delete({
+      where: { id: parsedVariantId },
+    });
   });
 }; 
 

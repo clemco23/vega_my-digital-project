@@ -222,6 +222,12 @@ const update = async (req, res) => {
   } catch (error) {
     console.error(error);
 
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
     if (error.code === "P2025") {
       return res.status(404).json({
         message: "Produit introuvable.",
@@ -252,6 +258,12 @@ const remove = async (req, res) => {
   } catch (error) {
     console.error(error);
 
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
     if (error.code === "P2025") {
       return res.status(404).json({
         message: "Produit introuvable.",
@@ -273,6 +285,13 @@ const updateVariantController = async (req, res) => {
     return res.status(200).json({ message: "Variante mise à jour.", data: variant });
   } catch (error) {
     console.error(error);
+
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
     return res.status(500).json({ message: "Erreur serveur." });
   }
 };
@@ -313,6 +332,13 @@ const deleteVariantController = async (req, res) => {
     return res.status(200).json({ message: "Variante supprimée." });
   } catch (error) {
     console.error(error);
+
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
     return res.status(500).json({ message: "Erreur serveur." });
   }
 };

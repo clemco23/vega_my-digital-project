@@ -1,56 +1,211 @@
 const prisma = require("../config/prisma");
 
-const createOrder = async (userId, addressId) => {
-  // Récupérer le panier du user
- const cart = await prisma.cart.findFirst({
-  where: { userId: BigInt(userId) },
-  include: {
-    items: {
-      include: {
-        productVariant: {
-          include: {
-            product: true, 
+// ============ PANIER ============
+
+const getOrCreateCart = async (userId) => {
+  let cart = await prisma.order.findFirst({
+    where: {
+      userId: BigInt(userId),
+      orderStatus: "CART",
+    },
+    include: {
+      orderVariants: {
+        include: {
+          productVariant: {
+            include: {
+              product: {
+                include: { images: true },
+              },
+            },
           },
         },
       },
     },
-  },
-});
+  });
 
-  if (!cart || cart.items.length === 0) {
+  if (!cart) {
+    cart = await prisma.order.create({
+      data: {
+        userId: BigInt(userId),
+        orderStatus: "CART",
+        totalAmount: 0,
+      },
+      include: {
+        orderVariants: {
+          include: {
+            productVariant: {
+              include: {
+                product: {
+                  include: { images: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  return cart;
+};
+
+const addToCart = async (userId, productVariantId, quantity = 1) => {
+  const cart = await getOrCreateCart(userId);
+
+  const variant = await prisma.productVariant.findUnique({
+    where: { id: parseInt(productVariantId) },
+  });
+
+  if (!variant) throw new Error("Variante introuvable.");
+  if (variant.stock < quantity) throw new Error("Stock insuffisant.");
+
+  // Vérifier si déjà dans le panier
+  const existingItem = cart.orderVariants.find(
+    (ov) => ov.productVariantId === parseInt(productVariantId)
+  );
+
+  if (existingItem) {
+    // Augmenter la quantité
+    await prisma.orderVariant.update({
+      where: {
+        orderId_productVariantId: {
+          orderId: cart.id,
+          productVariantId: parseInt(productVariantId),
+        },
+      },
+      data: {
+        quantity: existingItem.quantity + parseInt(quantity),
+      },
+    });
+  } else {
+    // Ajouter au panier
+    await prisma.orderVariant.create({
+      data: {
+        orderId: cart.id,
+        productVariantId: parseInt(productVariantId),
+        quantity: parseInt(quantity),
+      },
+    });
+  }
+
+  // Mettre à jour le total
+  const updatedCart = await getOrCreateCart(userId);
+  const total = calculateTotal(updatedCart.orderVariants);
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: { totalAmount: total },
+  });
+
+  return getOrCreateCart(userId);
+};
+
+const updateCartItem = async (userId, productVariantId, quantity) => {
+  const cart = await getOrCreateCart(userId);
+
+  if (quantity < 1) {
+    return removeFromCart(userId, productVariantId);
+  }
+
+  const variant = await prisma.productVariant.findUnique({
+    where: { id: parseInt(productVariantId) },
+  });
+
+  if (!variant) throw new Error("Variante introuvable.");
+  if (variant.stock < quantity) throw new Error("Stock insuffisant.");
+
+  await prisma.orderVariant.update({
+    where: {
+      orderId_productVariantId: {
+        orderId: cart.id,
+        productVariantId: parseInt(productVariantId),
+      },
+    },
+    data: { quantity: parseInt(quantity) },
+  });
+
+  // Mettre à jour le total
+  const updatedCart = await getOrCreateCart(userId);
+  const total = calculateTotal(updatedCart.orderVariants);
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: { totalAmount: total },
+  });
+
+  return getOrCreateCart(userId);
+};
+
+const removeFromCart = async (userId, productVariantId) => {
+  const cart = await getOrCreateCart(userId);
+
+  await prisma.orderVariant.delete({
+    where: {
+      orderId_productVariantId: {
+        orderId: cart.id,
+        productVariantId: parseInt(productVariantId),
+      },
+    },
+  });
+
+  // Mettre à jour le total
+  const updatedCart = await getOrCreateCart(userId);
+  const total = calculateTotal(updatedCart.orderVariants);
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: { totalAmount: total },
+  });
+
+  return getOrCreateCart(userId);
+};
+
+const clearCart = async (userId) => {
+  const cart = await getOrCreateCart(userId);
+
+  await prisma.orderVariant.deleteMany({
+    where: { orderId: cart.id },
+  });
+
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: { totalAmount: 0 },
+  });
+};
+
+const calculateTotal = (orderVariants) => {
+  return orderVariants.reduce((total, ov) => {
+    return total + parseFloat(ov.productVariant.price) * ov.quantity;
+  }, 0);
+};
+
+// ============ COMMANDES ============
+
+const createOrder = async (userId, addressId) => {
+  const cart = await getOrCreateCart(userId);
+
+  if (cart.orderVariants.length === 0) {
     throw new Error("Votre panier est vide.");
   }
 
-  // Récupérer l'adresse
   const address = await prisma.address.findFirst({
     where: { id: parseInt(addressId), userId: BigInt(userId) },
   });
 
   if (!address) throw new Error("Adresse introuvable.");
 
-  // Vérifier le stock de chaque produit
-  for (const item of cart.items) {
-    if (item.productVariant.stock < item.quantity) {
-      throw new Error(`Stock insuffisant pour la variante ${item.productVariant.id}.`);
+  for (const ov of cart.orderVariants) {
+    if (ov.productVariant.stock < ov.quantity) {
+      throw new Error(`Stock insuffisant pour ${ov.productVariant.product.name}.`);
     }
   }
 
-  // Calculer le total
-  const totalAmount = cart.items.reduce((total, item) => {
-    return total + parseFloat(item.productVariant.price) * item.quantity;
-  }, 0);
-
-  // Récupérer les infos du user
   const user = await prisma.user.findUnique({
     where: { id: BigInt(userId) },
   });
 
-  // Créer la commande
-  const order = await prisma.order.create({
+  const order = await prisma.order.update({
+    where: { id: cart.id },
     data: {
-      userId: BigInt(userId),
+      orderStatus: "PENDING",
       addressId: parseInt(addressId),
-      totalAmount: parseFloat(totalAmount.toFixed(2)),
       customerFirstname: user.firstname,
       customerLastname: user.name,
       customerEmail: user.email,
@@ -60,18 +215,10 @@ const createOrder = async (userId, addressId) => {
       customerCountry: address.country,
       customerRelayPointId: address.relayPointId || null,
       customerRelayName: address.relayName || null,
-      items: {
-        create: cart.items.map((item) => ({
-          productVariantId: item.productVariantId,
-          quantity: item.quantity,
-          unitPrice: item.productVariant.price,
-          productName: item.productVariant.product.name, 
-          variantSize: item.productVariant.size,  
-        })),
-      },
+      orderDate: new Date(),
     },
     include: {
-      items: {
+      orderVariants: {
         include: {
           productVariant: {
             include: { product: true },
@@ -82,22 +229,18 @@ const createOrder = async (userId, addressId) => {
     },
   });
 
- 
-
-  // Vider le panier
-  await prisma.cartItem.deleteMany({
-    where: { cartId: cart.id },
-  });
-
   return order;
 };
 
 const getUserOrders = async (userId) => {
   return prisma.order.findMany({
-    where: { userId: BigInt(userId) },
+    where: {
+      userId: BigInt(userId),
+      orderStatus: { not: "CART" },
+    },
     orderBy: { createdAt: "desc" },
     include: {
-      items: {
+      orderVariants: {
         include: {
           productVariant: {
             include: { product: true },
@@ -114,9 +257,10 @@ const getOrderById = async (id, userId) => {
     where: {
       id: parseInt(id),
       userId: BigInt(userId),
+      orderStatus: { not: "CART" },
     },
     include: {
-      items: {
+      orderVariants: {
         include: {
           productVariant: {
             include: { product: true },
@@ -124,11 +268,11 @@ const getOrderById = async (id, userId) => {
         },
       },
       address: true,
+      payment: true,
     },
   });
 
   if (!order) throw new Error("Commande introuvable.");
-
   return order;
 };
 
@@ -141,6 +285,9 @@ const updateOrderStatus = async (id, status) => {
 
 const getAllOrders = async () => {
   return prisma.order.findMany({
+    where: {
+      orderStatus: { not: "CART" },
+    },
     orderBy: { createdAt: "desc" },
     include: {
       user: {
@@ -151,7 +298,7 @@ const getAllOrders = async () => {
           email: true,
         },
       },
-      items: {
+      orderVariants: {
         include: {
           productVariant: {
             include: { product: true },
@@ -164,9 +311,15 @@ const getAllOrders = async () => {
 };
 
 module.exports = {
+  getOrCreateCart,
+  addToCart,
+  updateCartItem,
+  removeFromCart,
+  clearCart,
   createOrder,
   getUserOrders,
   getOrderById,
   updateOrderStatus,
   getAllOrders,
+  calculateTotal,
 };

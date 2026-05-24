@@ -1,0 +1,32 @@
+.cart-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.cart-hero__eyebrow {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-primary) 72%, #8f8274 28%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.cart-hero__title {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+}
+
+.cart-hero__subtitle {
+  max-width: 52ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--color-text) 76%, #8f8274 24%);
+  font-size: 1rem;
+  line-height: 1.65;
+}
