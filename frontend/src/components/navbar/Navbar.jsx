@@ -209,13 +209,15 @@ function Navbar() {
   };
 
   const handleLogout = () => {
+    const redirectUrl = new URL("/accueil", window.location.origin).toString();
+
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("user");
     clearStoredCartState();
     setCartItemCount(0);
     setUser(null);
     closeMenu();
-    window.location.href = `${apiBaseUrl}/auth/logout?redirect=${encodeURIComponent(window.location.origin)}`;
+    window.location.href = `${apiBaseUrl}/auth/logout?redirect=${encodeURIComponent(redirectUrl)}`;
   };
 
   const userLabel =

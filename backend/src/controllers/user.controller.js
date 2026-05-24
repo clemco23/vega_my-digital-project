@@ -6,6 +6,8 @@ const {
   deleteUser,
 } = require("../services/user.service");
 
+const ALLOWED_ROLES = ["USER", "ADMIN"];
+
 const getAll = async (req, res) => {
   try {
     const users = await getAllUsers();
@@ -75,6 +77,43 @@ const update = async (req, res) => {
   }
 };
 
+const updateRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "ID invalide." });
+    }
+
+    if (!ALLOWED_ROLES.includes(role)) {
+      return res.status(400).json({ message: "Role invalide." });
+    }
+
+    if (req.user.id === id) {
+      return res.status(400).json({
+        message: "Vous ne pouvez pas modifier votre propre role.",
+      });
+    }
+
+    const user = await getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable." });
+    }
+
+    const updated = await updateUser(id, { role });
+
+    return res.status(200).json({
+      message: "Role utilisateur mis a jour.",
+      data: { ...updated, id: updated.id.toString() },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
@@ -97,4 +136,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, update, remove };
+module.exports = { getAll, getOne, update, updateRole, remove };

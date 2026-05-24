@@ -5,6 +5,7 @@ import Newsletter from "../../components/dashboard/newsletter/Newsletter";
 import StatsCards from "../../components/dashboard/StatsCards/StatsCards";
 import ProductsList from "../../components/dashboard/products/ProductsList";
 import ProductForm from "../../components/dashboard/products/ProductForm"; 
+import UsersList from "../../components/dashboard/users/UsersList";
 import "./DashboardPage.css";
 
 function DashboardPage() {
@@ -49,13 +50,21 @@ function DashboardPage() {
           </>
         );
 
-        case "/dashboard/newsletter":
-          return (
-            <>
-              <h1 className="dashboard-title">Newsletter Subscribers</h1>
-              <Newsletter />
-            </>
-          );
+      case "/dashboard/users":
+        return (
+          <>
+            <h1 className="dashboard-title">Gestion des utilisateurs</h1>
+            <UsersList />
+          </>
+        );
+
+      case "/dashboard/newsletter":
+        return (
+          <>
+            <h1 className="dashboard-title">Newsletter Subscribers</h1>
+            <Newsletter />
+          </>
+        );
 
       default:
         return <h1 className="dashboard-title">Page en construction</h1>;
