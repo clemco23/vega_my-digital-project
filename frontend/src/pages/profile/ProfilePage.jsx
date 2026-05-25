@@ -165,7 +165,7 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
-    const redirectUrl = new URL("/accueil", window.location.origin).toString();
+    const redirectUrl = new URL("/", window.location.origin).toString();
 
     clearClientSession();
     window.location.href = `${apiBaseUrl}/auth/logout?redirect=${encodeURIComponent(redirectUrl)}`;
@@ -314,7 +314,7 @@ function ProfilePage() {
       setDeletingAccount(true);
       await deleteUserAccount(profile.id);
       clearClientSession();
-      window.location.href = "/accueil";
+      window.location.href = "/";
     } catch (error) {
       setPersonalError(
         error.response?.data?.message ||

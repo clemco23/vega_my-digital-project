@@ -26,7 +26,7 @@ export default function GoogleCallback() {
           localStorage.setItem("user", JSON.stringify(parsedUser));
         }
       } finally {
-        navigate("/accueil");
+        navigate("/");
       }
     };
 

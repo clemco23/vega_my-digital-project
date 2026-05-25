@@ -5,12 +5,12 @@ import "./SiteFooter.css";
 
 const footerColumns = [
   [
-    { label: "Accueil", to: "/accueil" },
+    { label: "Accueil", to: "/" },
     { label: "A propos", to: "/about" },
     { label: "Composer ma planche", to: "/la-planche" },
   ],
   [
-    { label: "Revendeurs B2B", to: "/" },
+    { label: "Revendeurs B2B", to: "/landing-page" },
     { label: "Blog", to: "/blog" },
     { label: "Contact", to: "/contact" },
   ],
@@ -23,7 +23,7 @@ function SiteFooter() {
         <div className="site-footer__top">
           <div className="site-footer__brand">
             <Link
-              to="/accueil"
+              to="/"
               className="site-footer__logo"
               aria-label="Retour a l'accueil"
             >

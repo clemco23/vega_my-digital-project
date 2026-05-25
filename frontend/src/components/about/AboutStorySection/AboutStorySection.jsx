@@ -45,7 +45,7 @@ function AboutStorySection() {
             en France.
           </p>
 
-          <Link to="/accueil" className="about-story__link">
+          <Link to="/" className="about-story__link">
             DECOUVRIR
           </Link>
         </div>

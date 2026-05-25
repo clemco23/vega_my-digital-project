@@ -35,7 +35,7 @@ function LoginPage() {
       const data = await login(formData.email, formData.password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.data));
-      navigate("/accueil");
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de la connexion.");
     } finally {
