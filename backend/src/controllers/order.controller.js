@@ -13,6 +13,38 @@ const {
 } = require("../services/order.service");
 const { serializeForJson } = require("../utils/serialize");
 
+const mapPackItem = (setItem) => ({
+  id: setItem.id,
+  quantity: setItem.quantity,
+  size: setItem.productVariant.size,
+  price: setItem.productVariant.price,
+  holesCount: setItem.productVariant.holesCount,
+  holesRequired: setItem.productVariant.holesRequired,
+  product: {
+    id: setItem.productVariant.product.id,
+    name: setItem.productVariant.product.name,
+    productType: setItem.productVariant.product.productType,
+    images: setItem.productVariant.product.images,
+  },
+});
+
+const mapCartItem = (orderVariant) => ({
+  id: orderVariant.productVariantId,
+  quantity: orderVariant.quantity,
+  size: orderVariant.productVariant.size,
+  price: orderVariant.productVariant.price,
+  product: {
+    id: orderVariant.productVariant.product.id,
+    name: orderVariant.productVariant.product.name,
+    productType: orderVariant.productVariant.product.productType,
+    images: orderVariant.productVariant.product.images,
+  },
+  packItems:
+    orderVariant.productVariant.product.productType === "SET_PREDEFINED"
+      ? (orderVariant.productVariant.setVariantItems || []).map(mapPackItem)
+      : [],
+});
+
 const getCart = async (req, res) => {
   try {
     const cart = await getOrCreateCart(req.user.id);
@@ -21,18 +53,7 @@ const getCart = async (req, res) => {
     return res.status(200).json({
       data: {
         id: cart.id,
-        items: (cart.orderVariants || []).map((ov) => ({
-          id: ov.productVariantId,
-          quantity: ov.quantity,
-          size: ov.productVariant.size,
-          price: ov.productVariant.price,
-          product: {
-            id: ov.productVariant.product.id,
-            name: ov.productVariant.product.name,
-            productType: ov.productVariant.product.productType,
-            images: ov.productVariant.product.images,
-          },
-        })),
+        items: (cart.orderVariants || []).map(mapCartItem),
         total: total.toFixed(2),
       },
     });

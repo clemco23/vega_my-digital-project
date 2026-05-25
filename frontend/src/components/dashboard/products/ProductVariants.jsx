@@ -6,7 +6,7 @@ import {
 } from "../../../services/product.service";
 import "./ProductVariants.css";
 
-function ProductVariants({ product }) {
+function ProductVariants({ product, onChange }) {
   const [variants, setVariants] = useState(product.variants || []);
   const [showForm, setShowForm] = useState(false);
   const [editingVariant, setEditingVariant] = useState(null);
@@ -42,12 +42,16 @@ function ProductVariants({ product }) {
       setLoading(true);
       if (editingVariant) {
         const updated = await updateVariant(editingVariant.id, formData);
-        setVariants((prev) =>
-          prev.map((v) => (v.id === editingVariant.id ? updated.data : v))
+        const nextVariants = variants.map((v) =>
+          v.id === editingVariant.id ? updated.data : v
         );
+        setVariants(nextVariants);
+        onChange?.(nextVariants);
       } else {
         const added = await addVariant(product.id, formData);
-        setVariants((prev) => [...prev, added.data]);
+        const nextVariants = [...variants, added.data];
+        setVariants(nextVariants);
+        onChange?.(nextVariants);
       }
       setShowForm(false);
       setEditingVariant(null);
@@ -63,7 +67,9 @@ function ProductVariants({ product }) {
     if (!window.confirm("Supprimer cette variante ?")) return;
     try {
       await deleteVariant(variantId);
-      setVariants((prev) => prev.filter((v) => v.id !== variantId));
+      const nextVariants = variants.filter((v) => v.id !== variantId);
+      setVariants(nextVariants);
+      onChange?.(nextVariants);
     } catch (error) {
       console.error(error);
     }

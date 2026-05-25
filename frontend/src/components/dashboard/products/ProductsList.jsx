@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { getProductsAdmin, deleteProduct } from "../../../services/product.service";
+import {
+  getProductsAdmin,
+  deleteProduct,
+  updateProduct,
+} from "../../../services/product.service";
 import "./ProductsList.css";
 
 function ProductsList({ onEdit, onAdd }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
 
   useEffect(() => {
     fetchProducts();
@@ -14,6 +19,7 @@ function ProductsList({ onEdit, onAdd }) {
     try {
       const data = await getProductsAdmin();
       setProducts(data.data);
+      setFeedback({ type: "", message: "" });
     } catch (error) {
       console.error(error);
     } finally {
@@ -23,11 +29,69 @@ function ProductsList({ onEdit, onAdd }) {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Supprimer ce produit ?")) return;
+
     try {
+      setFeedback({ type: "", message: "" });
       await deleteProduct(id);
       setProducts((prev) => prev.filter((p) => p.id !== id));
+      setFeedback({
+        type: "success",
+        message: "Produit supprime.",
+      });
     } catch (error) {
       console.error(error);
+
+      const backendMessage =
+        error.response?.data?.message ||
+        "Impossible de supprimer ce produit.";
+
+      if (error.response?.status === 409) {
+        const shouldDeactivate = window.confirm(
+          `${backendMessage}\n\nVoulez-vous le desactiver a la place ?`
+        );
+
+        if (!shouldDeactivate) {
+          setFeedback({
+            type: "error",
+            message: backendMessage,
+          });
+          return;
+        }
+
+        try {
+          const updated = await updateProduct(id, { isActivated: false });
+
+          setProducts((previousProducts) =>
+            previousProducts.map((product) =>
+              product.id === id
+                ? {
+                    ...product,
+                    ...updated.data,
+                  }
+                : product
+            )
+          );
+          setFeedback({
+            type: "success",
+            message: "Produit desactive car il est deja lie a une commande.",
+          });
+          return;
+        } catch (deactivationError) {
+          console.error(deactivationError);
+          setFeedback({
+            type: "error",
+            message:
+              deactivationError.response?.data?.message ||
+              "Suppression impossible, et la desactivation a aussi echoue.",
+          });
+          return;
+        }
+      }
+
+      setFeedback({
+        type: "error",
+        message: backendMessage,
+      });
     }
   };
 
@@ -41,6 +105,14 @@ function ProductsList({ onEdit, onAdd }) {
           + Ajouter un produit
         </button>
       </div>
+
+      {feedback.message ? (
+        <p
+          className={`products-feedback ${feedback.type === "error" ? "products-feedback--error" : "products-feedback--success"}`}
+        >
+          {feedback.message}
+        </p>
+      ) : null}
 
       <table className="products-table">
         <thead>

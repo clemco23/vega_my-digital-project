@@ -69,6 +69,110 @@
   white-space: nowrap;
 }
 
+.cart-item__pack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(23, 23, 23, 0.08);
+  background: rgba(248, 243, 237, 0.72);
+}
+
+.cart-item__pack-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cart-item__pack-title {
+  margin: 0;
+  color: #2d2118;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.cart-item__pack-caption {
+  color: #7f7267;
+  font-size: 0.8rem;
+}
+
+.cart-item__pack-list {
+  display: grid;
+  gap: 10px;
+}
+
+.cart-item__pack-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.cart-item__pack-item-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cart-item__pack-item-media {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  min-width: 54px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 65%),
+    linear-gradient(135deg, rgba(215, 183, 132, 0.18), rgba(180, 138, 88, 0.08));
+}
+
+.cart-item__pack-item-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item__pack-item-media span {
+  color: color-mix(in srgb, var(--color-primary) 78%, var(--color-dark) 22%);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cart-item__pack-item-copy {
+  min-width: 0;
+}
+
+.cart-item__pack-item-name {
+  margin: 0 0 4px;
+  color: #221915;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.cart-item__pack-item-meta {
+  margin: 0;
+  color: #7a6c60;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.cart-item__pack-item-quantity {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  background: rgba(243, 231, 216, 0.92);
+  color: #62442a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .cart-item__footer {
   display: flex;
   align-items: center;
@@ -147,7 +251,8 @@
   }
 
   .cart-item__header,
-  .cart-item__footer {
+  .cart-item__footer,
+  .cart-item__pack-item {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -159,5 +264,9 @@
   .cart-item__quantity {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .cart-item__pack-item-main {
+    width: 100%;
   }
 }

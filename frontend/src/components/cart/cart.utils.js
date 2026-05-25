@@ -15,5 +15,9 @@ export const getItemTypeLabel = (productType) => {
     return "Module";
   }
 
+  if (productType === "SET_PREDEFINED") {
+    return "Pack";
+  }
+
   return "Produit";
 };

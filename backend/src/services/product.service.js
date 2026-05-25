@@ -167,17 +167,26 @@ const getProductById = async (id) => {
   return prisma.product.findUnique({
     where: { id: parseInt(id) },
     include: {
-      variants: true,
+      variants: {
+        include: {
+          setVariantItems: {
+            include: {
+              productVariant: {
+                include: {
+                  product: {
+                    include: {
+                      images: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       images: true,
       skills: {
         include: { skill: true },
-      },
-      setItems: {
-        include: {
-          productVariant: {
-            include: { product: true },
-          },
-        },
       },
     },
   });

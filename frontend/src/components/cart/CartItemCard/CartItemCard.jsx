@@ -2,9 +2,28 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { formatPrice, getItemTypeLabel } from "../cart.utils";
 import "./CartItemCard.css";
 
+const buildPackItemMeta = (packItem) => {
+  const parts = [getItemTypeLabel(packItem.product.productType)];
+
+  if (packItem.size) {
+    parts.push(`Taille ${packItem.size}`);
+  }
+
+  if (packItem.product.productType === "BOARD" && packItem.holesCount) {
+    parts.push(`${packItem.holesCount} trous`);
+  }
+
+  if (packItem.product.productType === "MODULE" && packItem.holesRequired) {
+    parts.push(`${packItem.holesRequired} trous`);
+  }
+
+  return parts.join(" - ");
+};
+
 function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
   const productImage = item.product.images?.[0]?.url;
   const itemTotal = Number(item.price) * item.quantity;
+  const packItems = item.packItems || [];
 
   return (
     <article className="cart-item">
@@ -30,6 +49,50 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
 
           <p className="cart-item__price">{formatPrice(itemTotal)}</p>
         </div>
+
+        {packItems.length > 0 ? (
+          <div className="cart-item__pack">
+            <div className="cart-item__pack-header">
+              <p className="cart-item__pack-title">Contenu du pack</p>
+              <span className="cart-item__pack-caption">Detail d&apos;une composition</span>
+            </div>
+
+            <div className="cart-item__pack-list">
+              {packItems.map((packItem) => {
+                const packItemImage = packItem.product.images?.[0]?.url;
+
+                return (
+                  <article className="cart-item__pack-item" key={packItem.id}>
+                    <div className="cart-item__pack-item-main">
+                      <div className="cart-item__pack-item-media">
+                        {packItemImage ? (
+                          <img src={packItemImage} alt={packItem.product.name} />
+                        ) : (
+                          <span aria-hidden="true">
+                            {packItem.product.name.slice(0, 1).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="cart-item__pack-item-copy">
+                        <p className="cart-item__pack-item-name">
+                          {packItem.product.name}
+                        </p>
+                        <p className="cart-item__pack-item-meta">
+                          {buildPackItemMeta(packItem)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="cart-item__pack-item-quantity">
+                      x{packItem.quantity}
+                    </span>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
 
         <div className="cart-item__footer">
           <div className="cart-item__quantity" aria-label="Quantite">
