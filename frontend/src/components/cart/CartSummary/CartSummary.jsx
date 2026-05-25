@@ -29,8 +29,8 @@ function CartSummary({
 
   return (
     <aside className="cart-summary">
-      <p className="cart-summary__eyebrow">Recapitulatif</p>
-      <h2 className="cart-summary__title">Votre panier est sauvegarde</h2>
+      <p className="cart-summary__eyebrow">Récapitulatif</p>
+      <h2 className="cart-summary__title">Votre panier est sauvegardé</h2>
 
       <div className="cart-summary__row">
         <span>Articles</span>
@@ -43,7 +43,7 @@ function CartSummary({
       </div>
 
       <p className="cart-summary__note">
-        Vous pouvez revenir dans le configurateur a tout moment pour modifier
+        Vous pouvez revenir dans le configurateur à tout moment pour modifier
         votre composition.
       </p>
 
@@ -61,7 +61,7 @@ function CartSummary({
           </p>
         ) : shippingAddress ? (
           <div className="cart-summary__address-card">
-            <strong>{streetLine || "Adresse renseignee"}</strong>
+            <strong>{streetLine || "Adresse renseignée"}</strong>
             {extraLine ? <span>{extraLine}</span> : null}
             <span>
               {shippingAddress.postalCode} {shippingAddress.city}
@@ -70,7 +70,7 @@ function CartSummary({
           </div>
         ) : (
           <p className="cart-summary__address-note">
-            {addressMessage || "Aucune adresse de livraison enregistree."}
+            {addressMessage || "Aucune adresse de livraison enregistrée."}
           </p>
         )}
       </div>
@@ -86,7 +86,7 @@ function CartSummary({
         </button>
 
         <Link to="/la-planche" className="cart-summary__link">
-          Continuer ma selection
+          Continuer ma sélection
         </Link>
 
         <button

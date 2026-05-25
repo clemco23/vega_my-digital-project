@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import SiteFooter from "../../components/footer/SiteFooter";
 import Navbar from "../../components/navbar/Navbar";
@@ -213,7 +213,7 @@ function ProfilePage() {
     const nextEmail = personalForm.email.trim();
 
     if (!nextName || !nextFirstname || !nextEmail) {
-      setPersonalError("Nom, prenom et email sont obligatoires.");
+      setPersonalError("Nom, prénom et email sont obligatoires.");
       setPersonalFeedback("");
       return;
     }
@@ -238,13 +238,13 @@ function ProfilePage() {
       setProfile(updatedProfile);
       setPersonalForm(toPersonalForm(updatedProfile));
       setEditingPersonal(false);
-      setPersonalFeedback("Vos informations ont ete mises a jour.");
+      setPersonalFeedback("Vos informations ont été mises à jour.");
       window.localStorage.setItem("user", JSON.stringify(updatedProfile));
       window.dispatchEvent(new Event("storage"));
     } catch (error) {
       setPersonalError(
         error.response?.data?.message ||
-          "Impossible de mettre a jour vos informations."
+          "Impossible de mettre à jour vos informations."
       );
       setPersonalFeedback("");
     } finally {
@@ -285,11 +285,11 @@ function ProfilePage() {
       setAddress(savedAddress);
       setAddressForm(toAddressForm(savedAddress));
       setEditingAddress(false);
-      setAddressFeedback("Votre adresse a ete mise a jour.");
+      setAddressFeedback("Votre adresse a été mise à jour.");
     } catch (error) {
       setAddressError(
         error.response?.data?.message ||
-          "Impossible de mettre a jour votre adresse."
+          "Impossible de mettre à jour votre adresse."
       );
       setAddressFeedback("");
     } finally {
@@ -303,7 +303,7 @@ function ProfilePage() {
     }
 
     const confirmed = window.confirm(
-      "Voulez-vous vraiment supprimer votre profil ? Cette action est irreversible."
+      "Voulez-vous vraiment supprimer votre profil ? Cette action est irréversible."
     );
 
     if (!confirmed) {
@@ -360,7 +360,7 @@ function ProfilePage() {
             className="profile-page__logout"
             onClick={handleLogout}
           >
-            Se deconnecter
+            Se déconnecter
           </button>
         </div>
 
@@ -414,7 +414,7 @@ function ProfilePage() {
                   </label>
 
                   <label className="profile-field">
-                    <span>Prenom</span>
+                    <span>Prénom</span>
                     <input
                       type="text"
                       name="firstname"
@@ -438,11 +438,11 @@ function ProfilePage() {
                   </label>
 
                   <label className="profile-field">
-                    <span>Telephone</span>
+                    <span>Téléphone</span>
                     <input
                       type="tel"
                       value=""
-                      placeholder="Bientot disponible"
+                      placeholder="Bientôt disponible"
                       readOnly
                       disabled
                     />
@@ -515,7 +515,7 @@ function ProfilePage() {
 
                 <form className="profile-section__body" onSubmit={handleSaveAddress}>
                   <label className="profile-field">
-                    <span>Numero</span>
+                    <span>Numéro</span>
                     <input
                       type="text"
                       name="number"
@@ -539,7 +539,7 @@ function ProfilePage() {
                   </label>
 
                   <label className="profile-field">
-                    <span>Information complementaires</span>
+                    <span>Informations complémentaires</span>
                     <input
                       type="text"
                       name="extra"
@@ -626,7 +626,7 @@ function ProfilePage() {
                 className="profile-page__text-link"
                 disabled
               >
-                Gerer mes preferences de notifications
+                Gérer mes préférences de notifications
               </button>
             </div>
           </>
@@ -639,3 +639,4 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
+

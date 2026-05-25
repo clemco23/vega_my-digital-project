@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
   addSetItem,
   deleteSetItem,
@@ -210,7 +210,7 @@ function ProductSetItems({ product }) {
     const quantity = Number(formData.quantity);
 
     if (!setVariantId || !productVariantId || quantity <= 0) {
-      setError("Veuillez choisir une variante du pack, un produit et une quantite valide.");
+      setError("Veuillez choisir une variante du pack, un produit et une quantité valide.");
       return;
     }
 
@@ -222,7 +222,7 @@ function ProductSetItems({ product }) {
 
     if (alreadyExists) {
       setError(
-        "Cette variante est deja presente dans ce pack. Retirez-la d'abord si vous voulez la remplacer."
+        "Cette variante est déjà présente dans ce pack. Retirez-la d'abord si vous voulez la remplacer."
       );
       return;
     }
@@ -289,7 +289,7 @@ function ProductSetItems({ product }) {
         </p>
       ) : groupedSetItems.length === 0 ? (
         <p className="set-items-empty">
-          Aucun produit n'a encore ete ajoute a ce pack.
+          Aucun produit n'a encore été ajouté à ce pack.
         </p>
       ) : (
         <div className="set-items-groups">
@@ -372,11 +372,11 @@ function ProductSetItems({ product }) {
           {selectedProductVariant ? (
             <span>{buildVariantLabel(selectedProductVariant)}</span>
           ) : (
-            <span>Choisissez le produit a inclure</span>
+            <span>Choisissez le produit à inclure</span>
           )}
 
           {selectedPackVariant ? (
-            <span>{selectedPackItemsCount} element(s) deja ajoutes</span>
+            <span>{selectedPackItemsCount} élément(s) déjà ajoutés</span>
           ) : null}
         </div>
 
@@ -403,7 +403,7 @@ function ProductSetItems({ product }) {
           </div>
 
           <div className="set-items-form__field">
-            <label>Produit a inclure</label>
+            <label>Produit à inclure</label>
             <select
               value={formData.productVariantId}
               onChange={(event) =>
@@ -424,7 +424,7 @@ function ProductSetItems({ product }) {
           </div>
 
           <div className="set-items-form__field set-items-form__field--quantity">
-            <label>Quantite</label>
+            <label>Quantité</label>
             <input
               type="number"
               value={formData.quantity}
@@ -453,3 +453,4 @@ function ProductSetItems({ product }) {
 }
 
 export default ProductSetItems;
+

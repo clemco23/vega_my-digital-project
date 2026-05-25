@@ -25,9 +25,9 @@ function HeroSection() {
 
           <div className="content-description">
             <p className="hero-section__description">
-              Une planche d'eveil sensorielle modulaire, eco-concue et
-              inspiree de la pedagogie Montessori. Des modules clipsables qui
-              evoluent au rythme de votre enfant, de 9 mois a 6 ans.
+              Une planche d&apos;éveil sensorielle modulaire, éco-conçue et
+              inspirée de la pédagogie Montessori. Des modules clipsables qui
+              évoluent au rythme de votre enfant, de 9 mois à 6 ans.
             </p>
           </div>
 
@@ -44,11 +44,11 @@ function HeroSection() {
             </li>
             <li className="hero-section__highlight-item">
               <img src={picto2} alt="" className="hero-section__highlight-icon" />
-              <span>Bois certifie FSC</span>
+              <span>Bois certifié FSC</span>
             </li>
             <li className="hero-section__highlight-item">
               <img src={picto3} alt="" className="hero-section__highlight-icon" />
-              <span>Duree de vie 9 mois - 6 ans</span>
+              <span>Durée de vie 9 mois - 6 ans</span>
             </li>
           </ul>
         </div>

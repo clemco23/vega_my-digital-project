@@ -1,4 +1,4 @@
-import FooterLp from "../components/landing/FooterLp/FooterLp";
+﻿import FooterLp from "../components/landing/FooterLp/FooterLp";
 import "./StaticInfoPage.css";
 
 function StaticInfoPage({
@@ -12,7 +12,7 @@ function StaticInfoPage({
       <main className="static-info-page__main">
         <article className="static-info-page__content">
           <a href="/" className="static-info-page__back-link">
-            Retour a l'accueil
+            Retour à l'accueil
           </a>
 
           <header className="static-info-page__header">
@@ -79,3 +79,4 @@ function StaticInfoPage({
 }
 
 export default StaticInfoPage;
+

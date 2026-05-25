@@ -39,28 +39,28 @@ const cycleSteps = [
     toneClass: "circular-economy-section__step-badge--olive",
     title: "Achat de la planche",
     description:
-      "Une structure noble, durable, avec vos premiers modules selon l\u2019age.",
+      "Une structure noble, durable, avec vos premiers modules selon l’âge.",
   },
   {
     number: "2",
     toneClass: "circular-economy-section__step-badge--burnt",
     title: "Renouvellement des modules",
     description:
-      "Ajoutez ou changez des modules au fil du developpement.",
+      "Ajoutez ou changez des modules au fil du développement.",
   },
   {
     number: "3",
     toneClass: "circular-economy-section__step-badge--gold",
-    title: "Reprise & bon d\u2019achat",
+    title: "Reprise & bon d’achat",
     description:
-      "Retournez vos anciens modules contre un bon d\u2019achat. Zero gaspillage.",
+      "Retournez vos anciens modules contre un bon d’achat. Zéro gaspillage.",
   },
   {
     number: "4",
     toneClass: "circular-economy-section__step-badge--rose",
-    title: "Faites partie de la communaute Hapto",
+    title: "Faites partie de la communauté Hapto",
     description:
-      "Echangez entre parents. La seconde vie du bois continue.",
+      "Échangez entre parents. La seconde vie du bois continue.",
   },
 ];
 
@@ -85,7 +85,7 @@ function CircularEconomySection() {
 
         <div className="circular-economy-section__content">
           <p className="circular-economy-section__eyebrow">
-            ECONOMIE CIRCULAIRE
+            ÉCONOMIE CIRCULAIRE
           </p>
 
           <h2 className="circular-economy-section__title">
@@ -96,11 +96,15 @@ function CircularEconomySection() {
             <span className="circular-economy-section__title-accent">
               se partager
             </span>{" "}
-            et se reinventer.
+            et se réinventer.
           </h2>
 
           <p className="circular-economy-section__description">
-           Ce jouet ne s’inscrit pas comme un achat ponctuel et impulsif. Il représente une opportunité d’évolution tout au long du développement de l’enfant. Choisissez de renvoyer les anciens modules et procurez-vous ceux qui sauront combler les besoins de l’enfant.
+            Ce jouet ne s&apos;inscrit pas comme un achat ponctuel et impulsif.
+            Il représente une opportunité d&apos;évolution tout au long du
+            développement de l&apos;enfant. Choisissez de renvoyer les anciens
+            modules et procurez-vous ceux qui sauront combler les besoins de
+            l&apos;enfant.
           </p>
 
           <ol className="circular-economy-section__steps">

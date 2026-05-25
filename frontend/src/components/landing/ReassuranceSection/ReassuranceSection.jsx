@@ -15,14 +15,14 @@ const reassuranceItems = [
   {
     id: "materials",
     icon: materialsIcon,
-    eyebrow: "MATERIAUX",
-    text: "Bois FSC\ncertifie",
+    eyebrow: "MATÉRIAUX",
+    text: "Bois FSC\ncertifié",
   },
   {
     id: "fabrication",
     icon: fabricationIcon,
     eyebrow: "FABRICATION",
-    text: "Assemble\nen France",
+    text: "Assemblé\nen France",
   },
   {
     id: "chemistry",
@@ -33,7 +33,7 @@ const reassuranceItems = [
   {
     id: "circularity",
     icon: circularityIcon,
-    eyebrow: "CIRCULARITE",
+    eyebrow: "CIRCULARITÉ",
     text: "Reprise\ndes modules",
   },
 ];

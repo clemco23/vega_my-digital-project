@@ -10,7 +10,7 @@ function CartEmptyState() {
         <p className="cart-empty-state__description">
           Vous n&apos;avez encore aucun produit dans votre panier. Composez votre
           planche et ajoutez vos modules pour retrouver ici toute votre
-          selection.
+          sélection.
         </p>
 
         <Link to="/la-planche" className="cart-empty-state__action">

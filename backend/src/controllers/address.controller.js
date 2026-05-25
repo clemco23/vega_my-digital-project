@@ -1,4 +1,4 @@
-const {
+﻿const {
   getUserAddresses,
   createAddress,
   updateAddress,
@@ -68,7 +68,7 @@ const create = async (req, res) => {
     });
 
     return res.status(201).json({
-      message: "Adresse ajoutee.",
+      message: "Adresse ajoutée.",
       data: serializeForJson(address),
     });
   } catch (error) {
@@ -92,7 +92,7 @@ const update = async (req, res) => {
     const address = await updateAddress(id, req.user.id, data);
 
     return res.status(200).json({
-      message: "Adresse mise a jour.",
+      message: "Adresse mise à jour.",
       data: serializeForJson(address),
     });
   } catch (error) {
@@ -104,10 +104,11 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
     await deleteAddress(id, req.user.id);
-    return res.status(200).json({ message: "Adresse supprimee." });
+    return res.status(200).json({ message: "Adresse supprimée." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
 module.exports = { getAll, getByuserId, create, update, remove };
+

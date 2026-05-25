@@ -81,11 +81,11 @@ const markOrderAsPaid = async (orderId) => {
       };
     }
 
-    for (const ov of order.orderVariants) {
+    for (const orderVariant of order.orderVariants) {
       await tx.productVariant.update({
-        where: { id: ov.productVariantId },
+        where: { id: orderVariant.productVariantId },
         data: {
-          stock: ov.productVariant.stock - ov.quantity,
+          stock: orderVariant.productVariant.stock - orderVariant.quantity,
         },
       });
     }
@@ -119,7 +119,7 @@ const createCheckoutSession = async (orderId, userId) => {
   }
 
   if (order.orderStatus !== "PENDING") {
-    throw new Error("Cette commande ne peut pas etre payee.");
+    throw new Error("Cette commande ne peut pas être payée.");
   }
 
   return stripe.checkout.sessions.create({
@@ -131,15 +131,15 @@ const createCheckoutSession = async (orderId, userId) => {
       orderId: normalizedOrderId.toString(),
       userId: userId.toString(),
     },
-    line_items: order.orderVariants.map((ov) => ({
+    line_items: order.orderVariants.map((orderVariant) => ({
       price_data: {
         currency: "eur",
         product_data: {
-          name: `${ov.productVariant.product.name} - Taille ${ov.productVariant.size}`,
+          name: `${orderVariant.productVariant.product.name} - Taille ${orderVariant.productVariant.size}`,
         },
-        unit_amount: Math.round(parseFloat(ov.productVariant.price) * 100),
+        unit_amount: Math.round(parseFloat(orderVariant.productVariant.price) * 100),
       },
-      quantity: ov.quantity,
+      quantity: orderVariant.quantity,
     })),
   });
 };
@@ -177,7 +177,7 @@ const confirmCheckoutSession = async (orderId, sessionId, userId) => {
   }
 
   if (session.payment_status !== "paid") {
-    throw new Error("Le paiement Stripe n'est pas encore confirme.");
+    throw new Error("Le paiement Stripe n'est pas encore confirmé.");
   }
 
   const result = await markOrderAsPaid(normalizedOrderId);

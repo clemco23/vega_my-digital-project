@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+﻿import { useRef, useState } from "react";
 import { addImages, deleteImage } from "../../../services/product.service";
 import "./ProductImages.css";
 
@@ -71,7 +71,7 @@ const createResizedCanvas = (image, scale = 1) => {
   const context = canvas.getContext("2d");
 
   if (!context) {
-    throw new Error("Impossible de preparer l'image pour l'upload.");
+    throw new Error("Impossible de préparer l'image pour l'upload.");
   }
 
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -82,7 +82,7 @@ const createResizedCanvas = (image, scale = 1) => {
 const optimizeImageForUpload = async (file) => {
   if (!SUPPORTED_IMAGE_TYPES.includes(file.type)) {
     throw new Error(
-      `Le fichier "${file.name}" doit etre au format JPG, PNG ou WEBP.`
+      `Le fichier "${file.name}" doit être au format JPG, PNG ou WEBP.`
     );
   }
 
@@ -109,13 +109,13 @@ const optimizeImageForUpload = async (file) => {
   }
 
   throw new Error(
-    `Le fichier "${file.name}" reste trop volumineux apres optimisation. Essayez une image plus legere.`
+    `Le fichier "${file.name}" reste trop volumineux après optimisation. Essayez une image plus légère.`
   );
 };
 
 const getUploadErrorMessage = (error) => {
   if (error?.response?.status === 413) {
-    return "Le serveur refuse un fichier trop volumineux. Reduisez l'image ou augmentez la limite d'upload cote serveur.";
+    return "Le serveur refuse un fichier trop volumineux. Réduisez l'image ou augmentez la limite d'upload côté serveur.";
   }
 
   return (
@@ -137,7 +137,7 @@ function ProductImages({ product }) {
 
     if (nextFiles.length > MAX_FILES_PER_SELECTION) {
       setError(
-        `Vous pouvez selectionner jusqu'a ${MAX_FILES_PER_SELECTION} images a la fois.`
+        `Vous pouvez sélectionner jusqu'à ${MAX_FILES_PER_SELECTION} images à la fois.`
       );
       setFiles([]);
       event.target.value = "";
@@ -189,7 +189,7 @@ function ProductImages({ product }) {
     <div className="product-images">
       <h3>Images</h3>
       <p className="product-images__hint">
-        Formats acceptes : JPG, PNG, WEBP. Les images sont optimisees avant
+        Formats acceptés : JPG, PNG, WEBP. Les images sont optimisées avant
         envoi pour limiter les erreurs d'upload.
       </p>
 
@@ -219,8 +219,8 @@ function ProductImages({ product }) {
         />
         {files.length > 0 ? (
           <p className="product-images__selection">
-            {files.length} image(s) selectionnee(s), jusqu'a{" "}
-            {formatFileSize(TARGET_UPLOAD_SIZE_BYTES)} par envoi optimise.
+            {files.length} image(s) sélectionnée(s), jusqu&apos;à{" "}
+            {formatFileSize(TARGET_UPLOAD_SIZE_BYTES)} par envoi optimisé.
           </p>
         ) : null}
         <button type="submit" className="btn-save" disabled={loading || files.length === 0}>
@@ -232,3 +232,4 @@ function ProductImages({ product }) {
 }
 
 export default ProductImages;
+

@@ -10,10 +10,10 @@ const Marquee =
 const moduleItems = [
   { icon: "\u{1F512}", label: "Loquet de porte" },
   { icon: "\u2699\uFE0F", label: "Engrenage bois" },
-  { icon: "\u{1F511}", label: "Cadenas & cle" },
+  { icon: "\u{1F511}", label: "Cadenas & clé" },
   { icon: "\u{1F300}", label: "Minuteur rotatif" },
-  { icon: "\u{1F39B}\uFE0F", label: "Interrupteur metal" },
-  { icon: "\u26D3", label: "Chaine a maillons" },
+  { icon: "\u{1F39B}\uFE0F", label: "Interrupteur métal" },
+  { icon: "\u26D3", label: "Chaîne à maillons" },
   { icon: "\u23F3", label: "Sablier" },
   { icon: "\u{1F9F2}", label: "Aimant" },
 ];

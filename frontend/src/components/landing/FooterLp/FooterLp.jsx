@@ -12,7 +12,7 @@ function FooterLp() {
         </div>
 
         <div className="footer-lp__meta">
-          <nav className="footer-lp__legal-nav" aria-label="Liens legaux">
+          <nav className="footer-lp__legal-nav" aria-label="Liens légaux">
             {legalPages.map(({ path, label }) => (
               <Link className="footer-lp__legal-link" to={path} key={path}>
                 {label}

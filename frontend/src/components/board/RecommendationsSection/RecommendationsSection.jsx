@@ -18,21 +18,21 @@ const fallbackRecommendations = [
   {
     id: "fallback-eveil",
     image: heroImage,
-    eyebrow: "Eveil",
+    eyebrow: "Éveil",
     ageLabel: "2 ans et +",
-    title: "Planche d'eveil",
+    title: "Planche d&apos;éveil",
     description:
-      "Une combinaison douce pour faire decouvrir textures, sons et gestes du quotidien.",
+      "Une combinaison douce pour faire découvrir textures, sons et gestes du quotidien.",
     priceLabel: "XX EUR",
   },
   {
     id: "fallback-motricite",
     image: imgHomeImage,
-    eyebrow: "Motricite",
+    eyebrow: "Motricité",
     ageLabel: "2 - 4 ans",
-    title: "Planche de motricite",
+    title: "Planche de motricité",
     description:
-      "Des modules choisis pour encourager precision, coordination et autonomie.",
+      "Des modules choisis pour encourager précision, coordination et autonomie.",
     priceLabel: "XX EUR",
   },
   {
@@ -42,7 +42,7 @@ const fallbackRecommendations = [
     ageLabel: "4 ans et +",
     title: "Planche d'apaisement",
     description:
-      "Une selection tactile et repetitive qui aide l'enfant a se recentrer et se calmer.",
+      "Une sélection tactile et répétitive qui aide l&apos;enfant à se recentrer et se calmer.",
     priceLabel: "XX EUR",
   },
 ];
@@ -63,7 +63,7 @@ const formatAgeLabel = (ageMin, ageMax) => {
   const max = Number(ageMax);
 
   if (!Number.isFinite(min) || !Number.isFinite(max)) {
-    return "Tous ages";
+    return "Tous âges";
   }
 
   if (min === max) {
@@ -198,7 +198,7 @@ function RecommendationsSection() {
       console.error(error);
       setPackLoadError(
         error.response?.data?.message ||
-          "Impossible de charger le detail de ce pack."
+          "Impossible de charger le détail de ce pack."
       );
     } finally {
       setIsLoadingPack(false);
@@ -293,14 +293,14 @@ function RecommendationsSection() {
                         className="recommendation-card__button"
                         onClick={() => handleOpenDetails(card.productId)}
                       >
-                        Voir details
+                        Voir détails
                       </button>
                     ) : (
                       <a
                         className="recommendation-card__button"
                         href="#configurator"
                       >
-                        Decouvrir
+                        Découvrir
                       </a>
                     )}
                   </div>

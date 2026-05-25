@@ -10,10 +10,10 @@ function BlogPage() {
       <main className="home-page__content">
         <div className="home-page__placeholder">
           <p className="home-page__eyebrow">BLOG</p>
-          <h1>Le blog arrive bientot</h1>
+          <h1>Le blog arrive bientôt</h1>
           <p>
-            Cette page est prete pour accueillir vos articles, conseils et
-            actualites autour de l'univers Hapto.
+            Cette page est prête pour accueillir vos articles, conseils et
+            actualités autour de l&apos;univers Hapto.
           </p>
         </div>
       </main>

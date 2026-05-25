@@ -14,9 +14,9 @@ function ContactIntroSection() {
           </h2>
 
           <p className="contact-intro-section__text">
-            Nous sommes a votre ecoute pour accompagner chaque etape du
-            developpement de vos tout-petits avec nos creations artisanales
-            francaises.
+            Nous sommes à votre écoute pour accompagner chaque étape du
+            développement de vos tout-petits avec nos créations artisanales
+            françaises.
           </p>
         </div>
 

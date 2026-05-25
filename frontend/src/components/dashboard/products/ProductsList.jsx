@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   getProductsAdmin,
   deleteProduct,
@@ -36,7 +36,7 @@ function ProductsList({ onEdit, onAdd }) {
       setProducts((prev) => prev.filter((p) => p.id !== id));
       setFeedback({
         type: "success",
-        message: "Produit supprime.",
+        message: "Produit supprimé.",
       });
     } catch (error) {
       console.error(error);
@@ -47,7 +47,7 @@ function ProductsList({ onEdit, onAdd }) {
 
       if (error.response?.status === 409) {
         const shouldDeactivate = window.confirm(
-          `${backendMessage}\n\nVoulez-vous le desactiver a la place ?`
+          `${backendMessage}\n\nVoulez-vous le désactiver à la place ?`
         );
 
         if (!shouldDeactivate) {
@@ -73,7 +73,7 @@ function ProductsList({ onEdit, onAdd }) {
           );
           setFeedback({
             type: "success",
-            message: "Produit desactive car il est deja lie a une commande.",
+            message: "Produit désactivé car il est déjà lié à une commande.",
           });
           return;
         } catch (deactivationError) {
@@ -82,7 +82,7 @@ function ProductsList({ onEdit, onAdd }) {
             type: "error",
             message:
               deactivationError.response?.data?.message ||
-              "Suppression impossible, et la desactivation a aussi echoue.",
+              "Suppression impossible, et la désactivation a aussi échoué.",
           });
           return;
         }
@@ -119,7 +119,7 @@ function ProductsList({ onEdit, onAdd }) {
           <tr>
             <th>Nom</th>
             <th>Type</th>
-            <th>Age</th>
+            <th>Âge</th>
             <th>Variantes</th>
             <th>Statut</th>
             <th>Actions</th>
@@ -168,3 +168,4 @@ function ProductsList({ onEdit, onAdd }) {
 }
 
 export default ProductsList;
+

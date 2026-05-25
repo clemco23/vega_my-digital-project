@@ -10,7 +10,7 @@ function ProductIntroSection() {
         <div className="product-intro-section__media">
           <img
             src={productIntroImage}
-            alt="Planche sensorielle modulaire en bois avec plusieurs modules d'eveil"
+            alt="Planche sensorielle modulaire en bois avec plusieurs modules d&apos;éveil"
             className="product-intro-section__image"
           />
         </div>
@@ -21,9 +21,9 @@ function ProductIntroSection() {
           </h2>
 
           <p className="product-intro-section__description">
-            Ils grandissent, HAPTŌ s’adapte.  Ajoutez ou remplacez les modules de la planche au fil de leur développement. 
-Un objet pensé pour durer, de leurs
-premiers gestes à leurs plus grandes découvertes.
+            Ils grandissent, HAPTŌ s&apos;adapte. Ajoutez ou remplacez les modules
+            de la planche au fil de leur développement. Un objet pensé pour
+            durer, de leurs premiers gestes à leurs plus grandes découvertes.
           </p>
         </div>
       </div>

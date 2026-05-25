@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SiteFooter from "../../components/footer/SiteFooter";
 import Navbar from "../../components/navbar/Navbar";
@@ -87,14 +87,14 @@ function OrderPaymentStatusPage({ paymentStatus = "cancel" }) {
         <section className="order-payment-page__card">
           <p className="order-payment-page__eyebrow">Paiement</p>
           <h1>
-            {isSuccess ? "Paiement confirme" : "Paiement annule"}
+            {isSuccess ? "Paiement confirmé" : "Paiement annulé"}
           </h1>
 
           <p className="order-payment-page__text">
             {isSuccess
               ? isConfirming
-                ? `Le paiement de votre commande #${orderId} est en cours de verification.`
-                : `Le paiement de votre commande #${orderId} a bien ete transmis a Stripe.`
+                ? `Le paiement de votre commande #${orderId} est en cours de vérification.`
+                : `Le paiement de votre commande #${orderId} a bien été transmis à Stripe.`
               : `Votre commande #${orderId} est toujours en attente. Vous pouvez reprendre le paiement maintenant ou revenir plus tard depuis vos commandes.`}
           </p>
 
@@ -130,3 +130,4 @@ function OrderPaymentStatusPage({ paymentStatus = "cancel" }) {
 }
 
 export default OrderPaymentStatusPage;
+

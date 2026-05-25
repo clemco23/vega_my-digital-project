@@ -12,11 +12,11 @@ const heroHighlights = [
   },
   {
     icon: pictoFSC,
-    label: "Bois certifie FSC",
+    label: "Bois certifié FSC",
   },
   {
     icon: pictoTime,
-    label: "Duree de vie 9 mois-6 ans",
+    label: "Durée de vie 9 mois-6 ans",
   },
 ];
 
@@ -25,7 +25,7 @@ function HomeHeroSection() {
     <section className="home-hero">
       <div className="home-hero__copy">
         <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Design sensoriel - Assemble en France</p>
+          <p className="home-hero__eyebrow">Design sensoriel - Assemblé en France</p>
 
           <h1 className="home-hero__title">
             <span className="home-hero__title-line">Le premier jouet</span>
@@ -36,9 +36,9 @@ function HomeHeroSection() {
           </h1>
 
           <p className="home-hero__description">
-            Une planche d'eveil sensorielle modulaire, eco-concue et inspiree de
-            la pedagogie Montessori. Des modules clipsables qui evoluent au rythme
-            de votre enfant, au plus loin des ecrans.
+            Une planche d&apos;éveil sensorielle modulaire, éco-conçue et inspirée
+            de la pédagogie Montessori. Des modules clipsables qui évoluent au
+            rythme de votre enfant, au plus loin des écrans.
           </p>
 
           <Link to="/la-planche" className="home-hero__cta">
@@ -59,7 +59,7 @@ function HomeHeroSection() {
       <div className="home-hero__media">
         <img
           src={imgHome}
-          alt="Un enfant joue a cote d'une boite Hapto posee sur une table"
+          alt="Un enfant joue à côté d&apos;une boîte Hapto posée sur une table"
           className="home-hero__image"
         />
       </div>

@@ -74,7 +74,7 @@ const addItem = async (req, res) => {
     const cart = await addToCart(req.user.id, productVariantId, quantity);
 
     return res.status(200).json({
-      message: "Produit ajoute au panier.",
+      message: "Produit ajouté au panier.",
       data: serializeForJson(cart),
     });
   } catch (error) {
@@ -88,7 +88,7 @@ const removeItem = async (req, res) => {
     const cart = await removeFromCart(req.user.id, variantId);
 
     return res.status(200).json({
-      message: "Produit retire du panier.",
+      message: "Produit retiré du panier.",
       data: serializeForJson(cart),
     });
   } catch (error) {
@@ -117,7 +117,7 @@ const create = async (req, res) => {
     const order = await createOrder(req.user.id, addressId);
 
     return res.status(201).json({
-      message: "Commande creee.",
+      message: "Commande créée.",
       data: serializeForJson(order),
     });
   } catch (error) {
@@ -167,7 +167,7 @@ const updateStatus = async (req, res) => {
     const order = await updateOrderStatus(id, status);
 
     return res.status(200).json({
-      message: "Statut mis a jour.",
+      message: "Statut mis à jour.",
       data: serializeForJson(order),
     });
   } catch (error) {
@@ -192,13 +192,13 @@ const updateItem = async (req, res) => {
     const { quantity } = req.body;
 
     if (!quantity) {
-      return res.status(400).json({ message: "Quantite obligatoire." });
+      return res.status(400).json({ message: "Quantité obligatoire." });
     }
 
     const cart = await updateCartItem(req.user.id, variantId, quantity);
 
     return res.status(200).json({
-      message: "Quantite mise a jour.",
+      message: "Quantité mise à jour.",
       data: serializeForJson(cart),
     });
   } catch (error) {
