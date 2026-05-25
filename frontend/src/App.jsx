@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import { legalPagesByPath } from "./data/legalPages";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -20,6 +20,21 @@ import OrdersPage from "./pages/orders/OrdersPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import StaticInfoPage from "./pages/StaticInfoPage";
 
+function LegacyBoardRedirect() {
+  const location = useLocation();
+
+  return (
+    <Navigate
+      to={{
+        pathname: "/la-planche",
+        search: location.search,
+        hash: location.hash,
+      }}
+      replace
+    />
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -30,7 +45,7 @@ function App() {
         <Route path="/acceuil" element={<Navigate to="/" replace />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/la-planche" element={<BoardPage />} />
-        <Route path="/planche" element={<BoardPage />} />
+        <Route path="/planche" element={<LegacyBoardRedirect />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
 
