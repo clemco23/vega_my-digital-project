@@ -16,7 +16,7 @@ import {
 import "./Navbar.css";
 
 const navItems = [
-  { label: "ACCUEIL", to: "/accueil", matchPaths: ["/accueil", "/acceuil"] },
+  { label: "ACCUEIL", to: "/", matchPaths: ["/", "/accueil", "/acceuil"] },
   { label: "A PROPOS", to: "/about", matchPaths: ["/about"] },
   {
     label: "LA PLANCHE",
@@ -209,7 +209,7 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    const redirectUrl = new URL("/accueil", window.location.origin).toString();
+    const redirectUrl = new URL("/", window.location.origin).toString();
 
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("user");
@@ -240,7 +240,7 @@ function Navbar() {
     <header className="site-navbar">
       <div className="site-navbar__inner">
         <Link
-          to="/accueil"
+          to="/"
           className="site-navbar__logo"
           aria-label="Retourner a l'accueil"
           onClick={closeMenu}

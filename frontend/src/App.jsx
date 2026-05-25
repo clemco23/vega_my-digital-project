@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import { legalPagesByPath } from "./data/legalPages";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -24,10 +24,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/landing-page" element={<LandingPage />} />
-        <Route path="/accueil" element={<HomePage />} />
-        <Route path="/acceuil" element={<HomePage />} />
+        <Route path="/accueil" element={<Navigate to="/" replace />} />
+        <Route path="/acceuil" element={<Navigate to="/" replace />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/la-planche" element={<BoardPage />} />
         <Route path="/planche" element={<BoardPage />} />
