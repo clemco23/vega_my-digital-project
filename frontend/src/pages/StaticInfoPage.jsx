@@ -1,4 +1,5 @@
-﻿import FooterLp from "../components/landing/FooterLp/FooterLp";
+import { Link } from "react-router-dom";
+import FooterLp from "../components/landing/FooterLp/FooterLp";
 import "./StaticInfoPage.css";
 
 function StaticInfoPage({
@@ -6,14 +7,16 @@ function StaticInfoPage({
   summary,
   sections = [],
   statusCode = null,
+  backLinkPath = "/",
+  backLinkLabel = "Retour \u00e0 l'accueil",
 }) {
   return (
     <div className="static-info-page">
       <main className="static-info-page__main">
         <article className="static-info-page__content">
-          <a href="/" className="static-info-page__back-link">
-            Retour à l'accueil
-          </a>
+          <Link to={backLinkPath} className="static-info-page__back-link">
+            {backLinkLabel}
+          </Link>
 
           <header className="static-info-page__header">
             {statusCode ? (
@@ -79,4 +82,3 @@ function StaticInfoPage({
 }
 
 export default StaticInfoPage;
-

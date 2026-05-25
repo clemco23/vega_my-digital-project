@@ -169,7 +169,7 @@ function RecommendationsSection() {
 
   const handleOpenDetails = async (productId) => {
     if (!productId) {
-      navigate("/planche#configurator");
+      navigate("/la-planche#configurator");
       return;
     }
 
