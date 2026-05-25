@@ -41,6 +41,16 @@ function App() {
           }
         />
         <Route
+          path="/cgv"
+          element={
+            <StaticInfoPage
+              {...legalPagesByPath["/cgv"]}
+              backLinkPath="/register"
+              backLinkLabel="Retour \u00e0 l'inscription"
+            />
+          }
+        />
+        <Route
           path="/rgpd"
           element={<StaticInfoPage {...legalPagesByPath["/rgpd"]} />}
         />
