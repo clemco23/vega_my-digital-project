@@ -8,6 +8,17 @@ const cartInclude = {
           product: {
             include: { images: true },
           },
+          setVariantItems: {
+            include: {
+              productVariant: {
+                include: {
+                  product: {
+                    include: { images: true },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },

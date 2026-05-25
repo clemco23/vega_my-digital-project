@@ -95,6 +95,10 @@ const getPreviewModuleLabel = (name) => {
   return name.split(" ").slice(0, 2).join(" ");
 };
 
+const getProductImageUrl = (product) => {
+  return product?.images?.[0]?.url || "";
+};
+
 function Configurator() {
   const navigate = useNavigate();
   const [boards, setBoards] = useState([]);
@@ -223,6 +227,7 @@ function Configurator() {
                   Math.max(module.variant.holesRequired || 1, 1),
                   4
                 );
+                const imageUrl = getProductImageUrl(module.product);
 
                 return (
                   <div
@@ -234,9 +239,17 @@ function Configurator() {
                       "--module-rotate": placement.rotate,
                     }}
                   >
-                    <span className="configurator__board-module-name">
-                      {getPreviewModuleLabel(module.product.name)}
-                    </span>
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={module.product.name}
+                        className="configurator__board-module-image"
+                      />
+                    ) : (
+                      <span className="configurator__board-module-name">
+                        {getPreviewModuleLabel(module.product.name)}
+                      </span>
+                    )}
                   </div>
                 );
               })}
@@ -298,7 +311,7 @@ function Configurator() {
   }
 
   return (
-    <section className="configurator">
+    <section className="configurator" id="configurator">
       <div className="configurator__inner">
         <div className="configurator__left">
           <header className="configurator__header">

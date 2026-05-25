@@ -72,3 +72,8 @@ export const getModules = async () => {
   const { data } = await api.get("/products/type/MODULE");
   return data;
 };
+
+export const getPredefinedSets = async () => {
+  const { data } = await api.get("/products/type/SET_PREDEFINED");
+  return data;
+};

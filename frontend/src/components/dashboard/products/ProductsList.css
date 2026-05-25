@@ -10,11 +10,31 @@
     margin-bottom: 20px;
   }
   
-  .products-list__header h2 {
+.products-list__header h2 {
     font-size: 20px;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;
+  }
+
+  .products-feedback {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .products-feedback--success {
+    background-color: #e8f5e9;
+    color: #1f7a34;
+    border: 1px solid #cde8d2;
+  }
+
+  .products-feedback--error {
+    background-color: #fce8e6;
+    color: #b42318;
+    border: 1px solid #f3c7c2;
   }
   
   .btn-add {

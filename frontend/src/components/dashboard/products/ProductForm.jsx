@@ -283,7 +283,15 @@ function ProductForm({ product, onClose, onSave }) {
           {/* Sections disponibles après création */}
           {savedProduct && (
             <>
-              <ProductVariants product={savedProduct} />
+              <ProductVariants
+                product={savedProduct}
+                onChange={(nextVariants) =>
+                  setSavedProduct((previousProduct) => ({
+                    ...previousProduct,
+                    variants: nextVariants,
+                  }))
+                }
+              />
               <ProductImages product={savedProduct} />
               {savedProduct.productType === "SET_PREDEFINED" && (
                 <ProductSetItems product={savedProduct} />

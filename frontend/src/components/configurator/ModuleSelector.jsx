@@ -1,5 +1,15 @@
 import "./ModuleSelector.css";
 
+const getProductImageUrl = (product) => {
+  return product?.images?.[0]?.url || "";
+};
+
+const formatHolesRequired = (holesRequired) => {
+  const total = Number(holesRequired) || 0;
+
+  return `${total} trou${total > 1 ? "s" : ""}`;
+};
+
 function ModuleSelector({ modules, selectedBoard, selectedModules, onToggle }) {
   if (!selectedBoard) return null;
 
@@ -19,6 +29,7 @@ function ModuleSelector({ modules, selectedBoard, selectedModules, onToggle }) {
           const variant =
             module.variants.find((item) => item.size === selectedBoard.variant.size) ||
             module.variants[0];
+          const imageUrl = getProductImageUrl(module);
 
           if (!variant) return null;
 
@@ -36,7 +47,26 @@ function ModuleSelector({ modules, selectedBoard, selectedModules, onToggle }) {
               onClick={() => canAdd && onToggle(variant, module)}
               title={`${module.name} • ${variant.holesRequired} trous • ${variant.price} EUR`}
             >
-              <span className="module-card__name">{module.name}</span>
+              <span className="module-card__media">
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt={module.name}
+                    className="module-card__image"
+                  />
+                ) : (
+                  <span className="module-card__placeholder" aria-hidden="true">
+                    {module.name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+              </span>
+
+              <span className="module-card__content">
+                <span className="module-card__name">{module.name}</span>
+                <span className="module-card__meta">
+                  {formatHolesRequired(variant.holesRequired)}
+                </span>
+              </span>
             </button>
           );
         })}
