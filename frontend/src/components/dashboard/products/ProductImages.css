@@ -4,11 +4,24 @@
     border-top: 1px solid #eee;
   }
   
-  .product-images h3 {
+.product-images h3 {
     font-size: 15px;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0 0 15px;
+  }
+
+  .product-images__hint,
+  .product-images__selection {
+    margin: 0;
+    font-size: 13px;
+    color: #5f6368;
+  }
+
+  .product-images__error {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: #b42318;
   }
   
   .product-images__grid {
@@ -53,6 +66,7 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
   }
   
   .product-images__upload input {
