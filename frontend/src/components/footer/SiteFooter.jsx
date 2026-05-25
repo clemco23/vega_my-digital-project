@@ -6,7 +6,7 @@ import "./SiteFooter.css";
 const footerColumns = [
   [
     { label: "Accueil", to: "/" },
-    { label: "A propos", to: "/about" },
+    { label: "À propos", to: "/about" },
     { label: "Composer ma planche", to: "/la-planche" },
   ],
   [
@@ -25,7 +25,7 @@ function SiteFooter() {
             <Link
               to="/"
               className="site-footer__logo"
-              aria-label="Retour a l'accueil"
+              aria-label="Retour à l&apos;accueil"
             >
               <img src={haptoLogo} alt="Hapto" />
             </Link>
@@ -50,7 +50,7 @@ function SiteFooter() {
         </div>
 
         <div className="site-footer__bottom">
-          <nav className="site-footer__legal" aria-label="Liens legaux">
+          <nav className="site-footer__legal" aria-label="Liens légaux">
             {legalPages.map(({ path, label }) => (
               <Link key={path} to={path} className="site-footer__legal-link">
                 {label}
@@ -59,7 +59,7 @@ function SiteFooter() {
           </nav>
 
           <p className="site-footer__copyright">
-            © 2026 HAPTO - Tous droits reserves
+            © 2026 HAPTO - Tous droits réservés
           </p>
         </div>
       </div>

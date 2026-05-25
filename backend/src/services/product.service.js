@@ -1,4 +1,4 @@
-const prisma = require("../config/prisma");
+﻿const prisma = require("../config/prisma");
 
 const createHttpError = (message, statusCode) => {
   const error = new Error(message);
@@ -112,7 +112,7 @@ const assertVariantsNotUsedInOrders = async (tx, variantIds) => {
 
   if (usedOrderVariant) {
     throw createHttpError(
-      `Impossible de supprimer cette variante car elle est deja utilisee dans la commande #${usedOrderVariant.order.id}.`,
+      `Impossible de supprimer cette variante car elle est déjà utilisée dans la commande #${usedOrderVariant.order.id}.`,
       409
     );
   }
@@ -415,3 +415,4 @@ module.exports = {
   addVariant,
   addSkillToProduct,
 };
+

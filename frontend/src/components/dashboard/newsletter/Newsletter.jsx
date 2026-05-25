@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNewsletterSubscribers } from "../../../services/newsletter.service";
 import "./Newsletter.css";
@@ -16,7 +16,7 @@ function Newsletter() {
         setSubscribers(Array.isArray(data) ? data : []);
       } catch (fetchError) {
         console.error("Error fetching newsletter subscribers:", fetchError);
-        setError("Impossible de recuperer les adresses email pour le moment.");
+        setError("Impossible de récupérer les adresses email pour le moment.");
       } finally {
         setLoading(false);
       }
@@ -36,7 +36,7 @@ function Newsletter() {
   return (
     <div className="newsletter">
       {subscribers.length === 0 ? (
-        <p className="newsletter__state">Aucun inscrit a la newsletter.</p>
+        <p className="newsletter__state">Aucun inscrit à la newsletter.</p>
       ) : (
         <div className="newsletter__table-shell">
           <table className="newsletter__table">
@@ -68,3 +68,4 @@ function Newsletter() {
 }
 
 export default Newsletter;
+

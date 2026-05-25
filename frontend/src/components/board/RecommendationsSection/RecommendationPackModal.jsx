@@ -24,7 +24,7 @@ const formatAgeLabel = (ageMin, ageMax) => {
   const max = Number(ageMax);
 
   if (!Number.isFinite(min) || !Number.isFinite(max)) {
-    return "Tous ages";
+    return "Tous âges";
   }
 
   if (min === max) {
@@ -223,7 +223,7 @@ function RecommendationPackModal({
               <div className="recommendation-pack-modal__intro">
                 <div className="recommendation-pack-modal__badges">
                   <span className="recommendation-pack-modal__badge">
-                    Pack recommande
+                    Pack recommandé
                   </span>
                   <span className="recommendation-pack-modal__badge recommendation-pack-modal__badge--soft">
                     {formatAgeLabel(pack?.ageMin, pack?.ageMax)}
@@ -239,7 +239,7 @@ function RecommendationPackModal({
 
                 <p className="recommendation-pack-modal__description">
                   {pack?.description ||
-                    "Une composition prete a l'emploi pour demarrer rapidement."}
+                    "Une composition prête à l&apos;emploi pour démarrer rapidement."}
                 </p>
 
                 <div className="recommendation-pack-modal__summary">
@@ -384,7 +384,7 @@ function RecommendationPackModal({
             <div className="recommendation-pack-modal__footer">
               <div>
                 <p className="recommendation-pack-modal__footer-label">
-                  Le detail du pack sera visible dans votre panier.
+                  Le détail du pack sera visible dans votre panier.
                 </p>
                 <strong className="recommendation-pack-modal__footer-price">
                   {selectedVariant ? formatPrice(selectedVariant.price) : "-"}

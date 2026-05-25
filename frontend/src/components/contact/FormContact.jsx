@@ -24,7 +24,7 @@ function ContactForm({
       const data = await createContactMessage(name, email, content);
 
       showToast?.(
-        data.message || "Votre message a bien ete envoye.",
+        data.message || "Votre message a bien été envoyé.",
         "success"
       );
       setEmail("");

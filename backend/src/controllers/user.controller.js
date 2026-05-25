@@ -11,7 +11,11 @@ const ALLOWED_ROLES = ["USER", "ADMIN"];
 const getAll = async (req, res) => {
   try {
     const users = await getAllUsers();
-    const serialized = users.map((u) => ({ ...u, id: u.id.toString() }));
+    const serialized = users.map((user) => ({
+      ...user,
+      id: user.id.toString(),
+    }));
+
     return res.status(200).json({ data: serialized });
   } catch (error) {
     console.error(error);
@@ -27,7 +31,7 @@ const getOne = async (req, res) => {
       return res.status(400).json({ message: "ID invalide." });
     }
 
-    // Un user ne peut voir que son propre profil, un admin peut voir n'importe quel profil
+    // Un utilisateur ne peut voir que son propre profil, un admin peut voir n'importe quel profil.
     if (req.user.role !== "ADMIN" && req.user.id !== id) {
       return res.status(403).json({ message: "Accès refusé." });
     }
@@ -38,7 +42,9 @@ const getOne = async (req, res) => {
       return res.status(404).json({ message: "Utilisateur introuvable." });
     }
 
-    return res.status(200).json({ data: { ...user, id: user.id.toString() } });
+    return res.status(200).json({
+      data: { ...user, id: user.id.toString() },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
@@ -50,12 +56,13 @@ const update = async (req, res) => {
     const { id } = req.params;
     const { name, firstname, email, password } = req.body;
 
-    // Vérifier que l'utilisateur modifie son propre compte
+    // Vérifier que l'utilisateur modifie son propre compte.
     if (req.user.id !== id) {
       return res.status(403).json({ message: "Accès refusé." });
     }
 
     const user = await getUserById(id);
+
     if (!user) {
       return res.status(404).json({ message: "Utilisateur introuvable." });
     }
@@ -67,6 +74,7 @@ const update = async (req, res) => {
     if (password !== undefined) data.password = await bcrypt.hash(password, 10);
 
     const updated = await updateUser(id, data);
+
     return res.status(200).json({
       message: "Utilisateur mis à jour.",
       data: { ...updated, id: updated.id.toString() },
@@ -87,12 +95,12 @@ const updateRole = async (req, res) => {
     }
 
     if (!ALLOWED_ROLES.includes(role)) {
-      return res.status(400).json({ message: "Role invalide." });
+      return res.status(400).json({ message: "Rôle invalide." });
     }
 
     if (req.user.id === id) {
       return res.status(400).json({
-        message: "Vous ne pouvez pas modifier votre propre role.",
+        message: "Vous ne pouvez pas modifier votre propre rôle.",
       });
     }
 
@@ -105,7 +113,7 @@ const updateRole = async (req, res) => {
     const updated = await updateUser(id, { role });
 
     return res.status(200).json({
-      message: "Role utilisateur mis a jour.",
+      message: "Rôle utilisateur mis à jour.",
       data: { ...updated, id: updated.id.toString() },
     });
   } catch (error) {
@@ -118,12 +126,13 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Vérifier que l'utilisateur supprime son propre compte
+    // Vérifier que l'utilisateur supprime son propre compte.
     if (req.user.id !== id) {
       return res.status(403).json({ message: "Accès refusé." });
     }
 
     const user = await getUserById(id);
+
     if (!user) {
       return res.status(404).json({ message: "Utilisateur introuvable." });
     }

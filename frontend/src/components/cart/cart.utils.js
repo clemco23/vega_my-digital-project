@@ -1,4 +1,4 @@
-export const formatPrice = (value) =>
+﻿export const formatPrice = (value) =>
   new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
@@ -21,3 +21,4 @@ export const getItemTypeLabel = (productType) => {
 
   return "Produit";
 };
+

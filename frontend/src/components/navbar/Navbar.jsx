@@ -45,7 +45,7 @@ const readStoredUser = () => {
   try {
     return JSON.parse(rawUser);
   } catch (error) {
-    console.error("Impossible de lire l'utilisateur stocke :", error);
+    console.error("Impossible de lire l'utilisateur stocké :", error);
     return null;
   }
 };
@@ -106,7 +106,7 @@ function Navbar() {
         setUser(mergedUser);
       } catch (error) {
         console.error(
-          "Impossible de rafraichir le profil utilisateur depuis l'API :",
+          "Impossible de rafraîchir le profil utilisateur depuis l'API :",
           error
         );
       }
@@ -196,7 +196,7 @@ function Navbar() {
         );
         setCartItemCount(nextCount);
       } catch (error) {
-        console.error("Impossible de charger l'etat du panier :", error);
+        console.error("Impossible de charger l'état du panier :", error);
       }
     };
 
@@ -223,7 +223,7 @@ function Navbar() {
   const userLabel =
     [user?.firstname, user?.name].filter(Boolean).join(" ").trim() ||
     user?.email ||
-    "Utilisateur connecte";
+    "Utilisateur connecté";
   const firstName = user?.firstname || user?.name || "vous";
   const isAdmin = String(user?.role || "").toUpperCase() === "ADMIN";
   const isNavItemActive = (item) =>
@@ -242,7 +242,7 @@ function Navbar() {
         <Link
           to="/"
           className="site-navbar__logo"
-          aria-label="Retourner a l'accueil"
+          aria-label="Retourner à l'accueil"
           onClick={closeMenu}
         >
           <img src={haptoLogo} alt="Hapto" />
@@ -378,7 +378,7 @@ function Navbar() {
                       onClick={handleLogout}
                       role="menuitem"
                     >
-                      Se deconnecter
+                      Se déconnecter
                     </button>
                   </div>
                 </div>

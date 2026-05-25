@@ -1,4 +1,4 @@
-const CART_ANIMATION_EVENT = "hapto:cart-animation";
+﻿const CART_ANIMATION_EVENT = "hapto:cart-animation";
 const CART_ANIMATION_STORAGE_KEY = "hapto:cart-animation-request";
 const CART_ANIMATION_MAX_AGE_MS = 2500;
 const CART_STATE_EVENT = "hapto:cart-state";
@@ -107,7 +107,7 @@ export const readStoredCartState = () => {
 
     return state;
   } catch (error) {
-    console.error("Impossible de lire l'etat du panier :", error);
+    console.error("Impossible de lire l'état du panier :", error);
     window.sessionStorage.removeItem(CART_STATE_STORAGE_KEY);
     return null;
   }
@@ -122,3 +122,4 @@ export const clearStoredCartState = () => {
 };
 
 export { CART_ANIMATION_EVENT, CART_STATE_EVENT };
+

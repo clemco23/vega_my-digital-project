@@ -21,7 +21,7 @@ function AboutClosingCtaSection() {
             className="about-closing-cta__title"
             id="about-closing-cta-title"
           >
-            Offrez le meilleur a votre enfant
+            Offrez le meilleur à votre enfant
           </h2>
 
           <p className="about-closing-cta__description">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CartEmptyState from "../../components/cart/CartEmptyState/CartEmptyState";
 import CartHero from "../../components/cart/CartHero/CartHero";
@@ -90,7 +90,7 @@ function CartPage() {
       console.error(updateError);
       setError(
         updateError.response?.data?.message ||
-          "La mise a jour du panier a echoue."
+          "La mise à jour du panier a échoué."
       );
     } finally {
       setPendingItemId(null);
@@ -154,7 +154,7 @@ function CartPage() {
       console.error(createOrderError);
       const errorMessage =
         createOrderError.response?.data?.message ||
-        "Impossible de creer votre commande.";
+        "Impossible de créer votre commande.";
 
       if (createdOrder?.id) {
         navigate(
@@ -223,3 +223,4 @@ function CartPage() {
 }
 
 export default CartPage;
+

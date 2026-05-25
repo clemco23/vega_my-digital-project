@@ -9,12 +9,12 @@ import "./OrdersPage.css";
 
 const statusLabels = {
   PENDING: "En attente de paiement",
-  PAID: "Payee",
-  PREPARING: "En preparation",
-  SHIPPED: "Expediee",
-  DELIVERED: "Livree",
-  CANCELLED: "Annulee",
-  REFUNDED: "Remboursee",
+  PAID: "Payée",
+  PREPARING: "En préparation",
+  SHIPPED: "Expédiée",
+  DELIVERED: "Livrée",
+  CANCELLED: "Annulée",
+  REFUNDED: "Remboursée",
 };
 
 const formatDate = (value) => {
@@ -217,14 +217,14 @@ function OrdersPage() {
   const bannerMessage =
     paymentState === "success" && paymentOrderId
       ? isPaymentConfirmationPending
-        ? `Le paiement de votre commande #${paymentOrderId} a bien ete recu. Confirmation en cours...`
-        : `Le paiement de votre commande #${paymentOrderId} a ete confirme.`
+        ? `Le paiement de votre commande #${paymentOrderId} a bien été reçu. Confirmation en cours...`
+        : `Le paiement de votre commande #${paymentOrderId} a été confirmé.`
       : paymentState === "cancel" && paymentOrderId
-        ? `Le paiement de votre commande #${paymentOrderId} a ete annule. Vous pouvez le reprendre ci-dessous.`
+        ? `Le paiement de votre commande #${paymentOrderId} a été annulé. Vous pouvez le reprendre ci-dessous.`
       : paymentState === "unavailable" && createdOrderId
-      ? `Votre commande #${createdOrderId} a bien ete creee, mais la redirection vers Stripe a echoue. Vous pouvez reprendre le paiement ci-dessous.`
+      ? `Votre commande #${createdOrderId} a bien été créée, mais la redirection vers Stripe a échoué. Vous pouvez reprendre le paiement ci-dessous.`
       : createdOrderId
-        ? `Votre commande #${createdOrderId} a bien ete creee.`
+        ? `Votre commande #${createdOrderId} a bien été créée.`
         : "";
 
   return (
@@ -260,8 +260,8 @@ function OrdersPage() {
           <section className="orders-page__empty">
             <h2>Aucune commande pour le moment</h2>
             <p>
-              Votre prochaine composition apparaitra ici des qu&apos;elle sera
-              validee.
+              Votre prochaine composition apparaîtra ici dès qu&apos;elle sera
+              validée.
             </p>
             <Link to="/la-planche" className="orders-page__cta">
               Composer ma planche
@@ -277,7 +277,7 @@ function OrdersPage() {
                   <div>
                     <p className="order-card__number">Commande #{order.id}</p>
                     <p className="order-card__date">
-                      Creee le {formatDate(order.createdAt || order.orderDate)}
+                      Créée le {formatDate(order.createdAt || order.orderDate)}
                     </p>
                   </div>
 
@@ -313,7 +313,7 @@ function OrdersPage() {
                       Adresse de livraison
                     </p>
                     <p className="order-card__text">
-                      {getAddressLine(order) || "Adresse non renseignee"}
+                      {getAddressLine(order) || "Adresse non renseignée"}
                     </p>
                     <p className="order-card__text">
                       {order.customerPostalCode} {order.customerCity}

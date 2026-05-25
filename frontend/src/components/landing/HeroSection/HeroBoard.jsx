@@ -36,7 +36,7 @@ const tiles = [
     itemClass: "hero-board__item--sand",
     iconClass: "hero-board__icon--small",
     icon: "\u{1F511}",
-    label: "Module cle",
+    label: "Module clé",
   },
   {
     slotId: "slot-magnet",

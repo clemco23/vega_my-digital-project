@@ -3,28 +3,28 @@ import "./AboutDifferentiatorsSection.css";
 
 const differentiators = [
   {
-    title: "Modularite",
+    title: "Modularité",
     Icon: Puzzle,
     description:
-      "Nos modules sont clipsables et interchangeables. La planche evolue en complexite au meme rythme que votre enfant.",
+      "Nos modules sont clipsables et interchangeables. La planche évolue en complexité au même rythme que votre enfant.",
   },
   {
-    title: "Eco-conception",
+    title: "Éco-conception",
     Icon: Leaf,
     description:
-      "Bois certifie FSC, peintures conformes EN 71-3... Assemble en France avec des materiaux nobles sources en Europe.",
+      "Bois certifié FSC, peintures conformes EN 71-3... Assemblé en France avec des matériaux nobles sourcés en Europe.",
   },
   {
-    title: "Inclusivite",
+    title: "Inclusivité",
     Icon: UsersRound,
     description:
-      "Concu pour tous les enfants, y compris neuroatypiques (TDAH, TSA, ...). Convient egalement aux adultes.",
+      "Conçu pour tous les enfants, y compris neuroatypiques (TDAH, TSA, ...). Convient également aux adultes.",
   },
   {
-    title: "Design esthetique",
+    title: "Design esthétique",
     Icon: Palette,
     description:
-      "Plus qu'un objet sensoriel, son design et ses materiaux nobles s'integreront sans aucun probleme a votre decoration d'interieur.",
+      "Plus qu'un objet sensoriel, son design et ses matériaux nobles s'intégreront sans aucun problème à votre décoration d'intérieur.",
   },
 ];
 
@@ -43,7 +43,7 @@ function AboutDifferentiatorsSection() {
             Ce qui nous rend
           </span>{" "}
           <span className="about-differentiators__title-accent">
-            differents
+            différents
           </span>
         </h2>
 

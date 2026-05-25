@@ -54,7 +54,7 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
           <div className="cart-item__pack">
             <div className="cart-item__pack-header">
               <p className="cart-item__pack-title">Contenu du pack</p>
-              <span className="cart-item__pack-caption">Detail d&apos;une composition</span>
+              <span className="cart-item__pack-caption">Détail d&apos;une composition</span>
             </div>
 
             <div className="cart-item__pack-list">
@@ -95,13 +95,13 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
         ) : null}
 
         <div className="cart-item__footer">
-          <div className="cart-item__quantity" aria-label="Quantite">
+          <div className="cart-item__quantity" aria-label="Quantité">
             <button
               type="button"
               className="cart-item__quantity-btn"
               onClick={() => onQuantityChange(item, item.quantity - 1)}
               disabled={isPending}
-              aria-label={`Retirer une unite de ${item.product.name}`}
+              aria-label={`Retirer une unité de ${item.product.name}`}
             >
               <Minus size={16} />
             </button>
@@ -113,7 +113,7 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
               className="cart-item__quantity-btn"
               onClick={() => onQuantityChange(item, item.quantity + 1)}
               disabled={isPending}
-              aria-label={`Ajouter une unite de ${item.product.name}`}
+              aria-label={`Ajouter une unité de ${item.product.name}`}
             >
               <Plus size={16} />
             </button>

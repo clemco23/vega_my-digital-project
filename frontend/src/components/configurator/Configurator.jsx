@@ -256,7 +256,7 @@ function Configurator() {
             </div>
           ) : (
             <p className="configurator__board-empty">
-              Selectionnez vos modules pour visualiser la composition.
+              Sélectionnez vos modules pour visualiser la composition.
             </p>
           )}
 
@@ -319,7 +319,7 @@ function Configurator() {
 
             <p className="configurator__subtitle">
               Choisissez la taille de la planche que vous souhaitez et les
-              modules que vous voulez y integrer.
+              modules que vous voulez y intégrer.
             </p>
 
             {renderBoardPreview("configurator__preview-card--mobile")}

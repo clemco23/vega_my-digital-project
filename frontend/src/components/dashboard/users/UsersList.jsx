@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   getAllUsers,
   updateUserRole,
@@ -47,7 +47,7 @@ const syncStoredUserRole = (updatedUser) => {
       })
     );
   } catch (error) {
-    console.error("Impossible de synchroniser le role utilisateur :", error);
+    console.error("Impossible de synchroniser le rôle utilisateur :", error);
   }
 };
 
@@ -114,13 +114,13 @@ function UsersList() {
         )
       );
       setSuccessMessage(
-        `Le role de ${formatAccountLabel(updatedUser)} a ete mis a jour.`
+        `Le rôle de ${formatAccountLabel(updatedUser)} a été mis à jour.`
       );
     } catch (saveError) {
-      console.error("Impossible de mettre a jour le role :", saveError);
+      console.error("Impossible de mettre à jour le rôle :", saveError);
       setError(
         saveError.response?.data?.message ||
-          "Impossible de mettre a jour le role pour le moment."
+          "Impossible de mettre à jour le rôle pour le moment."
       );
       setUsers((currentUsers) =>
         currentUsers.map((currentUser) =>
@@ -176,8 +176,8 @@ function UsersList() {
               <tr>
                 <th>Utilisateur</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Compte verifie</th>
+                <th>Rôle</th>
+                <th>Compte vérifié</th>
                 <th>Inscription</th>
                 <th>Action</th>
               </tr>
@@ -247,3 +247,4 @@ function UsersList() {
 }
 
 export default UsersList;
+

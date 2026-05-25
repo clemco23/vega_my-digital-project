@@ -13,16 +13,16 @@ const teamMembers = [
     alt: "Portrait de Lorena Ville Peguy",
     imagePosition: "50% 34%",
     description:
-      "Directrice artistique de formation et maman d'un petit garcon, soucieuse du developpement des enfants au plus loin des ecrans. Elle lance Hapto avec Clement en 2025.",
+      "Directrice artistique de formation et maman d'un petit garçon, soucieuse du développement des enfants au plus loin des écrans. Elle lance Hapto avec Clement en 2025.",
   },
   {
     name: "Clement Boscher",
-    role: "Co-fondateur - Developpeur",
+    role: "Co-fondateur - Développeur",
     image: clementPortrait,
     alt: "Portrait de Clement Boscher",
     imagePosition: "50% 24%",
     description:
-      "L'architecte digital du projet et co-fondateur d'Hapto avec Lorena. Il veille a ce que votre experience en ligne soit aussi fluide qu'a travers la planche sensorielle.",
+      "L'architecte digital du projet et co-fondateur d'Hapto avec Lorena. Il veille à ce que votre expérience en ligne soit aussi fluide qu'à travers la planche sensorielle.",
   },
   {
     name: "Clessy Zhou",
@@ -31,7 +31,7 @@ const teamMembers = [
     alt: "Portrait de Clessy Zhou",
     imagePosition: "50% 22%",
     description:
-      "Formee en marketing et communication, et maman d'une petite fille, elle reflechit au developpement de la marque en accord avec nos valeurs et les votres.",
+      "Formée en marketing et communication, et maman d'une petite fille, elle réfléchit au développement de la marque en accord avec nos valeurs et les vôtres.",
   },
   {
     name: "William Anguile-Diop",
@@ -40,7 +40,7 @@ const teamMembers = [
     alt: "Portrait de William Anguile-Diop",
     imagePosition: "50% 22%",
     description:
-      "Educateur specialise aupres d'enfants en difficulte, il pratique son metier conjointement avec notre marque afin d'augmenter la presence d'Hapto au sein des ecoles et creches.",
+      "Éducateur spécialisé auprès d'enfants en difficulté, il pratique son métier conjointement avec notre marque afin d'augmenter la présence d'Hapto au sein des écoles et crèches.",
   },
   {
     name: "Ines Schlegel",
@@ -49,7 +49,7 @@ const teamMembers = [
     alt: "Portrait d'Ines Schlegel",
     imagePosition: "50% 30%",
     description:
-      "Diplomee de sociologie, elle se preoccupe de la place du digital au sein des foyers. En charge de la relation client, elle vous aidera a y voir plus clair et repondra a vos questions.",
+      "Diplômée de sociologie, elle se préoccupe de la place du digital au sein des foyers. En charge de la relation client, elle vous aidera à y voir plus clair et répondra à vos questions.",
   },
 ];
 
@@ -57,37 +57,37 @@ function AboutTeamSection() {
   return (
     <section className="about-team" aria-labelledby="about-team-title">
       <div className="about-team__inner">
-        <p className="about-team__eyebrow">L&apos;EQUIPE</p>
+        <p className="about-team__eyebrow">L&apos;ÉQUIPE</p>
 
         <h2 className="about-team__title" id="about-team-title">
           <span className="about-team__title-primary">
-            Les visages derriere
+            Les visages derrière
           </span>{" "}
           <span className="about-team__title-accent">Hapto</span>
         </h2>
 
         <p className="about-team__intro">
-          Nous travaillons tous a elaborer une solution plus saine et durable
+          Nous travaillons tous à élaborer une solution plus saine et durable
           pour l&apos;avenir : nos enfants.
         </p>
 
         <div className="about-team__grid">
           {teamMembers.map(
             ({ name, role, image, alt, description, imagePosition }) => (
-            <article className="about-team__card" key={name}>
-              <img
-                className="about-team__photo"
-                src={image}
-                alt={alt}
-                style={{ objectPosition: imagePosition }}
-              />
+              <article className="about-team__card" key={name}>
+                <img
+                  className="about-team__photo"
+                  src={image}
+                  alt={alt}
+                  style={{ objectPosition: imagePosition }}
+                />
 
-              <div className="about-team__card-body">
-                <h3 className="about-team__name">{name}</h3>
-                <p className="about-team__role">{role}</p>
-                <p className="about-team__description">{description}</p>
-              </div>
-            </article>
+                <div className="about-team__card-body">
+                  <h3 className="about-team__name">{name}</h3>
+                  <p className="about-team__role">{role}</p>
+                  <p className="about-team__description">{description}</p>
+                </div>
+              </article>
             )
           )}
         </div>

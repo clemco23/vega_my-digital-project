@@ -42,14 +42,14 @@ const register = async (req, res) => {
 
     if (password.length < 8) {
       return res.status(400).json({
-        message: "Le mot de passe doit faire au moins 8 caracteres.",
+        message: "Le mot de passe doit faire au moins 8 caractères.",
       });
     }
 
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return res.status(409).json({
-        message: "Cette adresse email est deja utilisee.",
+        message: "Cette adresse email est déjà utilisée.",
       });
     }
 
@@ -58,7 +58,7 @@ const register = async (req, res) => {
     await sendVerificationEmail(email, user.validationToken);
 
     return res.status(201).json({
-      message: "Inscription reussie. Verifiez votre email.",
+      message: "Inscription réussie. Vérifiez votre email.",
       data: toPublicUser(user),
     });
   } catch (error) {
@@ -77,7 +77,7 @@ const verify = async (req, res) => {
 
     await verifyUser(email, token);
 
-    return res.status(200).json({ message: "Compte verifie avec succes." });
+    return res.status(200).json({ message: "Compte vérifié avec succès." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -102,7 +102,7 @@ const login = async (req, res) => {
 
     if (!user.verifiedAt) {
       return res.status(401).json({
-        message: "Veuillez verifier votre email avant de vous connecter.",
+        message: "Veuillez vérifier votre email avant de vous connecter.",
       });
     }
 
@@ -120,7 +120,7 @@ const login = async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "Connexion reussie.",
+      message: "Connexion réussie.",
       token,
       data: toPublicUser(user),
     });
@@ -141,7 +141,7 @@ const resendVerification = async (req, res) => {
     const token = await resendVerificationEmail(email);
     await sendVerificationEmail(email, token);
 
-    return res.status(200).json({ message: "Code renvoye." });
+    return res.status(200).json({ message: "Code renvoyé." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -160,7 +160,7 @@ const forgotPasswordController = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Email de reinitialisation envoye." });
+      .json({ message: "Email de réinitialisation envoyé." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -178,7 +178,7 @@ const resetPasswordController = async (req, res) => {
 
     if (newPassword.length < 8) {
       return res.status(400).json({
-        message: "Le mot de passe doit faire au moins 8 caracteres.",
+        message: "Le mot de passe doit faire au moins 8 caractères.",
       });
     }
 
@@ -186,7 +186,7 @@ const resetPasswordController = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Mot de passe reinitialise avec succes." });
+      .json({ message: "Mot de passe réinitialisé avec succès." });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }

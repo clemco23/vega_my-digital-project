@@ -16,7 +16,7 @@ const checkout = async (req, res) => {
     const session = await createCheckoutSession(orderId, req.user.id);
 
     return res.status(200).json({
-      message: "Session de paiement creee.",
+      message: "Session de paiement créée.",
       url: session.url,
     });
   } catch (error) {
@@ -40,7 +40,7 @@ const confirm = async (req, res) => {
     const order = await confirmCheckoutSession(orderId, sessionId, req.user.id);
 
     return res.status(200).json({
-      message: "Paiement confirme.",
+      message: "Paiement confirmé.",
       data: serializeForJson(order),
     });
   } catch (error) {

@@ -14,12 +14,12 @@ function TouchCta() {
 
         <p className="touch-cta__description">
           <span className="touch-cta__description-line">
-            Composez la planche qui correspond a votre enfant. Un cadeau pense
+            Composez la planche qui correspond à votre enfant. Un cadeau pensé
           </span>
           <span className="touch-cta__description-line">
-            pour grandir avec lui - de ses premiers gestes a ses plus grandes
+            pour grandir avec lui - de ses premiers gestes à ses plus grandes
           </span>
-          <span className="touch-cta__description-line">decouvertes.</span>
+          <span className="touch-cta__description-line">découvertes.</span>
         </p>
 
         <Link to="/la-planche" className="touch-cta__button">
