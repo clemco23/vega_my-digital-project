@@ -70,6 +70,13 @@ Your VPS should already have:
 
 - serve the frontend from `${VPS_APP_DIR}/frontend/dist`
 - proxy API requests to your Node backend port
+- increase upload size for product/blog images, for example `client_max_body_size 10M;`
+
+Example inside your Nginx `server` block or the `/api/` location:
+
+```nginx
+client_max_body_size 10M;
+```
 
 ## Backend notes
 

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const multer = require("multer");
 const passport = require("./config/passport");
 const session = require("express-session");
 const newsletterRoutes = require("./routes/newsletter.routes");
@@ -67,5 +68,40 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stats", statsRoutes);
 
+app.use((error, _req, res, _next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({
+        message:
+          "Image trop lourde. Reduisez sa taille ou augmentez la limite d'upload du serveur.",
+      });
+    }
+
+    if (error.code === "LIMIT_FILE_COUNT") {
+      return res.status(400).json({
+        message: "Vous pouvez envoyer jusqu'a 5 images par requete.",
+      });
+    }
+  }
+
+  if (error?.type === "entity.too.large") {
+    return res.status(413).json({
+      message:
+        "Contenu trop volumineux. Reduisez la taille du fichier ou augmentez la limite du serveur.",
+    });
+  }
+
+  if (error?.statusCode) {
+    return res.status(error.statusCode).json({
+      message: error.message,
+    });
+  }
+
+  console.error(error);
+
+  return res.status(500).json({
+    message: "Erreur serveur.",
+  });
+});
 
 module.exports = app;
