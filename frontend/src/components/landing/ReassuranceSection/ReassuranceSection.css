@@ -37,9 +37,9 @@
 
 .reassurance-section__eyebrow {
   margin: 0 0 10px;
-  color: rgba(34, 28, 18, 0.96);
+  color: var(--color-white);
   font-family: var(--font-body);
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
