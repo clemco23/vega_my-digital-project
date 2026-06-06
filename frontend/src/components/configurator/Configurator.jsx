@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Info, Recycle, RotateCcw, Star, Truck } from "lucide-react";
+import {
+  BadgeCheck,
+  Info,
+  Leaf,
+  Recycle,
+  RotateCcw,
+  Star,
+  Trees,
+  Truck,
+} from "lucide-react";
 import { getBoards, getModules } from "../../services/product.service";
 import { triggerCartAnimation } from "../../services/cart-feedback";
 import { addCartItem } from "../../services/cart.service";
@@ -30,6 +39,24 @@ const benefitItems = [
     icon: Recycle,
     label: "Revendez vos articles",
     trailingIcon: Info,
+  },
+];
+
+const trustItems = [
+  {
+    icon: BadgeCheck,
+    title: "Normes CE",
+    text: "Sécurité certifiée",
+  },
+  {
+    icon: Trees,
+    title: "Bois FSC",
+    text: "Gestion durable",
+  },
+  {
+    icon: Leaf,
+    title: "Artisanat",
+    text: "Fait main en France",
   },
 ];
 
@@ -197,6 +224,7 @@ function Configurator() {
     (_, index) => index
   );
   const previewModules = selectedModules.slice(0, previewPlacements.length);
+  const showEmptyPreviewHint = previewModules.length === 0;
 
   const renderBoardPreview = (className = "") => (
     <div className={["configurator__preview-card", className].join(" ").trim()}>
@@ -254,15 +282,17 @@ function Configurator() {
                 );
               })}
             </div>
-          ) : (
-            <p className="configurator__board-empty">
-              Sélectionnez vos modules pour visualiser la composition.
-            </p>
-          )}
+          ) : null}
 
           <span className="configurator__board-brand">HAPTO</span>
         </div>
       </div>
+
+      {showEmptyPreviewHint ? (
+        <p className="configurator__board-empty-note">
+          Sélectionnez vos modules pour visualiser la composition.
+        </p>
+      ) : null}
     </div>
   );
 
@@ -391,6 +421,24 @@ function Configurator() {
                     <TrailingIcon className="configurator__benefit-icon configurator__benefit-icon--muted" />
                   ) : null}
                 </div>
+              );
+            })}
+          </div>
+
+          <div className="configurator__trust-strip" aria-label="Engagements produit">
+            {trustItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <article className="configurator__trust-item" key={item.title}>
+                  <span className="configurator__trust-icon-wrap" aria-hidden="true">
+                    <Icon className="configurator__trust-icon" />
+                  </span>
+                  <div className="configurator__trust-copy">
+                    <p className="configurator__trust-title">{item.title}</p>
+                    <p className="configurator__trust-text">{item.text}</p>
+                  </div>
+                </article>
               );
             })}
           </div>

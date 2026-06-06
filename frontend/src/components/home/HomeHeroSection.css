@@ -198,7 +198,7 @@
 
 @media (max-width: 540px) {
   .home-hero__copy {
-    padding: 34px 18px 8px;
+    padding: 34px 18px 34px;
   }
 
   .home-hero__content {

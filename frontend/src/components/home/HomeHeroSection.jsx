@@ -16,7 +16,7 @@ const heroHighlights = [
   },
   {
     icon: pictoTime,
-    label: "Durée de vie 9 mois-6 ans",
+    label: "Durée de vie illimitée",
   },
 ];
 
