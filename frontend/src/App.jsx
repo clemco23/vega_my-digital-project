@@ -8,6 +8,7 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import GoogleCallback from "./pages/auth/GoogleCallback";
 import AboutPage from "./pages/about/AboutPage";
+import BlogArticlePage from "./pages/blog/BlogArticlePage";
 import BlogPage from "./pages/blog/BlogPage";
 import BoardPage from "./pages/board/BoardPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
@@ -47,6 +48,7 @@ function App() {
         <Route path="/la-planche" element={<BoardPage />} />
         <Route path="/planche" element={<LegacyBoardRedirect />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogArticlePage />} />
         <Route path="/contact" element={<ContactPage />} />
 
         <Route

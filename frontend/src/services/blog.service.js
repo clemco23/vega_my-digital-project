@@ -1,5 +1,15 @@
 import api from "./api";
 
+export const getPublishedBlogs = async () => {
+  const { data } = await api.get("/blogs");
+  return data;
+};
+
+export const getPublishedBlogBySlug = async (slug) => {
+  const { data } = await api.get(`/blogs/${slug}`);
+  return data;
+};
+
 export const getBlogsAdmin = async () => {
   const { data } = await api.get("/blogs/admin");
   return data;
