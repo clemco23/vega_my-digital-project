@@ -1,18 +1,40 @@
 const METADATA_LINE_PATTERN =
-  /^(titre|meta description|mots-cl[eé]s cibl[eé]s)\s*:/i;
+  /^(titre|meta description|mots-cl[e\u00e9]s cibl[e\u00e9]s)\s*:/i;
 const IMAGE_LINE_PATTERN = /^!\[(.*?)\]\((https?:\/\/[^\s)]+)\)$/i;
+const NUMBERED_LINE_PATTERN = /^\d+\.\s+/;
+const INLINE_BOLD_MARKER_PATTERN = /(\*\*|__)/;
+const INLINE_BOLD_PATTERN = /(\*\*|__)(.+?)\1/g;
+const BULLET_ITEM_PATTERN = /^[-*\u2022]\s+/;
+const UPPERCASE_LATIN_PATTERN = /^[A-Z\u00c0-\u00de]/;
+const WRAPPING_PUNCTUATION_PATTERN =
+  /^[("'`\u00ab\u201c]+|[),;:.!?'"`\u00bb\u201d]+$/g;
 
 const normalizeLine = (line) => line.replace(/\s+/g, " ").trim();
 
 const isMetadataLine = (line) => METADATA_LINE_PATTERN.test(line);
 
+const isNumberedSectionHeading = (line) => {
+  if (!NUMBERED_LINE_PATTERN.test(line)) {
+    return false;
+  }
+
+  const headingValue = line.replace(NUMBERED_LINE_PATTERN, "").trim();
+  const wordCount = headingValue.split(/\s+/).filter(Boolean).length;
+
+  return (
+    headingValue.length <= 90 &&
+    wordCount <= 10 &&
+    !/[,:;.!?]/.test(headingValue)
+  );
+};
+
 const isSectionHeading = (line) =>
-  /^(introduction|conclusion)$/i.test(line) || /^\d+\.\s+/.test(line);
+  /^(introduction|conclusion)$/i.test(line) || isNumberedSectionHeading(line);
 
 const isColonSubheading = (line) => line.length <= 110 && /:$/.test(line);
 
 const isStandaloneSubheading = (line) => {
-  if (line.length > 90 || /[.!?;:]$/.test(line) || /^\d+\.\s+/.test(line)) {
+  if (line.length > 90 || /[.!?;:]$/.test(line) || NUMBERED_LINE_PATTERN.test(line)) {
     return false;
   }
 
@@ -22,19 +44,66 @@ const isStandaloneSubheading = (line) => {
 };
 
 const isQuoteLine = (line) =>
-  /^["“].+["”]$/.test(line) || /^>+\s*/.test(line);
+  /^["\u201c].+["\u201d]$/.test(line) || /^>+\s*/.test(line);
 
 const isImageLine = (line) => IMAGE_LINE_PATTERN.test(line);
 
 const cleanListItem = (line) =>
-  line.replace(/^[-*•]\s*/, "").replace(/^\d+\)\s*/, "").trim();
+  line.replace(BULLET_ITEM_PATTERN, "").replace(/^\d+\)\s*/, "").trim();
+
+const stripEdgePunctuation = (token) =>
+  token.replace(WRAPPING_PUNCTUATION_PATTERN, "");
+
+const autoEmphasizeNumberedLead = (line) => {
+  if (!NUMBERED_LINE_PATTERN.test(line) || INLINE_BOLD_MARKER_PATTERN.test(line)) {
+    return line;
+  }
+
+  const numberedMatch = line.match(/^(\d+\.)\s+(.+)$/);
+
+  if (!numberedMatch) {
+    return line;
+  }
+
+  const [, itemNumber, remainder] = numberedMatch;
+
+  if (remainder.length < 48 || !/[,:;]/.test(remainder)) {
+    return line;
+  }
+
+  const words = remainder.split(/\s+/).filter(Boolean);
+  const splitCandidates = [];
+  const scanLimit = Math.min(words.length, 8);
+
+  for (let index = 1; index < scanLimit; index += 1) {
+    const token = stripEdgePunctuation(words[index]);
+
+    if (UPPERCASE_LATIN_PATTERN.test(token)) {
+      splitCandidates.push(index);
+    }
+  }
+
+  if (splitCandidates.length === 0) {
+    return line;
+  }
+
+  const splitIndex = splitCandidates[splitCandidates.length - 1];
+  const titleWords = words.slice(0, splitIndex);
+  const bodyWords = words.slice(splitIndex);
+
+  if (titleWords.length < 3 || titleWords.length > 8 || bodyWords.length < 4) {
+    return line;
+  }
+
+  return `**${itemNumber} ${titleWords.join(" ")}** ${bodyWords.join(" ")}`;
+};
 
 const isListCandidateLine = (line) => {
-  if (/^[-*•]\s+/.test(line) || /^\d+\)\s+/.test(line)) {
+  if (BULLET_ITEM_PATTERN.test(line) || /^\d+\)\s+/.test(line)) {
     return true;
   }
 
-  if (/^[A-ZÀ-ÖØ-Ý][^:]{0,70}\s:\s+/.test(line)) {
+  if (/^[A-Z\u00c0-\u00de][^:]{0,70}\s:\s+/.test(line)) {
     return true;
   }
 
@@ -57,6 +126,9 @@ const buildTableBlock = (lines) => ({
     return rows;
   }, []),
 });
+
+const stripInlineFormatting = (value) =>
+  String(value || "").replace(INLINE_BOLD_PATTERN, "$2");
 
 export const formatBlogDate = (value) => {
   if (!value) {
@@ -84,15 +156,49 @@ export const getBlogExcerpt = (blog) => {
     return "Explorer l'article complet sur le journal Hapto.";
   }
 
-  if (firstContentBlock.length <= 168) {
-    return firstContentBlock;
+  const normalizedExcerpt = stripInlineFormatting(firstContentBlock);
+
+  if (normalizedExcerpt.length <= 168) {
+    return normalizedExcerpt;
   }
 
-  return `${firstContentBlock.slice(0, 165).trim()}...`;
+  return `${normalizedExcerpt.slice(0, 165).trim()}...`;
 };
 
 export const getBlogCoverImage = (blog, fallbackImage) =>
   blog?.picture || fallbackImage;
+
+export const buildBlogInlineParts = (value) => {
+  const normalizedValue = String(value || "");
+  const parts = [];
+  let cursor = 0;
+
+  normalizedValue.replace(INLINE_BOLD_PATTERN, (match, _marker, content, offset) => {
+    if (offset > cursor) {
+      parts.push({
+        type: "text",
+        value: normalizedValue.slice(cursor, offset),
+      });
+    }
+
+    parts.push({
+      type: "strong",
+      value: content,
+    });
+    cursor = offset + match.length;
+
+    return match;
+  });
+
+  if (cursor < normalizedValue.length) {
+    parts.push({
+      type: "text",
+      value: normalizedValue.slice(cursor),
+    });
+  }
+
+  return parts;
+};
 
 export const buildBlogContentBlocks = (content) => {
   const lines = String(content || "")
@@ -145,7 +251,7 @@ export const buildBlogContentBlocks = (content) => {
     if (isQuoteLine(line)) {
       blocks.push({
         type: "quote",
-        value: line.replace(/^>\s*/, "").replace(/^["“]|["”]$/g, ""),
+        value: line.replace(/^>\s*/, "").replace(/^["\u201c]|["\u201d]$/g, ""),
       });
       lineIndex += 1;
       continue;
@@ -191,7 +297,7 @@ export const buildBlogContentBlocks = (content) => {
     }
 
     const shouldRenderAsList =
-      textGroup.some((groupLine) => /^[-*•]\s+/.test(groupLine)) ||
+      textGroup.some((groupLine) => BULLET_ITEM_PATTERN.test(groupLine)) ||
       ((previousBlock?.type === "subheading" || followsListIntro) &&
         textGroup.length > 1 &&
         textGroup.every(isListCandidateLine));
@@ -207,8 +313,10 @@ export const buildBlogContentBlocks = (content) => {
     textGroup.forEach((groupLine, groupIndex) => {
       blocks.push({
         type: "paragraph",
-        value: groupLine,
-        isLead: blocks.length === 0 || (previousBlock?.type === "heading" && groupIndex === 0),
+        value: autoEmphasizeNumberedLead(groupLine),
+        isLead:
+          blocks.length === 0 ||
+          (previousBlock?.type === "heading" && groupIndex === 0),
       });
     });
   }

@@ -338,8 +338,12 @@ function BlogForm({ blog, onClose, onSave }) {
                   onChange={handleChange}
                   rows={16}
                   required
-                  placeholder="Tu peux coller ici ton article complet."
+                  placeholder="Tu peux coller ici ton article complet. Utilise **texte** pour mettre un passage en gras."
                 />
+                <p className="blog-form-help">
+                  Utilise <code>**texte**</code> pour garder seulement un passage
+                  en gras dans l&apos;article.
+                </p>
               </div>
             </div>
 
