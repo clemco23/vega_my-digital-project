@@ -1,0 +1,10 @@
+.blog-page {
+  min-height: 100vh;
+  background-color: color-mix(in srgb, var(--color-background) 96%, white 4%);
+  overflow-x: clip;
+}
+
+.blog-page__content {
+  width: 100%;
+  padding: 0;
+}

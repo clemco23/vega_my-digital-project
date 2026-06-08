@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout/DashboardLayout";
+import BlogForm from "../../components/dashboard/blogs/BlogForm";
+import BlogsList from "../../components/dashboard/blogs/BlogsList";
 import Newsletter from "../../components/dashboard/newsletter/Newsletter";
 import StatsCards from "../../components/dashboard/StatsCards/StatsCards";
 import ProductsList from "../../components/dashboard/products/ProductsList";
@@ -12,6 +14,9 @@ function DashboardPage() {
   const { pathname } = useLocation();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState(null);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [blogRefreshKey, setBlogRefreshKey] = useState(0);
 
   const renderContent = () => {
     switch (pathname) {
@@ -55,6 +60,34 @@ function DashboardPage() {
           <>
             <h1 className="dashboard-title">Gestion des utilisateurs</h1>
             <UsersList />
+          </>
+        );
+
+      case "/dashboard/blogs":
+        return (
+          <>
+            <BlogsList
+              refreshToken={blogRefreshKey}
+              onEdit={(blog) => {
+                setSelectedBlog(blog);
+                setShowBlogForm(true);
+              }}
+              onAdd={() => {
+                setSelectedBlog(null);
+                setShowBlogForm(true);
+              }}
+            />
+
+            {showBlogForm && (
+              <BlogForm
+                blog={selectedBlog}
+                onClose={() => setShowBlogForm(false)}
+                onSave={() => {
+                  setShowBlogForm(false);
+                  setBlogRefreshKey((previousValue) => previousValue + 1);
+                }}
+              />
+            )}
           </>
         );
 

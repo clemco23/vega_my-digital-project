@@ -1,0 +1,109 @@
+.blog-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-height: clamp(420px, 58vw, 640px);
+  padding: clamp(84px, 10vw, 132px) 24px clamp(92px, 12vw, 144px);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(224, 117, 59, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 26%, rgba(145, 44, 14, 0.24), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(255, 197, 134, 0.12), transparent 42%),
+    linear-gradient(135deg, #8f3916 0%, #a34118 42%, #903613 100%);
+}
+
+.blog-hero::before,
+.blog-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.blog-hero::before {
+  top: -180px;
+  left: -140px;
+  width: 420px;
+  height: 420px;
+  background: rgba(255, 255, 255, 0.04);
+  filter: blur(8px);
+}
+
+.blog-hero::after {
+  right: -180px;
+  bottom: -220px;
+  width: 520px;
+  height: 520px;
+  background: rgba(255, 196, 120, 0.08);
+  filter: blur(12px);
+}
+
+.blog-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 940px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.blog-hero__title {
+  margin: 0;
+  color: var(--color-white);
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 6.5vw, 5.25rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.06em;
+}
+
+.blog-hero__title-line {
+  display: block;
+}
+
+.blog-hero__title-line--accent {
+  color: var(--color-secondary);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.blog-hero__description {
+  width: min(100%, 760px);
+  margin: clamp(24px, 2.8vw, 34px) auto 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(1rem, 1.35vw, 1.3rem);
+  line-height: 1.72;
+}
+
+@media (max-width: 768px) {
+  .blog-hero {
+    min-height: auto;
+    padding: 72px 18px 84px;
+  }
+
+  .blog-hero__title {
+    font-size: clamp(2.5rem, 9vw, 4rem);
+    line-height: 1.08;
+  }
+
+  .blog-hero__description {
+    font-size: 1rem;
+    line-height: 1.68;
+  }
+}
+
+@media (max-width: 540px) {
+  .blog-hero {
+    padding: 58px 16px 70px;
+  }
+
+  .blog-hero__title {
+    font-size: clamp(2.2rem, 11vw, 3.1rem);
+  }
+
+  .blog-hero__description {
+    width: min(100%, 34ch);
+    margin-top: 20px;
+    font-size: 0.95rem;
+    line-height: 1.62;
+  }
+}
