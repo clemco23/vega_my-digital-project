@@ -193,6 +193,11 @@
   text-wrap: pretty;
 }
 
+.blog-article__body strong {
+  font-weight: 700;
+  color: inherit;
+}
+
 .blog-article__paragraph--lead {
   color: #423732;
   font-size: clamp(1.1rem, 1.5vw, 1.22rem);

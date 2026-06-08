@@ -109,6 +109,20 @@
   resize: vertical;
 }
 
+.blog-form-help {
+  margin: 8px 0 0;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.blog-form-help code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  font-size: 12px;
+}
+
 .blog-form-field--checkbox {
   display: flex;
   align-items: flex-end;

@@ -7,10 +7,20 @@ import PageSeo from "../../components/seo/PageSeo";
 import { getPublishedBlogBySlug } from "../../services/blog.service";
 import {
   buildBlogContentBlocks,
+  buildBlogInlineParts,
   formatBlogDate,
   getBlogCoverImage,
 } from "../../components/blog/blog.utils";
 import "./BlogArticlePage.css";
+
+const renderInlineContent = (value) =>
+  buildBlogInlineParts(value).map((part, index) =>
+    part.type === "strong" ? (
+      <strong key={`strong-${index}`}>{part.value}</strong>
+    ) : (
+      part.value
+    )
+  );
 
 function BlogArticlePage() {
   const { slug } = useParams();
@@ -114,17 +124,25 @@ function BlogArticlePage() {
                 <div className="blog-article__body">
                   {contentBlocks.map((block, index) => {
                     if (block.type === "heading") {
-                      return <h2 key={`${block.type}-${index}`}>{block.value}</h2>;
+                      return (
+                        <h2 key={`${block.type}-${index}`}>
+                          {renderInlineContent(block.value)}
+                        </h2>
+                      );
                     }
 
                     if (block.type === "subheading") {
-                      return <h3 key={`${block.type}-${index}`}>{block.value}</h3>;
+                      return (
+                        <h3 key={`${block.type}-${index}`}>
+                          {renderInlineContent(block.value)}
+                        </h3>
+                      );
                     }
 
                     if (block.type === "quote") {
                       return (
                         <blockquote key={`${block.type}-${index}`}>
-                          {block.value}
+                          {renderInlineContent(block.value)}
                         </blockquote>
                       );
                     }
@@ -133,7 +151,9 @@ function BlogArticlePage() {
                       return (
                         <ul key={`${block.type}-${index}`} className="blog-article__list">
                           {block.items.map((item, itemIndex) => (
-                            <li key={`${block.type}-${index}-${itemIndex}`}>{item}</li>
+                            <li key={`${block.type}-${index}-${itemIndex}`}>
+                              {renderInlineContent(item)}
+                            </li>
                           ))}
                         </ul>
                       );
@@ -150,7 +170,7 @@ function BlogArticlePage() {
                               <tr>
                                 {block.headers.map((header, headerIndex) => (
                                   <th key={`${block.type}-${index}-${headerIndex}`}>
-                                    {header}
+                                    {renderInlineContent(header)}
                                   </th>
                                 ))}
                               </tr>
@@ -162,7 +182,7 @@ function BlogArticlePage() {
                                     <td
                                       key={`${block.type}-${index}-${rowIndex}-${cellIndex}`}
                                     >
-                                      {cell}
+                                      {renderInlineContent(cell)}
                                     </td>
                                   ))}
                                 </tr>
@@ -189,7 +209,7 @@ function BlogArticlePage() {
                         key={`${block.type}-${index}`}
                         className={`blog-article__paragraph ${block.isLead ? "blog-article__paragraph--lead" : ""}`}
                       >
-                        {block.value}
+                        {renderInlineContent(block.value)}
                       </p>
                     );
                   })}
