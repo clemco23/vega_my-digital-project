@@ -8,9 +8,19 @@ const getAllBlogs = async () => {
   });
 };
 
+const getAllBlogsAdmin = async () => {
+  return prisma.blog.findMany({
+    orderBy: { updatedAt: "desc" },
+    include: { category: true },
+  });
+};
+
 const getBlogBySlug = async (slug) => {
-  return prisma.blog.findUnique({
-    where: { slug },
+  return prisma.blog.findFirst({
+    where: {
+      slug,
+      isActivated: true,
+    },
     include: { category: true },
   });
 };
@@ -20,7 +30,7 @@ const getBlogById = async (id) => {
     where: { id },
     include: { category: true },
   });
-} ;
+};
 
 const createBlog = async (data) => {
   return prisma.blog.create({ data });
@@ -28,19 +38,20 @@ const createBlog = async (data) => {
 
 const updateBlog = async (id, data) => {
   return prisma.blog.update({
-    where: { id: parseInt(id) },
+    where: { id: Number.parseInt(id, 10) },
     data,
   });
 };
 
 const deleteBlog = async (id) => {
   return prisma.blog.delete({
-    where: { id: parseInt(id) },
+    where: { id: Number.parseInt(id, 10) },
   });
 };
 
 module.exports = {
   getAllBlogs,
+  getAllBlogsAdmin,
   getBlogBySlug,
   getBlogById,
   createBlog,
