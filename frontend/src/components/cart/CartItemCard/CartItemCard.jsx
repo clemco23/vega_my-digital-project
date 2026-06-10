@@ -1,4 +1,4 @@
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { formatPrice, getItemTypeLabel } from "../cart.utils";
 import "./CartItemCard.css";
 
@@ -20,9 +20,18 @@ const buildPackItemMeta = (packItem) => {
   return parts.join(" - ");
 };
 
-function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
+function CartItemCard({
+  item,
+  mode = "cart",
+  isPending,
+  onQuantityChange,
+  onRemove,
+  onAddToCart,
+}) {
+  const isWishlist = mode === "wishlist";
   const productImage = item.product.images?.[0]?.url;
-  const itemTotal = Number(item.price) * item.quantity;
+  const itemQuantity = Number(item.quantity) || 1;
+  const itemTotal = Number(item.price) * itemQuantity;
   const packItems = item.packItems || [];
 
   return (
@@ -54,7 +63,9 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
           <div className="cart-item__pack">
             <div className="cart-item__pack-header">
               <p className="cart-item__pack-title">Contenu du pack</p>
-              <span className="cart-item__pack-caption">Détail d&apos;une composition</span>
+              <span className="cart-item__pack-caption">
+                Detail d&apos;une composition
+              </span>
             </div>
 
             <div className="cart-item__pack-list">
@@ -95,39 +106,65 @@ function CartItemCard({ item, isPending, onQuantityChange, onRemove }) {
         ) : null}
 
         <div className="cart-item__footer">
-          <div className="cart-item__quantity" aria-label="Quantité">
-            <button
-              type="button"
-              className="cart-item__quantity-btn"
-              onClick={() => onQuantityChange(item, item.quantity - 1)}
-              disabled={isPending}
-              aria-label={`Retirer une unité de ${item.product.name}`}
-            >
-              <Minus size={16} />
-            </button>
+          {isWishlist ? (
+            <div className="cart-item__actions">
+              <button
+                type="button"
+                className="cart-item__move"
+                onClick={() => onAddToCart(item)}
+                disabled={isPending}
+              >
+                <ShoppingCart size={16} />
+                Ajouter au panier
+              </button>
 
-            <span className="cart-item__quantity-value">{item.quantity}</span>
+              <button
+                type="button"
+                className="cart-item__remove"
+                onClick={() => onRemove(item.id)}
+                disabled={isPending}
+              >
+                <Trash2 size={16} />
+                Retirer
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="cart-item__quantity" aria-label="Quantite">
+                <button
+                  type="button"
+                  className="cart-item__quantity-btn"
+                  onClick={() => onQuantityChange(item, itemQuantity - 1)}
+                  disabled={isPending}
+                  aria-label={`Retirer une unite de ${item.product.name}`}
+                >
+                  <Minus size={16} />
+                </button>
 
-            <button
-              type="button"
-              className="cart-item__quantity-btn"
-              onClick={() => onQuantityChange(item, item.quantity + 1)}
-              disabled={isPending}
-              aria-label={`Ajouter une unité de ${item.product.name}`}
-            >
-              <Plus size={16} />
-            </button>
-          </div>
+                <span className="cart-item__quantity-value">{itemQuantity}</span>
 
-          <button
-            type="button"
-            className="cart-item__remove"
-            onClick={() => onRemove(item.id)}
-            disabled={isPending}
-          >
-            <Trash2 size={16} />
-            Retirer
-          </button>
+                <button
+                  type="button"
+                  className="cart-item__quantity-btn"
+                  onClick={() => onQuantityChange(item, itemQuantity + 1)}
+                  disabled={isPending}
+                  aria-label={`Ajouter une unite de ${item.product.name}`}
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+
+              <button
+                type="button"
+                className="cart-item__remove"
+                onClick={() => onRemove(item.id)}
+                disabled={isPending}
+              >
+                <Trash2 size={16} />
+                Retirer
+              </button>
+            </>
+          )}
         </div>
       </div>
     </article>

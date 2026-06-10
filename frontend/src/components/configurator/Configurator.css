@@ -98,9 +98,16 @@
   color: var(--color-primary);
 }
 
+.configurator__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
 .configurator__btn {
   min-height: 58px;
-  margin-top: 10px;
+  cursor: pointer;
   border: 0;
   border-radius: 0;
   background: #171717;
@@ -122,6 +129,23 @@
 .configurator__btn:disabled {
   cursor: not-allowed;
   opacity: 0.65;
+}
+
+.configurator__btn--secondary {
+  border: 1px solid rgba(23, 23, 23, 0.14);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-dark);
+}
+
+.configurator__btn--secondary:hover:not(:disabled) {
+  background: rgba(245, 239, 232, 0.96);
+}
+
+.configurator__feedback {
+  margin: 0;
+  color: #8d3d30;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .configurator__right {
@@ -521,5 +545,9 @@
 
   .configurator__trust-text {
     font-size: 0.68rem;
+  }
+
+  .configurator__actions {
+    grid-template-columns: 1fr;
   }
 }
