@@ -1,31 +1,36 @@
 const prisma = require("../config/prisma");
 
-const getOrCreateWishlist = async (userId) => {
-  let wishlist = await prisma.wishlist.findFirst({
-    where: { userId: BigInt(userId) },
+const wishlistInclude = {
+  variants: {
     include: {
-      variants: {
+      product: {
+        include: { images: true },
+      },
+      setVariantItems: {
         include: {
-          product: {
-            include: { images: true },
+          productVariant: {
+            include: {
+              product: {
+                include: { images: true },
+              },
+            },
           },
         },
       },
     },
+  },
+};
+
+const getOrCreateWishlist = async (userId) => {
+  let wishlist = await prisma.wishlist.findFirst({
+    where: { userId: BigInt(userId) },
+    include: wishlistInclude,
   });
 
   if (!wishlist) {
     wishlist = await prisma.wishlist.create({
       data: { userId: BigInt(userId) },
-      include: {
-        variants: {
-          include: {
-            product: {
-              include: { images: true },
-            },
-          },
-        },
-      },
+      include: wishlistInclude,
     });
   }
 
@@ -35,20 +40,24 @@ const getOrCreateWishlist = async (userId) => {
 const addToWishlist = async (userId, productVariantId) => {
   const wishlist = await getOrCreateWishlist(userId);
 
-  // Vérifier si déjà dans la wishlist
+  const normalizedVariantId = parseInt(productVariantId, 10);
   const alreadyInWishlist = wishlist.variants.some(
-    (v) => v.id === parseInt(productVariantId)
+    (variant) => variant.id === normalizedVariantId
   );
 
   if (alreadyInWishlist) {
-    throw new Error("Ce produit est déjà dans votre wishlist.");
+    const duplicateError = new Error(
+      "Ce produit est deja dans votre wishlist."
+    );
+    duplicateError.code = "WISHLIST_DUPLICATE";
+    throw duplicateError;
   }
 
   await prisma.wishlist.update({
     where: { id: wishlist.id },
     data: {
       variants: {
-        connect: { id: parseInt(productVariantId) },
+        connect: { id: normalizedVariantId },
       },
     },
   });
@@ -63,7 +72,7 @@ const removeFromWishlist = async (userId, productVariantId) => {
     where: { id: wishlist.id },
     data: {
       variants: {
-        disconnect: { id: parseInt(productVariantId) },
+        disconnect: { id: parseInt(productVariantId, 10) },
       },
     },
   });
@@ -82,13 +91,7 @@ const getAllWishlists = async () => {
           email: true,
         },
       },
-      variants: {
-        include: {
-          product: {
-            include: { images: true },
-          },
-        },
-      },
+      variants: wishlistInclude.variants,
     },
   });
 };

@@ -235,6 +235,7 @@ function Navbar() {
     cartItemCount > 0
       ? `Ouvrir le panier, ${cartItemCount} article${cartItemCount > 1 ? "s" : ""}`
       : "Ouvrir le panier";
+  const isSelectionPage = pathname === "/panier" || pathname === "/favoris";
 
   return (
     <header className="site-navbar">
@@ -299,7 +300,7 @@ function Navbar() {
               <div className="site-navbar__user">
                 <Link
                   to="/panier"
-                  className={`site-navbar__icon-button site-navbar__cart-button ${pathname === "/panier" ? "site-navbar__icon-button--active" : ""} ${isCartAnimating ? "site-navbar__cart-button--animating" : ""}`}
+                  className={`site-navbar__icon-button site-navbar__cart-button ${isSelectionPage ? "site-navbar__icon-button--active" : ""} ${isCartAnimating ? "site-navbar__cart-button--animating" : ""}`}
                   aria-label={cartAriaLabel}
                   onClick={closeMenu}
                 >
@@ -370,6 +371,15 @@ function Navbar() {
                       role="menuitem"
                     >
                       Mes commandes
+                    </Link>
+
+                    <Link
+                      to="/favoris"
+                      className="site-navbar__user-link"
+                      onClick={closeMenu}
+                      role="menuitem"
+                    >
+                      Mes favoris
                     </Link>
 
                     <button

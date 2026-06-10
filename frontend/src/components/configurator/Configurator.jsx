@@ -13,6 +13,7 @@ import {
 import { getBoards, getModules } from "../../services/product.service";
 import { triggerCartAnimation } from "../../services/cart-feedback";
 import { addCartItem } from "../../services/cart.service";
+import { addWishlistItem } from "../../services/wishlist.service";
 import BoardSizeSelector from "./BoardSizeSelector";
 import ModuleSelector from "./ModuleSelector";
 import "./Configurator.css";
@@ -134,6 +135,8 @@ function Configurator() {
   const [selectedModules, setSelectedModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [addingToWishlist, setAddingToWishlist] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -225,6 +228,10 @@ function Configurator() {
   );
   const previewModules = selectedModules.slice(0, previewPlacements.length);
   const showEmptyPreviewHint = previewModules.length === 0;
+  const selectionVariantIds = [
+    selectedBoard?.variant?.id,
+    ...selectedModules.map((module) => module.variant.id),
+  ].filter(Boolean);
 
   const renderBoardPreview = (className = "") => (
     <div className={["configurator__preview-card", className].join(" ").trim()}>
@@ -306,6 +313,7 @@ function Configurator() {
 
     try {
       setAddingToCart(true);
+      setActionError("");
 
       await addCartItem(selectedBoard.variant.id);
 
@@ -317,8 +325,48 @@ function Configurator() {
       navigate("/panier");
     } catch (error) {
       console.error(error);
+      setActionError(
+        error.response?.data?.message ||
+          "Impossible d'ajouter cette selection au panier."
+      );
     } finally {
       setAddingToCart(false);
+    }
+  };
+
+  const handleAddToWishlist = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setAddingToWishlist(true);
+      setActionError("");
+
+      for (const variantId of selectionVariantIds) {
+        try {
+          await addWishlistItem(variantId);
+        } catch (error) {
+          if (error.response?.status === 409) {
+            continue;
+          }
+
+          throw error;
+        }
+      }
+
+      navigate("/favoris");
+    } catch (error) {
+      console.error(error);
+      setActionError(
+        error.response?.data?.message ||
+          "Impossible d'ajouter cette selection aux favoris."
+      );
+    } finally {
+      setAddingToWishlist(false);
     }
   };
 
@@ -392,14 +440,33 @@ function Configurator() {
             />
           </div>
 
-          <button
-            type="button"
-            className="configurator__btn"
-            onClick={handleAddToCart}
-            disabled={!selectedBoard || addingToCart}
-          >
-            {addingToCart ? "Ajout en cours..." : "Ajouter au panier"}
-          </button>
+          <div className="configurator__actions">
+            <button
+              type="button"
+              className="configurator__btn"
+              onClick={handleAddToCart}
+              disabled={!selectedBoard || addingToCart || addingToWishlist}
+            >
+              {addingToCart ? "Ajout en cours..." : "Ajouter au panier"}
+            </button>
+
+            <button
+              type="button"
+              className="configurator__btn configurator__btn--secondary"
+              onClick={handleAddToWishlist}
+              disabled={!selectedBoard || addingToCart || addingToWishlist}
+            >
+              {addingToWishlist
+                ? "Sauvegarde..."
+                : "Ajouter aux favoris"}
+            </button>
+          </div>
+
+          {actionError ? (
+            <p className="configurator__feedback" role="alert">
+              {actionError}
+            </p>
+          ) : null}
         </div>
 
         <div className="configurator__right">

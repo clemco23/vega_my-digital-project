@@ -166,6 +166,14 @@ function App() {
           }
         />
         <Route
+          path="/favoris"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profil"
           element={
             <ProtectedRoute>
