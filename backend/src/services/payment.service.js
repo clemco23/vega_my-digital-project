@@ -11,6 +11,7 @@ const ensureStripeConfigured = () => {
 };
 
 const paymentOrderInclude = {
+  promoCode: true,
   orderVariants: {
     include: {
       productVariant: {
@@ -90,6 +91,17 @@ const markOrderAsPaid = async (orderId) => {
       });
     }
 
+    if (order.promoCodeId) {
+      await tx.promoCode.update({
+        where: { id: order.promoCodeId },
+        data: {
+          currentUses: {
+            increment: 1,
+          },
+        },
+      });
+    }
+
     const refreshedOrder = await tx.order.findUnique({
       where: { id: normalizedOrderId },
       include: paymentOrderInclude,
@@ -122,6 +134,20 @@ const createCheckoutSession = async (orderId, userId) => {
     throw new Error("Cette commande ne peut pas être payée.");
   }
 
+  if (Number(order.totalAmount) <= 0) {
+    throw new Error(
+      "Le total de la commande doit être supérieur à 0 EUR pour le paiement en ligne."
+    );
+  }
+
+  const itemsCount = order.orderVariants.reduce(
+    (total, orderVariant) => total + orderVariant.quantity,
+    0
+  );
+  const promoDescription = order.promoCode
+    ? ` • code promo ${order.promoCode.code}`
+    : "";
+
   return stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
@@ -131,16 +157,19 @@ const createCheckoutSession = async (orderId, userId) => {
       orderId: normalizedOrderId.toString(),
       userId: userId.toString(),
     },
-    line_items: order.orderVariants.map((orderVariant) => ({
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: `${orderVariant.productVariant.product.name} - Taille ${orderVariant.productVariant.size}`,
+    line_items: [
+      {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: `Commande HAPTO #${normalizedOrderId}`,
+            description: `${itemsCount} article${itemsCount > 1 ? "s" : ""}${promoDescription}`,
+          },
+          unit_amount: Math.round(Number(order.totalAmount) * 100),
         },
-        unit_amount: Math.round(parseFloat(orderVariant.productVariant.price) * 100),
+        quantity: 1,
       },
-      quantity: orderVariant.quantity,
-    })),
+    ],
   });
 };
 
@@ -218,7 +247,7 @@ const handleWebhook = async (payload, signature) => {
 };
 
 module.exports = {
-  createCheckoutSession,
   confirmCheckoutSession,
+  createCheckoutSession,
   handleWebhook,
 };

@@ -1,21 +1,22 @@
 const prisma = require("../config/prisma");
+const {
+  getPromoCodeByCode,
+  roundCurrency,
+  validatePromoCodeForSubtotal,
+} = require("./promoCode.service");
 
-const cartInclude = {
-  orderVariants: {
+const orderVariantInclude = {
+  productVariant: {
     include: {
-      productVariant: {
+      product: {
+        include: { images: true },
+      },
+      setVariantItems: {
         include: {
-          product: {
-            include: { images: true },
-          },
-          setVariantItems: {
+          productVariant: {
             include: {
-              productVariant: {
-                include: {
-                  product: {
-                    include: { images: true },
-                  },
-                },
+              product: {
+                include: { images: true },
               },
             },
           },
@@ -25,21 +26,153 @@ const cartInclude = {
   },
 };
 
-const getCartTotal = (orderVariants = []) =>
-  orderVariants.reduce((total, ov) => {
-    return total + parseFloat(ov.productVariant.price) * ov.quantity;
-  }, 0);
+const cartInclude = {
+  promoCode: true,
+  orderVariants: {
+    include: orderVariantInclude,
+  },
+};
 
-const mergeCartIntoPrimary = async (tx, primaryCartId, secondaryCartId) => {
+const orderInclude = {
+  promoCode: true,
+  address: true,
+  payment: true,
+  orderVariants: {
+    include: orderVariantInclude,
+  },
+};
+
+const adminOrderInclude = {
+  promoCode: true,
+  address: true,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      firstname: true,
+      email: true,
+    },
+  },
+  orderVariants: {
+    include: orderVariantInclude,
+  },
+};
+
+const getCartSubtotal = (orderVariants = []) =>
+  roundCurrency(
+    orderVariants.reduce((total, orderVariant) => {
+      return (
+        total +
+        Number(orderVariant.productVariant?.price || 0) * orderVariant.quantity
+      );
+    }, 0)
+  );
+
+const buildOrderPricing = (order, { requireValidPromo = false } = {}) => {
+  const subtotalAmount = getCartSubtotal(order.orderVariants || []);
+
+  if (!order.promoCode) {
+    return {
+      promoCodeId: null,
+      subtotalAmount,
+      discountAmount: 0,
+      totalAmount: subtotalAmount,
+    };
+  }
+
+  if (requireValidPromo) {
+    const validatedPromo = validatePromoCodeForSubtotal(
+      order.promoCode,
+      subtotalAmount,
+      { throwOnInvalid: true }
+    );
+
+    return {
+      promoCodeId: order.promoCodeId,
+      subtotalAmount: validatedPromo.subtotalAmount,
+      discountAmount: validatedPromo.discountAmount,
+      totalAmount: validatedPromo.totalAmount,
+    };
+  }
+
+  const validatedPromo = validatePromoCodeForSubtotal(
+    order.promoCode,
+    subtotalAmount,
+    { throwOnInvalid: false }
+  );
+
+  if (!validatedPromo.isValid) {
+    return {
+      promoCodeId: null,
+      subtotalAmount,
+      discountAmount: 0,
+      totalAmount: subtotalAmount,
+    };
+  }
+
+  return {
+    promoCodeId: order.promoCodeId,
+    subtotalAmount: validatedPromo.subtotalAmount,
+    discountAmount: validatedPromo.discountAmount,
+    totalAmount: validatedPromo.totalAmount,
+  };
+};
+
+const recalculateOrderPricing = async (
+  client,
+  orderId,
+  { include = cartInclude, removeInvalidPromo = true, requireValidPromo = false } = {}
+) => {
+  const order = await client.order.findUnique({
+    where: { id: orderId },
+    include: cartInclude,
+  });
+
+  if (!order) {
+    throw new Error("Commande introuvable.");
+  }
+
+  const pricing = buildOrderPricing(order, { requireValidPromo });
+  const promoCodeId =
+    order.promoCode && !pricing.promoCodeId && !removeInvalidPromo
+      ? order.promoCodeId
+      : pricing.promoCodeId;
+
+  await client.order.update({
+    where: { id: orderId },
+    data: {
+      promoCodeId,
+      subtotalAmount: pricing.subtotalAmount,
+      discountAmount: pricing.discountAmount,
+      totalAmount: pricing.totalAmount,
+    },
+  });
+
+  return client.order.findUnique({
+    where: { id: orderId },
+    include,
+  });
+};
+
+const mergeCartIntoPrimary = async (tx, primaryCart, secondaryCart) => {
+  if (!primaryCart.promoCodeId && secondaryCart.promoCodeId) {
+    await tx.order.update({
+      where: { id: primaryCart.id },
+      data: { promoCodeId: secondaryCart.promoCodeId },
+    });
+
+    primaryCart.promoCodeId = secondaryCart.promoCodeId;
+  }
+
   const secondaryVariants = await tx.orderVariant.findMany({
-    where: { orderId: secondaryCartId },
+    where: { orderId: secondaryCart.id },
   });
 
   for (const secondaryVariant of secondaryVariants) {
     const existingVariant = await tx.orderVariant.findUnique({
       where: {
         orderId_productVariantId: {
-          orderId: primaryCartId,
+          orderId: primaryCart.id,
           productVariantId: secondaryVariant.productVariantId,
         },
       },
@@ -49,7 +182,7 @@ const mergeCartIntoPrimary = async (tx, primaryCartId, secondaryCartId) => {
       await tx.orderVariant.update({
         where: {
           orderId_productVariantId: {
-            orderId: primaryCartId,
+            orderId: primaryCart.id,
             productVariantId: secondaryVariant.productVariantId,
           },
         },
@@ -61,7 +194,7 @@ const mergeCartIntoPrimary = async (tx, primaryCartId, secondaryCartId) => {
       await tx.orderVariant.delete({
         where: {
           orderId_productVariantId: {
-            orderId: secondaryCartId,
+            orderId: secondaryCart.id,
             productVariantId: secondaryVariant.productVariantId,
           },
         },
@@ -70,23 +203,21 @@ const mergeCartIntoPrimary = async (tx, primaryCartId, secondaryCartId) => {
       await tx.orderVariant.update({
         where: {
           orderId_productVariantId: {
-            orderId: secondaryCartId,
+            orderId: secondaryCart.id,
             productVariantId: secondaryVariant.productVariantId,
           },
         },
         data: {
-          orderId: primaryCartId,
+          orderId: primaryCart.id,
         },
       });
     }
   }
 
   await tx.order.delete({
-    where: { id: secondaryCartId },
+    where: { id: secondaryCart.id },
   });
 };
-
-// ============ PANIER ============
 
 const getOrCreateCart = async (userId) => {
   const normalizedUserId = BigInt(userId);
@@ -108,6 +239,9 @@ const getOrCreateCart = async (userId) => {
         data: {
           userId: normalizedUserId,
           orderStatus: "CART",
+          promoCodeId: null,
+          subtotalAmount: 0,
+          discountAmount: 0,
           totalAmount: 0,
         },
         include: cartInclude,
@@ -117,134 +251,111 @@ const getOrCreateCart = async (userId) => {
     const [primaryCart, ...secondaryCarts] = carts;
 
     for (const secondaryCart of secondaryCarts) {
-      await mergeCartIntoPrimary(tx, primaryCart.id, secondaryCart.id);
+      await mergeCartIntoPrimary(tx, primaryCart, secondaryCart);
     }
 
-    const normalizedCart = await tx.order.findUnique({
-      where: { id: primaryCart.id },
+    return recalculateOrderPricing(tx, primaryCart.id, {
       include: cartInclude,
-    });
-
-    const nextTotal = getCartTotal(normalizedCart?.orderVariants || []);
-
-    await tx.order.update({
-      where: { id: primaryCart.id },
-      data: { totalAmount: nextTotal },
-    });
-
-    return tx.order.findUnique({
-      where: { id: primaryCart.id },
-      include: cartInclude,
+      removeInvalidPromo: true,
     });
   });
 };
 
 const addToCart = async (userId, productVariantId, quantity = 1) => {
   const cart = await getOrCreateCart(userId);
+  const normalizedVariantId = parseInt(productVariantId, 10);
+  const normalizedQuantity = parseInt(quantity, 10);
 
   const variant = await prisma.productVariant.findUnique({
-    where: { id: parseInt(productVariantId) },
+    where: { id: normalizedVariantId },
   });
 
   if (!variant) throw new Error("Variante introuvable.");
-  if (variant.stock < quantity) throw new Error("Stock insuffisant.");
+  if (variant.stock < normalizedQuantity) throw new Error("Stock insuffisant.");
 
-  // Vérifier si déjà dans le panier
   const existingItem = cart.orderVariants.find(
-    (ov) => ov.productVariantId === parseInt(productVariantId)
+    (orderVariant) => orderVariant.productVariantId === normalizedVariantId
   );
 
   if (existingItem) {
-    // Augmenter la quantité
     await prisma.orderVariant.update({
       where: {
         orderId_productVariantId: {
           orderId: cart.id,
-          productVariantId: parseInt(productVariantId),
+          productVariantId: normalizedVariantId,
         },
       },
       data: {
-        quantity: existingItem.quantity + parseInt(quantity),
+        quantity: existingItem.quantity + normalizedQuantity,
       },
     });
   } else {
-    // Ajouter au panier
     await prisma.orderVariant.create({
       data: {
         orderId: cart.id,
-        productVariantId: parseInt(productVariantId),
-        quantity: parseInt(quantity),
+        productVariantId: normalizedVariantId,
+        quantity: normalizedQuantity,
       },
     });
   }
 
-  // Mettre à jour le total
-  const updatedCart = await getOrCreateCart(userId);
-  const total = calculateTotal(updatedCart.orderVariants);
-  await prisma.order.update({
-    where: { id: cart.id },
-    data: { totalAmount: total },
+  return recalculateOrderPricing(prisma, cart.id, {
+    include: cartInclude,
+    removeInvalidPromo: true,
   });
-
-  return getOrCreateCart(userId);
 };
 
 const updateCartItem = async (userId, productVariantId, quantity) => {
   const cart = await getOrCreateCart(userId);
+  const normalizedVariantId = parseInt(productVariantId, 10);
+  const normalizedQuantity = parseInt(quantity, 10);
 
-  if (quantity < 1) {
-    return removeFromCart(userId, productVariantId);
+  if (normalizedQuantity < 1) {
+    return removeFromCart(userId, normalizedVariantId);
   }
 
   const variant = await prisma.productVariant.findUnique({
-    where: { id: parseInt(productVariantId) },
+    where: { id: normalizedVariantId },
   });
 
   if (!variant) throw new Error("Variante introuvable.");
-  if (variant.stock < quantity) throw new Error("Stock insuffisant.");
+  if (variant.stock < normalizedQuantity) throw new Error("Stock insuffisant.");
 
   await prisma.orderVariant.update({
     where: {
       orderId_productVariantId: {
         orderId: cart.id,
-        productVariantId: parseInt(productVariantId),
+        productVariantId: normalizedVariantId,
       },
     },
-    data: { quantity: parseInt(quantity) },
+    data: {
+      quantity: normalizedQuantity,
+    },
   });
 
-  // Mettre à jour le total
-  const updatedCart = await getOrCreateCart(userId);
-  const total = calculateTotal(updatedCart.orderVariants);
-  await prisma.order.update({
-    where: { id: cart.id },
-    data: { totalAmount: total },
+  return recalculateOrderPricing(prisma, cart.id, {
+    include: cartInclude,
+    removeInvalidPromo: true,
   });
-
-  return getOrCreateCart(userId);
 };
 
 const removeFromCart = async (userId, productVariantId) => {
   const cart = await getOrCreateCart(userId);
+  const normalizedVariantId = parseInt(productVariantId, 10);
 
   await prisma.orderVariant.delete({
     where: {
       orderId_productVariantId: {
         orderId: cart.id,
-        productVariantId: parseInt(productVariantId),
+        productVariantId: normalizedVariantId,
       },
     },
   });
 
-  // Mettre à jour le total
-  const updatedCart = await getOrCreateCart(userId);
-  const total = calculateTotal(updatedCart.orderVariants);
-  await prisma.order.update({
-    where: { id: cart.id },
-    data: { totalAmount: total },
+  return recalculateOrderPricing(prisma, cart.id, {
+    include: cartInclude,
+    removeInvalidPromo: true,
   });
-
-  return getOrCreateCart(userId);
 };
 
 const clearCart = async (userId) => {
@@ -256,15 +367,63 @@ const clearCart = async (userId) => {
 
   await prisma.order.update({
     where: { id: cart.id },
-    data: { totalAmount: 0 },
+    data: {
+      promoCodeId: null,
+      subtotalAmount: 0,
+      discountAmount: 0,
+      totalAmount: 0,
+    },
+  });
+};
+
+const applyPromoCodeToCart = async (userId, code) => {
+  const cart = await getOrCreateCart(userId);
+  const promoCode = await getPromoCodeByCode(code);
+
+  const validatedPromo = validatePromoCodeForSubtotal(
+    promoCode,
+    getCartSubtotal(cart.orderVariants),
+    { throwOnInvalid: true }
+  );
+
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: {
+      promoCodeId: promoCode.id,
+      subtotalAmount: validatedPromo.subtotalAmount,
+      discountAmount: validatedPromo.discountAmount,
+      totalAmount: validatedPromo.totalAmount,
+    },
+  });
+
+  return prisma.order.findUnique({
+    where: { id: cart.id },
+    include: cartInclude,
+  });
+};
+
+const removePromoCodeFromCart = async (userId) => {
+  const cart = await getOrCreateCart(userId);
+
+  await prisma.order.update({
+    where: { id: cart.id },
+    data: {
+      promoCodeId: null,
+      discountAmount: 0,
+      totalAmount: getCartSubtotal(cart.orderVariants),
+      subtotalAmount: getCartSubtotal(cart.orderVariants),
+    },
+  });
+
+  return prisma.order.findUnique({
+    where: { id: cart.id },
+    include: cartInclude,
   });
 };
 
 const calculateTotal = (orderVariants) => {
-  return getCartTotal(orderVariants);
+  return getCartSubtotal(orderVariants);
 };
-
-// ============ COMMANDES ============
 
 const createOrder = async (userId, addressId) => {
   const cart = await getOrCreateCart(userId);
@@ -273,15 +432,23 @@ const createOrder = async (userId, addressId) => {
     throw new Error("Votre panier est vide.");
   }
 
+  const validatedCart = await recalculateOrderPricing(prisma, cart.id, {
+    include: cartInclude,
+    removeInvalidPromo: false,
+    requireValidPromo: Boolean(cart.promoCodeId),
+  });
+
   const address = await prisma.address.findFirst({
-    where: { id: parseInt(addressId), userId: BigInt(userId) },
+    where: { id: parseInt(addressId, 10), userId: BigInt(userId) },
   });
 
   if (!address) throw new Error("Adresse introuvable.");
 
-  for (const ov of cart.orderVariants) {
-    if (ov.productVariant.stock < ov.quantity) {
-      throw new Error(`Stock insuffisant pour ${ov.productVariant.product.name}.`);
+  for (const orderVariant of validatedCart.orderVariants) {
+    if (orderVariant.productVariant.stock < orderVariant.quantity) {
+      throw new Error(
+        `Stock insuffisant pour ${orderVariant.productVariant.product.name}.`
+      );
     }
   }
 
@@ -289,11 +456,11 @@ const createOrder = async (userId, addressId) => {
     where: { id: BigInt(userId) },
   });
 
-  const order = await prisma.order.update({
-    where: { id: cart.id },
+  return prisma.order.update({
+    where: { id: validatedCart.id },
     data: {
       orderStatus: "PENDING",
-      addressId: parseInt(addressId),
+      addressId: parseInt(addressId, 10),
       customerFirstname: user.firstname,
       customerLastname: user.name,
       customerEmail: user.email,
@@ -305,19 +472,8 @@ const createOrder = async (userId, addressId) => {
       customerRelayName: address.relayName || null,
       orderDate: new Date(),
     },
-    include: {
-      orderVariants: {
-        include: {
-          productVariant: {
-            include: { product: true },
-          },
-        },
-      },
-      address: true,
-    },
+    include: orderInclude,
   });
-
-  return order;
 };
 
 const getUserOrders = async (userId) => {
@@ -327,37 +483,18 @@ const getUserOrders = async (userId) => {
       orderStatus: { not: "CART" },
     },
     orderBy: { createdAt: "desc" },
-    include: {
-      orderVariants: {
-        include: {
-          productVariant: {
-            include: { product: true },
-          },
-        },
-      },
-      address: true,
-    },
+    include: orderInclude,
   });
 };
 
 const getOrderById = async (id, userId) => {
   const order = await prisma.order.findFirst({
     where: {
-      id: parseInt(id),
+      id: parseInt(id, 10),
       userId: BigInt(userId),
       orderStatus: { not: "CART" },
     },
-    include: {
-      orderVariants: {
-        include: {
-          productVariant: {
-            include: { product: true },
-          },
-        },
-      },
-      address: true,
-      payment: true,
-    },
+    include: orderInclude,
   });
 
   if (!order) throw new Error("Commande introuvable.");
@@ -366,7 +503,7 @@ const getOrderById = async (id, userId) => {
 
 const updateOrderStatus = async (id, status) => {
   return prisma.order.update({
-    where: { id: parseInt(id) },
+    where: { id: parseInt(id, 10) },
     data: { orderStatus: status },
   });
 };
@@ -377,37 +514,23 @@ const getAllOrders = async () => {
       orderStatus: { not: "CART" },
     },
     orderBy: { createdAt: "desc" },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          firstname: true,
-          email: true,
-        },
-      },
-      orderVariants: {
-        include: {
-          productVariant: {
-            include: { product: true },
-          },
-        },
-      },
-      address: true,
-    },
+    include: adminOrderInclude,
   });
 };
 
 module.exports = {
-  getOrCreateCart,
   addToCart,
-  updateCartItem,
-  removeFromCart,
+  applyPromoCodeToCart,
+  calculateTotal,
   clearCart,
   createOrder,
-  getUserOrders,
-  getOrderById,
-  updateOrderStatus,
   getAllOrders,
-  calculateTotal,
+  getOrCreateCart,
+  getOrderById,
+  getUserOrders,
+  recalculateOrderPricing,
+  removeFromCart,
+  removePromoCodeFromCart,
+  updateCartItem,
+  updateOrderStatus,
 };

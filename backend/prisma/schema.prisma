@@ -207,7 +207,10 @@ model Order {
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   user               User        @relation(fields: [userId], references: [id])
-  payment            Payment?      
+  payment            Payment? 
+  promoCodeId    Int?
+  discountAmount Decimal?  @default(0)
+  promoCode      PromoCode? @relation(fields: [promoCodeId], references: [id])     
   orderVariants OrderVariant[]
 
   @@map("orders")
@@ -311,4 +314,27 @@ model OrderVariant {
 
   @@id([orderId, productVariantId])
   @@map("order_variants")
+}
+
+model PromoCode {
+  id            Int      @id @default(autoincrement())
+  code          String   @unique
+  discountValue Decimal
+  discountType  DiscountType @default(PERCENTAGE)
+  minAmount     Decimal? 
+  maxUses       Int?     
+  currentUses   Int      @default(0)
+  expiresAt     DateTime?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  orders Order[]
+
+  @@map("promo_codes")
+}
+
+enum DiscountType {
+  PERCENTAGE  // ex: 10% de réduction
+  FIXED       // ex: 10€ de réduction
 }

@@ -9,7 +9,9 @@ const {
   getOne,
   updateStatus,
   getAllAdmin,
-  updateItem
+  updateItem,
+  applyPromoCode,
+  removePromoCode,
 } = require("../controllers/order.controller");
 const { authMiddleware, adminMiddleware } = require("../middlewares/auth.middleware");
 
@@ -18,7 +20,9 @@ const router = express.Router();
 // Panier
 router.get("/cart", authMiddleware, getCart);
 router.post("/cart/add", authMiddleware, addItem);
+router.post("/cart/promo", authMiddleware, applyPromoCode);
 router.delete("/cart/empty", authMiddleware, emptyCart);
+router.delete("/cart/promo", authMiddleware, removePromoCode);
 router.delete("/cart/:variantId", authMiddleware, removeItem);
 router.put("/cart/:variantId", authMiddleware, updateItem);
 

@@ -15,6 +15,7 @@ const wishlistRoutes = require("./routes/wishlist.routes");
 const addressRoutes = require("./routes/address.routes");
 const orderRoutes = require("./routes/order.routes");
 const paymentRoutes = require("./routes/payment.routes");
+const promoCodeRoutes = require("./routes/promoCode.routes");
 const reviewRoutes = require("./routes/review.routes");
 const statsRoutes = require("./routes/stats.routes");
 
@@ -65,6 +66,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/promo-codes", promoCodeRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stats", statsRoutes);
 
