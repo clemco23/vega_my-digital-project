@@ -7,6 +7,7 @@ const menuItems = [
   { path: "/dashboard/contact", label: "Messages", icon: "▦" },
   { path: "/dashboard/produits", label: "Produits", icon: "📦" },
   { path: "/dashboard/commandes", label: "Commandes", icon: "🧾" },
+  { path: "/dashboard/codes-promos", label: "Codes promos", icon: "🏷️" },
   { path: "/dashboard/users", label: "Utilisateurs", icon: "👤" },
   { path: "/dashboard/blogs", label: "Blogs", icon: "✏️" },
   { path: "/dashboard/reviews", label: "Avis", icon: "⭐" },

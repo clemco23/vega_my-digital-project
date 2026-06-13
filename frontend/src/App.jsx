@@ -137,6 +137,14 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/codes-promos"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/dashboard/users"
           element={
             <ProtectedRoute adminOnly>

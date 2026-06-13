@@ -1,15 +1,16 @@
 const {
-  getOrCreateCart,
   addToCart,
-  updateCartItem,
-  removeFromCart,
+  applyPromoCodeToCart,
   clearCart,
   createOrder,
-  getUserOrders,
-  getOrderById,
-  updateOrderStatus,
   getAllOrders,
-  calculateTotal,
+  getOrCreateCart,
+  getOrderById,
+  getUserOrders,
+  removeFromCart,
+  removePromoCodeFromCart,
+  updateCartItem,
+  updateOrderStatus,
 } = require("../services/order.service");
 const { serializeForJson } = require("../utils/serialize");
 
@@ -45,17 +46,39 @@ const mapCartItem = (orderVariant) => ({
       : [],
 });
 
+const mapPromoCode = (promoCode) => {
+  if (!promoCode) {
+    return null;
+  }
+
+  return {
+    id: promoCode.id,
+    code: promoCode.code,
+    discountType: promoCode.discountType,
+    discountValue: promoCode.discountValue,
+    minAmount: promoCode.minAmount,
+    maxUses: promoCode.maxUses,
+    currentUses: promoCode.currentUses,
+    expiresAt: promoCode.expiresAt,
+    isActive: promoCode.isActive,
+  };
+};
+
+const buildCartResponse = (cart) => ({
+  id: cart.id,
+  items: (cart.orderVariants || []).map(mapCartItem),
+  promoCode: mapPromoCode(cart.promoCode),
+  subtotal: Number(cart.subtotalAmount || 0).toFixed(2),
+  discountAmount: Number(cart.discountAmount || 0).toFixed(2),
+  total: Number(cart.totalAmount || 0).toFixed(2),
+});
+
 const getCart = async (req, res) => {
   try {
     const cart = await getOrCreateCart(req.user.id);
-    const total = calculateTotal(cart.orderVariants || []);
 
     return res.status(200).json({
-      data: {
-        id: cart.id,
-        items: (cart.orderVariants || []).map(mapCartItem),
-        total: total.toFixed(2),
-      },
+      data: serializeForJson(buildCartResponse(cart)),
     });
   } catch (error) {
     console.error(error);
@@ -103,6 +126,38 @@ const emptyCart = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+const applyPromoCode = async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ message: "Code promo obligatoire." });
+    }
+
+    const cart = await applyPromoCodeToCart(req.user.id, code);
+
+    return res.status(200).json({
+      message: "Code promo appliqué.",
+      data: serializeForJson(buildCartResponse(cart)),
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+const removePromoCode = async (req, res) => {
+  try {
+    const cart = await removePromoCodeFromCart(req.user.id);
+
+    return res.status(200).json({
+      message: "Code promo retiré.",
+      data: serializeForJson(buildCartResponse(cart)),
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -207,14 +262,16 @@ const updateItem = async (req, res) => {
 };
 
 module.exports = {
-  getCart,
   addItem,
-  updateItem,
-  removeItem,
-  emptyCart,
+  applyPromoCode,
   create,
+  emptyCart,
   getAll,
-  getOne,
-  updateStatus,
   getAllAdmin,
+  getCart,
+  getOne,
+  removeItem,
+  removePromoCode,
+  updateItem,
+  updateStatus,
 };

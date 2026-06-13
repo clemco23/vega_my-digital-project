@@ -1,15 +1,11 @@
 ﻿const prisma = require("../config/prisma");
 
+const { recalculateOrderPricing } = require("./order.service");
+
 const createHttpError = (message, statusCode) => {
   const error = new Error(message);
   error.statusCode = statusCode;
   return error;
-};
-
-const calculateOrderVariantsTotal = (orderVariants) => {
-  return orderVariants.reduce((total, orderVariant) => {
-    return total + parseFloat(orderVariant.productVariant.price) * orderVariant.quantity;
-  }, 0);
 };
 
 const cleanupWishlistsForVariants = async (tx, variantIds) => {
@@ -64,21 +60,12 @@ const cleanupCartOrderVariants = async (tx, variantIds) => {
 
   const refreshedCarts = await tx.order.findMany({
     where: { id: { in: cartIds } },
-    include: {
-      orderVariants: {
-        include: {
-          productVariant: true,
-        },
-      },
-    },
+    select: { id: true },
   });
 
   for (const cart of refreshedCarts) {
-    await tx.order.update({
-      where: { id: cart.id },
-      data: {
-        totalAmount: calculateOrderVariantsTotal(cart.orderVariants),
-      },
+    await recalculateOrderPricing(tx, cart.id, {
+      removeInvalidPromo: true,
     });
   }
 };

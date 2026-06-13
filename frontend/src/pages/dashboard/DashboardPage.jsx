@@ -4,6 +4,7 @@ import DashboardLayout from "../../components/dashboard/DashboardLayout/Dashboar
 import BlogForm from "../../components/dashboard/blogs/BlogForm";
 import BlogsList from "../../components/dashboard/blogs/BlogsList";
 import Newsletter from "../../components/dashboard/newsletter/Newsletter";
+import PromoCodesManager from "../../components/dashboard/promoCodes/PromoCodesManager";
 import StatsCards from "../../components/dashboard/StatsCards/StatsCards";
 import ProductsList from "../../components/dashboard/products/ProductsList";
 import ProductForm from "../../components/dashboard/products/ProductForm"; 
@@ -98,6 +99,9 @@ function DashboardPage() {
             <Newsletter />
           </>
         );
+
+      case "/dashboard/codes-promos":
+        return <PromoCodesManager />;
 
       default:
         return <h1 className="dashboard-title">Page en construction</h1>;
