@@ -49,3 +49,15 @@ export const clearCart = async () => {
   notifyCartState(0);
   return data;
 };
+
+export const applyCartPromoCode = async (code) => {
+  const { data } = await api.post("/orders/cart/promo", { code });
+  notifyCartState(getCartItemsCount(data.data?.items));
+  return data.data;
+};
+
+export const removeCartPromoCode = async () => {
+  const { data } = await api.delete("/orders/cart/promo");
+  notifyCartState(getCartItemsCount(data.data?.items));
+  return data.data;
+};

@@ -10,9 +10,11 @@ import Navbar from "../../components/navbar/Navbar";
 import { triggerCartAnimation } from "../../services/cart-feedback";
 import {
   addCartItem,
+  applyCartPromoCode,
   clearCart,
   getCart,
   removeCartItem,
+  removeCartPromoCode,
   updateCartItem,
 } from "../../services/cart.service";
 import { getMyAddresses } from "../../services/address.service";
@@ -27,22 +29,33 @@ import "./CartPage.css";
 const getPreferredAddress = (addresses = []) =>
   addresses.find((item) => item.addressType === "SHIPPING") || addresses[0] || null;
 
+const createEmptySelection = () => ({
+  items: [],
+  promoCode: null,
+  subtotal: "0.00",
+  discountAmount: "0.00",
+  total: "0.00",
+});
+
 function CartPage() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isWishlistMode = pathname === "/favoris";
   const mode = isWishlistMode ? "wishlist" : "cart";
 
-  const [selection, setSelection] = useState({ items: [], total: "0.00" });
+  const [selection, setSelection] = useState(createEmptySelection);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAddress, setLoadingAddress] = useState(!isWishlistMode);
   const [error, setError] = useState("");
   const [addressMessage, setAddressMessage] = useState("");
+  const [promoFeedback, setPromoFeedback] = useState(null);
   const [pendingItemId, setPendingItemId] = useState(null);
   const [isClearing, setIsClearing] = useState(false);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
   const [isAddingWishlistToCart, setIsAddingWishlistToCart] = useState(false);
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [isRemovingPromo, setIsRemovingPromo] = useState(false);
 
   const loadSelection = async () => {
     try {
@@ -62,13 +75,16 @@ function CartPage() {
   };
 
   useEffect(() => {
-    setSelection({ items: [], total: "0.00" });
+    setSelection(createEmptySelection());
     setSelectedAddress(null);
     setLoading(true);
     setLoadingAddress(!isWishlistMode);
     setError("");
     setAddressMessage("");
+    setPromoFeedback(null);
     setPendingItemId(null);
+    setIsApplyingPromo(false);
+    setIsRemovingPromo(false);
 
     const loadPageData = async () => {
       try {
@@ -123,6 +139,7 @@ function CartPage() {
 
     try {
       setError("");
+      setPromoFeedback(null);
 
       if (nextQuantity < 1) {
         await removeCartItem(item.id);
@@ -147,6 +164,7 @@ function CartPage() {
 
     try {
       setError("");
+      setPromoFeedback(null);
 
       if (isWishlistMode) {
         await removeWishlistItem(variantId);
@@ -173,6 +191,7 @@ function CartPage() {
 
     try {
       setError("");
+      setPromoFeedback(null);
 
       if (isWishlistMode) {
         for (const item of selection.items) {
@@ -193,6 +212,64 @@ function CartPage() {
       );
     } finally {
       setIsClearing(false);
+    }
+  };
+
+  const handleApplyPromoCode = async (code) => {
+    if (!code || isWishlistMode) {
+      return;
+    }
+
+    try {
+      setIsApplyingPromo(true);
+      setError("");
+      setPromoFeedback(null);
+
+      const updatedCart = await applyCartPromoCode(code);
+      setSelection(updatedCart);
+      setPromoFeedback({
+        type: "success",
+        message: `Le code promo ${updatedCart.promoCode?.code || code.toUpperCase()} a bien ete applique.`,
+      });
+    } catch (promoError) {
+      console.error(promoError);
+      setPromoFeedback({
+        type: "error",
+        message:
+          promoError.response?.data?.message ||
+          "Impossible d'appliquer ce code promo.",
+      });
+    } finally {
+      setIsApplyingPromo(false);
+    }
+  };
+
+  const handleRemovePromoCode = async () => {
+    if (isWishlistMode) {
+      return;
+    }
+
+    try {
+      setIsRemovingPromo(true);
+      setError("");
+      setPromoFeedback(null);
+
+      const updatedCart = await removeCartPromoCode();
+      setSelection(updatedCart);
+      setPromoFeedback({
+        type: "success",
+        message: "Le code promo a ete retire du panier.",
+      });
+    } catch (promoError) {
+      console.error(promoError);
+      setPromoFeedback({
+        type: "error",
+        message:
+          promoError.response?.data?.message ||
+          "Impossible de retirer ce code promo.",
+      });
+    } finally {
+      setIsRemovingPromo(false);
     }
   };
 
@@ -324,7 +401,13 @@ function CartPage() {
             <CartSummary
               mode={mode}
               totalItems={totalItems}
+              subtotalAmount={selection.subtotal || selection.total}
+              discountAmount={selection.discountAmount}
               totalAmount={selection.total}
+              promoCode={selection.promoCode}
+              promoFeedback={promoFeedback}
+              isApplyingPromo={isApplyingPromo}
+              isRemovingPromo={isRemovingPromo}
               shippingAddress={selectedAddress}
               addressMessage={addressMessage}
               isLoadingAddress={loadingAddress}
@@ -336,6 +419,8 @@ function CartPage() {
                 isWishlistMode ? handleAddWishlistToCart : handleCheckout
               }
               onClear={handleClearSelection}
+              onApplyPromoCode={handleApplyPromoCode}
+              onRemovePromoCode={handleRemovePromoCode}
             />
           </section>
         )}
