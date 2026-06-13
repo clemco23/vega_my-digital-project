@@ -1,0 +1,221 @@
+.promo-codes-loading {
+  color: #666;
+  font-size: 14px;
+}
+
+.promo-codes-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.promo-codes-manager__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.promo-codes-manager__subtitle {
+  margin: 8px 0 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.promo-codes-feedback {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.promo-codes-feedback--success {
+  background-color: #e8f5e9;
+  color: #1f7a34;
+  border: 1px solid #cde8d2;
+}
+
+.promo-codes-feedback--error {
+  background-color: #fce8e6;
+  color: #b42318;
+  border: 1px solid #f3c7c2;
+}
+
+.promo-codes-manager__layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.promo-codes-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.promo-codes-form h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #1a1a1a;
+}
+
+.promo-codes-form__grid {
+  display: grid;
+  gap: 14px;
+}
+
+.promo-codes-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.promo-codes-form__field span,
+.promo-codes-form__checkbox span {
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.promo-codes-form__field input,
+.promo-codes-form__field select {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1a1a1a;
+  background-color: #fff;
+}
+
+.promo-codes-form__field input:focus,
+.promo-codes-form__field select:focus {
+  outline: 2px solid rgba(26, 26, 26, 0.12);
+  border-color: #1a1a1a;
+}
+
+.promo-codes-form__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.promo-codes-form__submit {
+  min-height: 48px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.promo-codes-form__submit:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.promo-codes-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.promo-codes-table-shell {
+  overflow-x: auto;
+}
+
+.promo-codes-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.promo-codes-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.promo-codes-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.promo-codes-table tr:last-child td {
+  border-bottom: none;
+}
+
+.promo-codes-table tr:hover td {
+  background-color: #fafafa;
+}
+
+.promo-codes-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.promo-codes-badge--active {
+  background-color: #e8f5e9;
+  color: #1f7a34;
+}
+
+.promo-codes-badge--inactive {
+  background-color: #fce8e6;
+  color: #b42318;
+}
+
+.promo-codes-table__actions {
+  white-space: nowrap;
+}
+
+.promo-codes-table__delete {
+  background-color: #fff;
+  color: #ea4335;
+  border: 1px solid #ea4335;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.promo-codes-table__delete:hover {
+  background-color: #fce8e6;
+}
+
+.promo-codes-empty {
+  text-align: center;
+  color: #888;
+  padding: 24px 0 0;
+  font-size: 14px;
+}
+
+@media (max-width: 1180px) {
+  .promo-codes-manager__layout {
+    grid-template-columns: 1fr;
+  }
+}
