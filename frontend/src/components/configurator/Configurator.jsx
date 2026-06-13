@@ -9,6 +9,7 @@ import {
   Star,
   Trees,
   Truck,
+  X,
 } from "lucide-react";
 import { getBoards, getModules } from "../../services/product.service";
 import { triggerCartAnimation } from "../../services/cart-feedback";
@@ -133,6 +134,7 @@ function Configurator() {
   const [modules, setModules] = useState([]);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [selectedModules, setSelectedModules] = useState([]);
+  const [expandedPreviewModule, setExpandedPreviewModule] = useState(null);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
@@ -173,9 +175,33 @@ function Configurator() {
     void fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!expandedPreviewModule) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setExpandedPreviewModule(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [expandedPreviewModule]);
+
   const handleSelectSize = (variant) => {
     setSelectedBoard({ product: boards[0], variant });
     setSelectedModules([]);
+    setExpandedPreviewModule(null);
   };
 
   const handleToggleModule = (variant, product) => {
@@ -184,6 +210,9 @@ function Configurator() {
     );
 
     if (alreadySelected) {
+      setExpandedPreviewModule((currentModule) =>
+        currentModule?.variant.id === variant.id ? null : currentModule
+      );
       setSelectedModules((previousModules) =>
         previousModules.filter((module) => module.variant.id !== variant.id)
       );
@@ -232,6 +261,9 @@ function Configurator() {
     selectedBoard?.variant?.id,
     ...selectedModules.map((module) => module.variant.id),
   ].filter(Boolean);
+  const expandedPreviewImageUrl = getProductImageUrl(
+    expandedPreviewModule?.product
+  );
 
   const renderBoardPreview = (className = "") => (
     <div className={["configurator__preview-card", className].join(" ").trim()}>
@@ -265,7 +297,8 @@ function Configurator() {
                 const imageUrl = getProductImageUrl(module.product);
 
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={`preview-module-${module.variant.id}`}
                     className={`configurator__board-module configurator__board-module--span-${span}`}
                     style={{
@@ -273,6 +306,9 @@ function Configurator() {
                       "--module-left": placement.left,
                       "--module-rotate": placement.rotate,
                     }}
+                    onClick={() => setExpandedPreviewModule(module)}
+                    aria-label={`Voir ${module.product.name} en grand`}
+                    title={`Voir ${module.product.name} en grand`}
                   >
                     {imageUrl ? (
                       <img
@@ -285,7 +321,7 @@ function Configurator() {
                         {getPreviewModuleLabel(module.product.name)}
                       </span>
                     )}
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -511,6 +547,66 @@ function Configurator() {
           </div>
         </div>
       </div>
+
+      {expandedPreviewModule ? (
+        <div
+          className="configurator__module-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="configurator-module-lightbox-title"
+          onClick={() => setExpandedPreviewModule(null)}
+        >
+          <div
+            className="configurator__module-lightbox-panel"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="configurator__module-lightbox-close"
+              onClick={() => setExpandedPreviewModule(null)}
+              aria-label="Fermer l'aperçu du module"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="configurator__module-lightbox-media">
+              {expandedPreviewImageUrl ? (
+                <img
+                  src={expandedPreviewImageUrl}
+                  alt={expandedPreviewModule.product.name}
+                  className="configurator__module-lightbox-image"
+                />
+              ) : (
+                <span
+                  className="configurator__module-lightbox-placeholder"
+                  aria-hidden="true"
+                >
+                  {expandedPreviewModule.product.name
+                    .slice(0, 1)
+                    .toUpperCase()}
+                </span>
+              )}
+            </div>
+
+            <div className="configurator__module-lightbox-copy">
+              <p className="configurator__module-lightbox-eyebrow">
+                Module selectionne
+              </p>
+              <h2
+                className="configurator__module-lightbox-title"
+                id="configurator-module-lightbox-title"
+              >
+                {expandedPreviewModule.product.name}
+              </h2>
+              <p className="configurator__module-lightbox-meta">
+                {expandedPreviewModule.variant.holesRequired} trou
+                {expandedPreviewModule.variant.holesRequired > 1 ? "s" : ""} sur
+                la planche
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
