@@ -30,6 +30,40 @@ function SiteFooter() {
               <img src={haptoLogo} alt="Hapto" />
             </Link>
             <p className="site-footer__tagline">Le design sensoriel</p>
+            <div className="site-footer__socials">
+              <a
+                href="https://www.instagram.com/hapto.kids/"
+                className="site-footer__social-link"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram Hapto Kids"
+              >
+                <svg
+                  className="site-footer__social-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="3.25"
+                    y="3.25"
+                    width="17.5"
+                    height="17.5"
+                    rx="5.25"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="4.1"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  />
+                  <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" />
+                </svg>
+              </a>
+            </div>
           </div>
 
           <div className="site-footer__navs" aria-label="Liens du pied de page">
