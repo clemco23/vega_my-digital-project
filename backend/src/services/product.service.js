@@ -125,8 +125,8 @@ const cleanupVariantRelations = async (tx, variantIds) => {
   });
 };
 
-const getAllProducts = async () => {
-  return prisma.product.findMany({
+const getAllProducts = async (client = prisma) => {
+  return client.product.findMany({
     where: { isActivated: true },
     include: {
       variants: true,
@@ -138,8 +138,8 @@ const getAllProducts = async () => {
   });
 };
 
-const getAllProductsAdmin = async () => {
-  return prisma.product.findMany({
+const getAllProductsAdmin = async (client = prisma) => {
+  return client.product.findMany({
     include: {
       variants: true,
       images: true,
@@ -150,8 +150,8 @@ const getAllProductsAdmin = async () => {
   });
 };
 
-const getProductById = async (id) => {
-  return prisma.product.findUnique({
+const getProductById = async (id, client = prisma) => {
+  return client.product.findUnique({
     where: { id: parseInt(id) },
     include: {
       variants: {
@@ -179,8 +179,8 @@ const getProductById = async (id) => {
   });
 };
 
-const createProduct = async ({ name, description, productType, ageMin, ageMax, variants, skillIds }) => {
-  return prisma.product.create({
+const createProduct = async ({ name, description, productType, ageMin, ageMax, variants, skillIds }, client = prisma) => {
+  return client.product.create({
     data: {
       name,
       description,
@@ -209,8 +209,8 @@ const createProduct = async ({ name, description, productType, ageMin, ageMax, v
   });
 };
 
-const updateProduct = async (id, data) => {
-  return prisma.product.update({
+const updateProduct = async (id, data, client = prisma) => {
+  return client.product.update({
     where: { id: parseInt(id) },
     data,
     include: {
@@ -247,8 +247,8 @@ const deleteProduct = async (id) => {
   });
 };
 
-const updateVariant = async (variantId, data) => {
-  return prisma.productVariant.update({
+const updateVariant = async (variantId, data, client = prisma) => {
+  return client.productVariant.update({
     where: { id: parseInt(variantId) },
     data: {
       price: data.price ? parseFloat(parseFloat(data.price).toFixed(2)) : undefined,
@@ -259,15 +259,15 @@ const updateVariant = async (variantId, data) => {
   });
 };
 
-const addProductImages = async (productId, images) => {
-  const lastImage = await prisma.productImage.findFirst({
+const addProductImages = async (productId, images, client = prisma) => {
+  const lastImage = await client.productImage.findFirst({
     where: { productId: parseInt(productId) },
     orderBy: { position: "desc" },
   });
 
   const startPosition = lastImage ? lastImage.position + 1 : 1;
 
-  return prisma.productImage.createMany({
+  return client.productImage.createMany({
     data: images.map((url, index) => ({
       productId: parseInt(productId),
       url,
@@ -330,15 +330,11 @@ const getProductsBySkill = async (skillId) => {
   });
 };
 
-const addSetItem = async (setVariantId, productVariantId, quantity) => {
-  console.log("setVariantId reçu:", setVariantId);
-
-  const setVariant = await prisma.productVariant.findUnique({
+const addSetItem = async (setVariantId, productVariantId, quantity, client = prisma) => {
+  const setVariant = await client.productVariant.findUnique({
     where: { id: parseInt(setVariantId) },
     include: { product: true },
   });
-
-  console.log("setVariant trouvé:", setVariant);
 
   if (!setVariant) throw new Error("Variante introuvable.");
 
@@ -346,7 +342,7 @@ const addSetItem = async (setVariantId, productVariantId, quantity) => {
     throw new Error("Cette variante n'appartient pas à un set prédéfini.");
   }
 
-  return prisma.setItem.create({
+  return client.setItem.create({
     data: {
       setVariantId: parseInt(setVariantId),
       productVariantId: parseInt(productVariantId),
