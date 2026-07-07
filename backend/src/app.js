@@ -3,6 +3,10 @@ const cors = require("cors");
 const multer = require("multer");
 const passport = require("./config/passport");
 const session = require("express-session");
+const {
+  applySecurityHeaders,
+  sanitizeRequestPayload,
+} = require("./middlewares/security.middleware");
 const newsletterRoutes = require("./routes/newsletter.routes");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -24,6 +28,8 @@ const frontendUrl = (
   process.env.FRONTEND_URL || "http://localhost:5173"
 ).replace(/\/+$/, "");
 
+app.use(applySecurityHeaders);
+
 app.use(
   cors({
     origin: frontendUrl,
@@ -38,6 +44,7 @@ app.set("json replacer", (_key, value) => (
 ));
 
 app.use(express.json());
+app.use(sanitizeRequestPayload);
 
 app.get("/", (req, res) => {
   res.json({
