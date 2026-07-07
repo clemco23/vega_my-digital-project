@@ -5,6 +5,20 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="HaptoKids" />
     <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' https://cdn.matomo.cloud;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob: https:;
+        connect-src 'self' http://localhost:3000 http://localhost:5173 ws://localhost:5173 ws://localhost:24678 https://haptokids.fr https://haptokids.matomo.cloud https://cdn.matomo.cloud;
+        font-src 'self' data:;
+        object-src 'none';
+        base-uri 'self';
+        frame-ancestors 'none';
+      "
+    />
+    <meta
       name="description"
       content="HAPTO conçoit des planches sensorielles evolutives en bois pour enfant, avec des modules interchangeables et un design pense pour durer."
     />
@@ -18,18 +32,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-     <!-- Matomo -->
-  <script>
-    var _paq = window._paq = window._paq || [];
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="https://haptokids.matomo.cloud/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '1']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src='https://cdn.matomo.cloud/haptokids.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
   </body>
 </html>
