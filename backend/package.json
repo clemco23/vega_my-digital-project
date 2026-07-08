@@ -7,9 +7,16 @@
     "start": "node index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "test": "vitest run",
+    "prisma:migrate:test": "node scripts/run-with-test-env.js prisma migrate deploy",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run tests/product.service.test.js",
+    "test:integration": "vitest run tests/integration",
+    "test:integration:local": "npm run prisma:migrate:test && npm run test:integration",
+    "test:all": "vitest run",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run tests/product.service.test.js --coverage",
+    "test:db:up": "docker compose -f docker-compose.test.yml up -d",
+    "test:db:down": "docker compose -f docker-compose.test.yml down -v"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +43,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.9",
+    "supertest": "^7.2.2",
     "vitest": "^4.1.9"
   }
 }
