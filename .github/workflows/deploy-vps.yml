@@ -13,6 +13,20 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: hapto_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d hapto_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     defaults:
       run:
@@ -25,6 +39,10 @@ jobs:
       VPS_APP_DIR: ${{ secrets.VPS_APP_DIR }}
       VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
       VPS_RESTART_COMMAND: ${{ secrets.VPS_RESTART_COMMAND }}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/hapto_test?schema=public
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/hapto_test?schema=public
+      JWT_SECRET: test-secret
+      FRONTEND_URL: http://localhost:5173
 
     steps:
       - name: Checkout repository
@@ -52,10 +70,15 @@ jobs:
         run: |
           npm ci
           npm run prisma:generate
+          npm run prisma:migrate:deploy
 
       - name: Run backend unit tests
         working-directory: backend
-        run: npm test
+        run: npm run test:unit
+
+      - name: Run backend integration tests
+        working-directory: backend
+        run: npm run test:integration
 
       - name: Configure SSH
         run: |
