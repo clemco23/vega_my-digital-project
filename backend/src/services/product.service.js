@@ -32,7 +32,11 @@ const cleanupWishlistsForVariants = async (tx, variantIds) => {
   }
 };
 
-const cleanupCartOrderVariants = async (tx, variantIds) => {
+const cleanupCartOrderVariants = async (
+  tx,
+  variantIds,
+  recalculatePricing = recalculateOrderPricing
+) => {
   const carts = await tx.order.findMany({
     where: {
       orderStatus: "CART",
@@ -64,7 +68,7 @@ const cleanupCartOrderVariants = async (tx, variantIds) => {
   });
 
   for (const cart of refreshedCarts) {
-    await recalculateOrderPricing(tx, cart.id, {
+    await recalculatePricing(tx, cart.id, {
       removeInvalidPromo: true,
     });
   }
@@ -105,14 +109,18 @@ const assertVariantsNotUsedInOrders = async (tx, variantIds) => {
   }
 };
 
-const cleanupVariantRelations = async (tx, variantIds) => {
+const cleanupVariantRelations = async (
+  tx,
+  variantIds,
+  recalculatePricing = recalculateOrderPricing
+) => {
   if (variantIds.length === 0) {
     return;
   }
 
   await assertVariantsNotUsedInOrders(tx, variantIds);
 
-  await cleanupCartOrderVariants(tx, variantIds);
+  await cleanupCartOrderVariants(tx, variantIds, recalculatePricing);
   await cleanupWishlistsForVariants(tx, variantIds);
 
   await tx.setItem.deleteMany({
@@ -220,10 +228,14 @@ const updateProduct = async (id, data, client = prisma) => {
   });
 };
 
-const deleteProduct = async (id) => {
+const deleteProduct = async (
+  id,
+  client = prisma,
+  { recalculatePricing = recalculateOrderPricing } = {}
+) => {
   const productId = parseInt(id);
 
-  return prisma.$transaction(async (tx) => {
+  return client.$transaction(async (tx) => {
     const product = await tx.product.findUnique({
       where: { id: productId },
       include: {
@@ -239,7 +251,7 @@ const deleteProduct = async (id) => {
 
     const variantIds = product.variants.map((variant) => variant.id);
 
-    await cleanupVariantRelations(tx, variantIds);
+    await cleanupVariantRelations(tx, variantIds, recalculatePricing);
 
     return tx.product.delete({
       where: { id: productId },
@@ -276,16 +288,20 @@ const addProductImages = async (productId, images, client = prisma) => {
   });
 };
 
-const deleteProductImage = async (imageId) => {
-  return prisma.productImage.delete({
+const deleteProductImage = async (imageId, client = prisma) => {
+  return client.productImage.delete({
     where: { id: parseInt(imageId) },
   });
 };
 
-const deleteVariant = async (variantId) => {
+const deleteVariant = async (
+  variantId,
+  client = prisma,
+  { recalculatePricing = recalculateOrderPricing } = {}
+) => {
   const parsedVariantId = parseInt(variantId);
 
-  return prisma.$transaction(async (tx) => {
+  return client.$transaction(async (tx) => {
     const variant = await tx.productVariant.findUnique({
       where: { id: parsedVariantId },
       select: { id: true },
@@ -295,7 +311,7 @@ const deleteVariant = async (variantId) => {
       throw createHttpError("Variante introuvable.", 404);
     }
 
-    await cleanupVariantRelations(tx, [parsedVariantId]);
+    await cleanupVariantRelations(tx, [parsedVariantId], recalculatePricing);
 
     return tx.productVariant.delete({
       where: { id: parsedVariantId },
@@ -303,8 +319,8 @@ const deleteVariant = async (variantId) => {
   });
 }; 
 
-const getProductsByType = async (type) => {
-  return prisma.product.findMany({
+const getProductsByType = async (type, client = prisma) => {
+  return client.product.findMany({
     where: { productType: type, isActivated: true },
     include: {
       variants: true,
@@ -314,8 +330,8 @@ const getProductsByType = async (type) => {
   });
 };
 
-const getProductsBySkill = async (skillId) => {
-  return prisma.product.findMany({
+const getProductsBySkill = async (skillId, client = prisma) => {
+  return client.product.findMany({
     where: {
       isActivated: true,
       skills: {
@@ -351,14 +367,14 @@ const addSetItem = async (setVariantId, productVariantId, quantity, client = pri
   });
 };
 
-const deleteSetItem = async (itemId) => {
-  return prisma.setItem.delete({
+const deleteSetItem = async (itemId, client = prisma) => {
+  return client.setItem.delete({
     where: { id: parseInt(itemId) },
   });
 };
 
-const addVariant = async (productId, data) => {
-  return prisma.productVariant.create({
+const addVariant = async (productId, data, client = prisma) => {
+  return client.productVariant.create({
     data: {
       productId: parseInt(productId),
       size: data.size,
@@ -370,8 +386,8 @@ const addVariant = async (productId, data) => {
   });
 };
 
-const addSkillToProduct = async (productId, skillId) => {
-  return prisma.productSkill.create({
+const addSkillToProduct = async (productId, skillId, client = prisma) => {
+  return client.productSkill.create({
     data: {
       productId: parseInt(productId),
       skillId: parseInt(skillId),
