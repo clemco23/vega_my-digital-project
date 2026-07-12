@@ -22,6 +22,8 @@ const paymentRoutes = require("./routes/payment.routes");
 const promoCodeRoutes = require("./routes/promoCode.routes");
 const reviewRoutes = require("./routes/review.routes");
 const statsRoutes = require("./routes/stats.routes");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./docs/swagger");
 
 const app = express();
 const frontendUrl = (
@@ -29,6 +31,16 @@ const frontendUrl = (
 ).replace(/\/+$/, "");
 
 app.use(applySecurityHeaders);
+
+app.get("/api/docs.json", (_req, res) => {
+  res.json(swaggerSpec);
+});
+
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { explorer: true })
+);
 
 app.use(
   cors({
